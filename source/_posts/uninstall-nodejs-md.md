@@ -40,3 +40,6 @@ sudo rm /opt/local/bin/node
 sudo rm /opt/local/include/node
 sudo rm -rf /opt/local/lib/node_modules
 ```
+
+
+原文链接：http://www.cnblogs.com/kivenlv/p/6096171.html
