@@ -1,4 +1,4 @@
-This is http://blog.at23.net/ source files.
+This is http://www.weidong.io/ source files.
 
 * 日常修改  
 	在本地对博客进行修改（添加新博文、修改样式等等）后，通过以下流程进行管理:  
