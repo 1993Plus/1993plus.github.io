@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux 基础 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Linux,Linux运维" />
+  
+
+  <meta name="description" content="Linux 用户 root 用户 一个特殊的管理账户 也被称为超级用户 root 已经接近完整的系统控制 对系统损害几乎有无线的能力 除非必要，不要使用 root 用户登录   普通（非特权）用户 权限有限 造成损害的能力比较有限    终端 terminal 设备终端 键盘、鼠标、显示器   物理设备（/dev/console） 控制台 console   虚拟终端（tty：teltypewri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 基础">
+<meta property="og:url" content="http://www.weidong.io/2017/07/16/20170616/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="Linux 用户 root 用户 一个特殊的管理账户 也被称为超级用户 root 已经接近完整的系统控制 对系统损害几乎有无线的能力 除非必要，不要使用 root 用户登录   普通（非特权）用户 权限有限 造成损害的能力比较有限    终端 terminal 设备终端 键盘、鼠标、显示器   物理设备（/dev/console） 控制台 console   虚拟终端（tty：teltypewri">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ot6jjpn4h.bkt.clouddn.com/shell.png">
+<meta property="og:updated_time" content="2017-07-16T13:10:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 基础">
+<meta name="twitter:description" content="Linux 用户 root 用户 一个特殊的管理账户 也被称为超级用户 root 已经接近完整的系统控制 对系统损害几乎有无线的能力 除非必要，不要使用 root 用户登录   普通（非特权）用户 权限有限 造成损害的能力比较有限    终端 terminal 设备终端 键盘、鼠标、显示器   物理设备（/dev/console） 控制台 console   虚拟终端（tty：teltypewri">
+<meta name="twitter:image" content="http://ot6jjpn4h.bkt.clouddn.com/shell.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux-用户"><span class="toc-text">Linux 用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#终端-terminal"><span class="toc-text">终端 terminal</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell"><span class="toc-text">shell</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-20170616" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Linux 基础</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.07.16</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/07/16/20170616/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h3 id="Linux-用户"><a href="#Linux-用户" class="headerlink" title="Linux 用户"></a>Linux 用户</h3><ul>
+<li>root 用户<ul>
+<li>一个特殊的管理账户</li>
+<li>也被称为超级用户</li>
+<li>root 已经接近完整的系统控制</li>
+<li>对系统损害几乎有无线的能力</li>
+<li>除非必要，不要使用 root 用户登录</li>
+</ul>
+</li>
+<li>普通（非特权）用户<ul>
+<li>权限有限</li>
+<li>造成损害的能力比较有限</li>
+</ul>
+</li>
+</ul>
+<h3 id="终端-terminal"><a href="#终端-terminal" class="headerlink" title="终端 terminal"></a>终端 terminal</h3><ul>
+<li>设备终端<ul>
+<li>键盘、鼠标、显示器</li>
+</ul>
+</li>
+<li>物理设备（/dev/console）<ul>
+<li>控制台 console</li>
+</ul>
+</li>
+<li>虚拟终端（tty：teltypewriters,/dev/tty[1-6]）<ul>
+<li>tty 有 N 个，Ctrl+Alt+F[1-6] </li>
+</ul>
+</li>
+<li>图形终端（/dev/tty7） startx,xwindows<ul>
+<li>CentOS 6:Ctrl+Alt+F7</li>
+<li>CentOS 7:在哪个终端启动，即位于哪个虚拟终端（比如图形终端是开机启动的那么它将位于第一个终端）</li>
+</ul>
+</li>
+<li>串行终端（/dev/ttyS#）<ul>
+<li>ttyS</li>
+</ul>
+</li>
+<li>伪终端（pty:psedo-tty, /dev/pts/#）<ul>
+<li>pts, SSH 远程连接</li>
+</ul>
+</li>
+</ul>
+<p><code>tips:查看当前登录的终端设备使用 #tty</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# tty</div><div class="line">/dev/pts/0   #当前登录的终端设备为 pts0</div></pre></td></tr></table></figure></p>
+<h3 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h3><ul>
+<li>shell 是 Linux 系统的用户界面，提供了用户内核进行交互操作的一种接口。它接收用户输入的命令并把它提交给内核执行。</li>
+<li>shell 也被成为 Linux 的命令解释器（command interpreter）。</li>
+<li>shell 是一种高级程序设计语言。</li>
+</ul>
+<p><img src="http://ot6jjpn4h.bkt.clouddn.com/shell.png" alt="此处输入图片的描述"></p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="hide pull-left" href="/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/07/17/Linux-获取帮助/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/07/16/20170616/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

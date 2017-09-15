@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux 获取帮助 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Linux,man,info,help," />
+  
+
+  <meta name="description" content="在 Linux(CentOS) 系统中获取帮助Linux 系统中指令的分类： 内部命令（指集成在 shell 中的指令） 外部指令（非集成在 shell 中的指令）查看指令是否是内部指令或外部指令使用 #type [root@localhost ~]# type cdcd is a shell builtin   //系统告诉我们 cd 是一个 shell 内置的。[root@localhost">
+<meta name="keywords" content="Linux,man,info,help">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 获取帮助">
+<meta property="og:url" content="http://www.weidong.io/2017/07/17/Linux-获取帮助/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="在 Linux(CentOS) 系统中获取帮助Linux 系统中指令的分类： 内部命令（指集成在 shell 中的指令） 外部指令（非集成在 shell 中的指令）查看指令是否是内部指令或外部指令使用 #type [root@localhost ~]# type cdcd is a shell builtin   //系统告诉我们 cd 是一个 shell 内置的。[root@localhost">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-07-17T13:25:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 获取帮助">
+<meta name="twitter:description" content="在 Linux(CentOS) 系统中获取帮助Linux 系统中指令的分类： 内部命令（指集成在 shell 中的指令） 外部指令（非集成在 shell 中的指令）查看指令是否是内部指令或外部指令使用 #type [root@localhost ~]# type cdcd is a shell builtin   //系统告诉我们 cd 是一个 shell 内置的。[root@localhost">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在-Linux-CentOS-系统中获取帮助"><span class="toc-text">在 Linux(CentOS) 系统中获取帮助</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux-系统中指令的分类："><span class="toc-text">Linux 系统中指令的分类：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取内部命令的帮助信息"><span class="toc-text">获取内部命令的帮助信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取外部命令的帮助信息"><span class="toc-text">获取外部命令的帮助信息</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#man-文档代号说明"><span class="toc-text">man 文档代号说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#man-文档中各段落说明"><span class="toc-text">man 文档中各段落说明</span></a></li></ol></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Linux-获取帮助" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Linux 获取帮助</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.07.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/07/17/Linux-获取帮助/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="在-Linux-CentOS-系统中获取帮助"><a href="#在-Linux-CentOS-系统中获取帮助" class="headerlink" title="在 Linux(CentOS) 系统中获取帮助"></a>在 Linux(CentOS) 系统中获取帮助</h2><h3 id="Linux-系统中指令的分类："><a href="#Linux-系统中指令的分类：" class="headerlink" title="Linux 系统中指令的分类："></a>Linux 系统中指令的分类：</h3><ul>
+<li>内部命令（指集成在 shell 中的指令）</li>
+<li>外部指令（非集成在 shell 中的指令）<br><code>查看指令是否是内部指令或外部指令使用 #type</code><blockquote>
+<p>[root@localhost ~]# type cd<br>cd is a shell builtin   //系统告诉我们 cd 是一个 shell 内置的。<br>[root@localhost ~]# type ls<br>ls is aliased to `ls –color=auto’  //系统告诉我们 ls 指向的是一个命令别名（alias）。<br>[root@localhost ~]# which ls //使用 which 指令查看 ls 的完整路径。<br>alias ls=’ls –color=auto’<br>  /bin/ls</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="获取内部命令的帮助信息"><a href="#获取内部命令的帮助信息" class="headerlink" title="获取内部命令的帮助信息"></a>获取内部命令的帮助信息</h3><p>使用格式：<code># help command</code></p>
+<blockquote>
+<p>[root@localhost ~]# help cd<br>cd: cd [-L|-P] [dir]<br>    Change the shell working directory.</p>
+<p>   Change the current directory to DIR.  The default DIR is the value of the<br>    HOME shell variable.</p>
+<p>   The variable CDPATH defines the search path for the directory containing<br>    DIR.  Alternative directory names in CDPATH are separated by a colon (:).<br>    A null directory name is the same as the current directory.  If DIR begins<br>    with a slash (/), then CDPATH is not used.</p>
+<p>   If the directory is not found, and the shell option `cdable_vars’ is set,<br>    the word is assumed to be  a variable name.  If that variable has a value,<br>    its value is used for DIR.</p>
+<p>   Options:<br>        -L    force symbolic links to be followed<br>        -P    use the physical directory structure without following symbolic<br>        links</p>
+<p>   The default is to follow symbolic links, as if `-L’ were specified.</p>
+<p>   Exit Status:<br>   Returns 0 if the directory is changed; non-zero otherwise.</p>
+</blockquote>
+<h3 id="获取外部命令的帮助信息"><a href="#获取外部命令的帮助信息" class="headerlink" title="获取外部命令的帮助信息"></a>获取外部命令的帮助信息</h3><ul>
+<li>–help<br>使用格式： <code># command --help</code><blockquote>
+<p>[root@localhost ~]# date –help<br>Usage: date [OPTION]… [+FORMAT]<br>or:  date [-u|–utc|–universal]<br>[MMDDhhmm[[CC]YY][.ss]]<br>Display the current time in the given FORMAT, or set the  system date.<br>…略…</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>man</li>
+</ul>
+<p>man 命令来自英文单词 manual 的简写。</p>
+<p>man 常用的两个选项<br><code># man [-f] [-k] keyword</code><br>-f：在系统中搜索与 keyword 完全匹配的文档。<br>-k：在系统中搜索所有与 keyword 相关的文档。<br>使用 <code>whatis</code> 效果相当于 man -f<br>在搜索出来的相关文档中关键字后面都会带有一个数字，这些数字都是有含义的。</p>
+<blockquote>
+<p>[root@localhost ~]# man -f passwd<br>passwd               (1)  - update user’s authentication tokens<br>passwd               (5)  - password file<br>passwd [sslpasswd]   (1ssl)  - compute password hashes</p>
+</blockquote>
+<h4 id="man-文档代号说明"><a href="#man-文档代号说明" class="headerlink" title="man 文档代号说明"></a>man 文档代号说明</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">代号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td>可执行程序或 shell 命令。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td>系统调用（由内核提供的函数）</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td>库调用（程序库中的函数）</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td>特殊文件（通常在 /dev 中）</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td>文件格式和约定，如 /etc/passwd</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td>游戏。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td>杂项（包括宏包和约定）</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td>系统管理命令（通常只用于 root ）</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td>内核相关的文件。</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>如上例，如果我们是要查看与密码文件格式相关的文档那么我们应该用代号 5。</p>
+<blockquote>
+<p>[root@localhost ~]# man 5 passwd  </p>
+</blockquote>
+<h4 id="man-文档中各段落说明"><a href="#man-文档中各段落说明" class="headerlink" title="man 文档中各段落说明"></a>man 文档中各段落说明</h4><table>
+<thead>
+<tr>
+<th style="text-align:left">段落名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">NAME</td>
+<td>简短的指令、及说明。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">SYNOPSIS</td>
+<td>简短的指令下达语法简介。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">DESCRIPTION</td>
+<td>较为完整的说明。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">OPTIONS</td>
+<td>相关举例说明</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">COMMANDS</td>
+<td>当这个指令在执行的时候可以在此程序中下达的指令。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">FILES</td>
+<td>相关链接或文件。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">SEE ALSO</td>
+<td>相关的其他说明。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">EXAMPLE</td>
+<td>一些可以参考的范例</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/07/16/20170616/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/07/20/hello-world/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/07/17/Linux-获取帮助/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
