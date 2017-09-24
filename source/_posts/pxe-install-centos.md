@@ -5,9 +5,6 @@ category: Linux
 tags:
 	- 自动化安装操作系统
 ---
-
-
-
 **环境**
 
 * 服务端使用 CentOS 7.3
@@ -342,6 +339,8 @@ active
 ![客户端成功读取到菜单文件](http://ot6jjpn4h.bkt.clouddn.com/cli2.png)
 
 
+
+######多安装源
 
 现在已经能成功安装 `CentOS 7.3` 了，再添加` CentOS 6.9 `的安装源
 
