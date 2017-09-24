@@ -25,7 +25,10 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/cobbler_cli1.png">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/cobbler_cli2.png">
-<meta property="og:updated_time" content="2017-09-24T14:09:29.000Z">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/cobbler_web1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/cobbler_web2.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/cobbler_web3.png">
+<meta property="og:updated_time" content="2017-09-24T14:57:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cobbler 基本应用">
 <meta name="twitter:description" content="Cobbler 建立在 kickstart 机制上，它使用 DHCP、TFTP、DNS、等服务来通过网络为多计算机自动化安装操作系统。 安装包：  主程序包 cobbler web 管理 cobbler-web  cobbler 服务集成  pxe 服务 DHCP rsync http dns kickstart IPMI 电源管理  配置文件  /etc/cobbler/settings cob">
@@ -286,9 +289,9 @@
 <p>安装主程序包</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># yum install -y cobbler</span></div></pre></td></tr></table></figure>
 <p>查看<code>cobbler</code>服务是否为开机自启动（<code>cobbler</code> 的服务脚本名称为 <code>cobblerd</code>）</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># chkconfig --list cobblerd</span></div><div class="line">cobblerd        0:off   1:off   2:off   3:on    4:on    5:on    6:off</div><div class="line"><span class="comment">## 如果将 cobblerd 设置为开机自启动？</span></div><div class="line">[root@Cobbler ~]<span class="comment"># chkconfig cobblerd on</span></div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># chkconfig --list cobblerd</span></div><div class="line">cobblerd        0:off   1:off   2:off   3:on    4:on    5:on    6:off</div><div class="line"><span class="comment">## 如何将 cobblerd 设置为开机自启动？</span></div><div class="line">[root@Cobbler ~]<span class="comment"># chkconfig cobblerd on</span></div></pre></td></tr></table></figure>
 <p>修改 <code>cobbler</code> 配置文件</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## 配置文件路径 /etc/cobbler/settings</span></div><div class="line"><span class="comment">## 允许 cobbler 管理 DHCP 服务</span></div><div class="line">manage_dhcp: 1</div><div class="line"><span class="comment">## 运行 cobbler 管理 rsync 服务</span></div><div class="line">manage_rsync: 1</div><div class="line"><span class="comment">## 提供 PXE 启动镜像的的 TFTP 服务器地址</span></div><div class="line">next_server: 192.168.1.200</div><div class="line"><span class="comment">## 开启 PXE 启动</span></div><div class="line">pxe_just_once: 1</div><div class="line"><span class="comment">## cobbler 服务地址</span></div><div class="line">server: 192.168.1.200</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## 配置文件路径 /etc/cobbler/settings</span></div><div class="line"><span class="comment">## 允许 cobbler 管理 DHCP 服务</span></div><div class="line">manage_dhcp: 1</div><div class="line"><span class="comment">## 允许 cobbler 管理 rsync 服务</span></div><div class="line">manage_rsync: 1</div><div class="line"><span class="comment">## 提供 PXE 启动镜像的的 TFTP 服务器地址</span></div><div class="line">next_server: 192.168.1.200</div><div class="line"><span class="comment">## 开启 PXE 启动</span></div><div class="line">pxe_just_once: 1</div><div class="line"><span class="comment">## cobbler 服务地址</span></div><div class="line">server: 192.168.1.200</div></pre></td></tr></table></figure>
 <p>配置客户端系统密码（也就是客户机在安装完系统后的 root 密码）</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## 使用 openssl 生成一个密码</span></div><div class="line">[root@Cobbler ~]<span class="comment"># openssl passwd -1</span></div><div class="line">Password: </div><div class="line">Verifying - Password: </div><div class="line"><span class="variable">$1</span><span class="variable">$VPwt6vsK</span><span class="variable">$Z7uHjzFul98wT</span>/vsyls3u1</div><div class="line"><span class="comment">## 将配置文件中的默认密码改为自己的密码</span></div><div class="line">default_password_crypted: <span class="string">"<span class="variable">$1</span><span class="variable">$VPwt6vsK</span><span class="variable">$Z7uHjzFul98wT</span>/vsyls3u1"</span></div></pre></td></tr></table></figure>
 <p>启动 <code>cobbler</code> 服务</p>
@@ -342,6 +345,31 @@
 <p>客户端测试</p>
 <p><img src="http://ov2iiuul1.bkt.clouddn.com/cobbler_cli1.png" alt="客户端读取菜单列表成功"></p>
 <p><img src="http://ov2iiuul1.bkt.clouddn.com/cobbler_cli2.png" alt="开始安装"></p>
+<p><strong>使用 WEB 管理界面</strong></p>
+<p>安装程序包(<code>这个包来自 epel 源，所以安装之前你需要配置 epel 源</code>)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># yum install -y cobbler-web</span></div></pre></td></tr></table></figure>
+<p>重启 <code>httpd</code> 服务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># service httpd restart</span></div></pre></td></tr></table></figure>
+<p>通过浏览器访问 (<a href="http://cobbler_server_ip/cobbler_web/)默认用户名密码为" target="_blank" rel="external">http://cobbler_server_ip/cobbler_web/)默认用户名密码为</a> “cobbler”</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/cobbler_web1.png" alt="通过浏览器访问 cobbler"></p>
+<p>使用 <code>htdigest</code> 命令添加用户</p>
+<p><code>cobbler</code> 用户与密码都存在 <code>/etc/cobbler/users.digest</code> 这个文件中，如果你需要删除某个用户直接在这个文件中删除即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># htdigest /etc/cobbler/users.digest Cobbler testuser</span></div><div class="line">Adding user testuser <span class="keyword">in</span> realm Cobbler</div><div class="line">New password: </div><div class="line">Re-type new password: </div><div class="line">[root@Cobbler ~]<span class="comment"># cat /etc/cobbler/users.digest </span></div><div class="line">cobbler:Cobbler:a2d6bae81669d707b72c0bd9806e01f3</div><div class="line">testuser:Cobbler:dda9ed9c10bd11914d650e5842d77df4</div></pre></td></tr></table></figure>
+<p>测试登录</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/cobbler_web2.png" alt="测试登录用户"></p>
+<p><code>cobbler</code> 还支持通过 <code>authn_pam</code> 模块来验证用户</p>
+<p>修改模块配置文件<code>/etc/cobbler/modules.conf</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## module 的值更改为 authn_pam</span></div><div class="line">module = authn_pam</div></pre></td></tr></table></figure>
+<p>添加用户(<code>为了安全请将用户设置为禁止登录操作系统</code>)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># useradd -r pamuser -s /sbin/nologin</span></div><div class="line">[root@Cobbler ~]<span class="comment"># echo 123 | passwd --stdin pamuser</span></div><div class="line">Changing password <span class="keyword">for</span> user pamuser.</div><div class="line">passwd: all authentication tokens updated successfully.</div></pre></td></tr></table></figure>
+<p>修改用户配置文件<code>/etc/cobbler/users.conf</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## 在 admin 后输入用户名，多个用户用英文的“,”分隔</span></div><div class="line">[admins]</div><div class="line">admin = <span class="string">"pamuser,test"</span></div></pre></td></tr></table></figure>
+<p>重启 <code>cobbler</code>服务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># service cobblerd restart</span></div></pre></td></tr></table></figure>
+<p>测试登录</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/cobbler_web3.png" alt="测试登录用户"></p>
+<p><strong>更多使用方法请访问官方文档<a href="http://cobbler.github.io/manuals/" target="_blank" rel="external">http://cobbler.github.io/manuals/</a></strong> 可能有墙 (&gt;_&lt;)</p>
+<p>END!</p>
 
     
   </div>
