@@ -97,7 +97,7 @@ cobbler 服务集成
 ```sh
 [root@Cobbler ~]# chkconfig --list cobblerd
 cobblerd        0:off   1:off   2:off   3:on    4:on    5:on    6:off
-## 如果将 cobblerd 设置为开机自启动？
+## 如何将 cobblerd 设置为开机自启动？
 [root@Cobbler ~]# chkconfig cobblerd on
 ```
 
@@ -107,7 +107,7 @@ cobblerd        0:off   1:off   2:off   3:on    4:on    5:on    6:off
 ## 配置文件路径 /etc/cobbler/settings
 ## 允许 cobbler 管理 DHCP 服务
 manage_dhcp: 1
-## 运行 cobbler 管理 rsync 服务
+## 允许 cobbler 管理 rsync 服务
 manage_rsync: 1
 ## 提供 PXE 启动镜像的的 TFTP 服务器地址
 next_server: 192.168.1.200
@@ -526,3 +526,84 @@ cobbler profile edit --name=CentOS-6.9-x86_64 --kickstart=/var/lib/cobbler/kicks
 
 
 
+**使用 WEB 管理界面**
+
+安装程序包(`这个包来自 epel 源，所以安装之前你需要配置 epel 源`)
+
+```sh
+[root@Cobbler ~]# yum install -y cobbler-web
+```
+
+重启 `httpd` 服务
+
+```sh
+[root@Cobbler ~]# service httpd restart
+```
+
+通过浏览器访问 (http://cobbler_server_ip/cobbler_web/)默认用户名密码为 "cobbler"
+
+![通过浏览器访问 cobbler](http://ov2iiuul1.bkt.clouddn.com/cobbler_web1.png)
+
+
+
+使用 `htdigest` 命令添加用户
+
+`cobbler` 用户与密码都存在 `/etc/cobbler/users.digest` 这个文件中，如果你需要删除某个用户直接在这个文件中删除即可
+
+```sh
+[root@Cobbler ~]# htdigest /etc/cobbler/users.digest Cobbler testuser
+Adding user testuser in realm Cobbler
+New password: 
+Re-type new password: 
+[root@Cobbler ~]# cat /etc/cobbler/users.digest 
+cobbler:Cobbler:a2d6bae81669d707b72c0bd9806e01f3
+testuser:Cobbler:dda9ed9c10bd11914d650e5842d77df4
+```
+
+测试登录
+
+![测试登录用户](http://ov2iiuul1.bkt.clouddn.com/cobbler_web2.png)
+
+
+
+`cobbler` 还支持通过 `authn_pam` 模块来验证用户
+
+修改模块配置文件`/etc/cobbler/modules.conf`
+
+```sh
+## module 的值更改为 authn_pam
+module = authn_pam
+```
+
+添加用户(`为了安全请将用户设置为禁止登录操作系统`)
+
+```sh
+[root@Cobbler ~]# useradd -r pamuser -s /sbin/nologin
+[root@Cobbler ~]# echo 123 | passwd --stdin pamuser
+Changing password for user pamuser.
+passwd: all authentication tokens updated successfully.
+```
+
+修改用户配置文件`/etc/cobbler/users.conf `
+
+```sh
+## 在 admin 后输入用户名，多个用户用英文的“,”分隔
+[admins]
+admin = "pamuser,test"
+```
+
+重启 `cobbler`服务
+
+```sh
+[root@Cobbler ~]# service cobblerd restart
+```
+
+测试登录
+
+![测试登录用户](http://ov2iiuul1.bkt.clouddn.com/cobbler_web3.png)
+
+
+
+**更多使用方法请访问官方文档http://cobbler.github.io/manuals/** 可能有墙 (>_<)
+
+END!
