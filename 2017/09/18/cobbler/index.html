@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Cobbler 基本应用 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="cobbler,自动化安装系统," />
+  
+
+  <meta name="description" content="Cobbler 建立在 kickstart 机制上，它使用 DHCP、TFTP、DNS、等服务来通过网络为多计算机自动化安装操作系统。 安装包：  主程序包 cobbler web 管理 cobbler-web  cobbler 服务集成  pxe 服务 DHCP rsync http dns kickstart IPMI 电源管理  配置文件  /etc/cobbler/settings cob">
+<meta name="keywords" content="cobbler,自动化安装系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cobbler 基本应用">
+<meta property="og:url" content="http://www.weidong.io/2017/09/18/cobbler/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="Cobbler 建立在 kickstart 机制上，它使用 DHCP、TFTP、DNS、等服务来通过网络为多计算机自动化安装操作系统。 安装包：  主程序包 cobbler web 管理 cobbler-web  cobbler 服务集成  pxe 服务 DHCP rsync http dns kickstart IPMI 电源管理  配置文件  /etc/cobbler/settings cob">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/cobbler_cli1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/cobbler_cli2.png">
+<meta property="og:updated_time" content="2017-09-24T14:09:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cobbler 基本应用">
+<meta name="twitter:description" content="Cobbler 建立在 kickstart 机制上，它使用 DHCP、TFTP、DNS、等服务来通过网络为多计算机自动化安装操作系统。 安装包：  主程序包 cobbler web 管理 cobbler-web  cobbler 服务集成  pxe 服务 DHCP rsync http dns kickstart IPMI 电源管理  配置文件  /etc/cobbler/settings cob">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/cobbler_cli1.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-cobbler" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Cobbler 基本应用</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.09.18</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/09/18/cobbler/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>Cobbler 建立在 kickstart 机制上，它使用 DHCP、TFTP、DNS、等服务来通过网络为多计算机自动化安装操作系统。</p>
+<p>安装包：</p>
+<ul>
+<li>主程序包 cobbler</li>
+<li>web 管理 cobbler-web</li>
+</ul>
+<p>cobbler 服务集成</p>
+<ul>
+<li>pxe 服务</li>
+<li>DHCP</li>
+<li>rsync</li>
+<li>http</li>
+<li>dns</li>
+<li>kickstart</li>
+<li>IPMI 电源管理</li>
+</ul>
+<p>配置文件</p>
+<ul>
+<li><code>/etc/cobbler/settings</code> cobbler 主配置文件</li>
+<li><code>/etc/cobbler/iso/</code> iso 模板配置文件</li>
+<li><code>/etc/coobler/pxe/</code> pxe 模板配置文件</li>
+<li><code>/etc/cobbler/power/</code> 电源管理模板配置文件</li>
+<li><code>/etc/cobbler/user.conf</code> web 服务授权配置文件</li>
+<li><code>/etc/cobbler/user.digest</code> web 访问用户密码配置文件</li>
+<li><code>/etc/cobbler/dhcp.template</code> dhcp 服务模板配置文件</li>
+<li><code>/etc/cobbler/dnsmasq.template</code> dns 服务模板配置文件</li>
+<li><code>/etc/coobler/tftp.template</code> tftp 服务模板配置文件 </li>
+<li><code>/etc/cobbler/modules.conf</code> 模块配置文件 </li>
+</ul>
+<p>数据目录</p>
+<ul>
+<li><code>/var/lib/cobbler/config/</code> 存放 distros、system、profiles 等信息配置文件</li>
+<li><code>/var/lib/cobbler/triggers/</code> 存放用户定义的 cobbler 命令</li>
+<li><code>/var/lib/cobbler/kickstart/</code> 存放默认 kickstart 文件</li>
+</ul>
+<p>镜像目录</p>
+<ul>
+<li><code>/var/www/cobbler/ks_mirror/</code> 导入的发行版系统的所有数据</li>
+<li><code>/var/www/cobbler/images/</code> 导入的发行版的 kernel 和 initrd 文件用户网络启动</li>
+<li><code>/var/www/cobbler/repo_mirror/</code> yum 仓库存储目录</li>
+</ul>
+<p>日志目录</p>
+<ul>
+<li><code>/var/log/cobbler/installing.log</code> 客户端安装日志</li>
+<li><code>/var/log/cobbler/cobbler.log</code> cobbler 日志</li>
+</ul>
+<blockquote>
+<p><strong>cobbler 命令</strong></p>
+</blockquote>
+<p><code>cobbler check</code> 检测当前设置是否存在问题</p>
+<p><code>cobbler list</code> 列出所有 <code>cobbler</code> 元素</p>
+<p><code>cobbler report</code> 列出元素的详细信息</p>
+<p><code>cobbler sync</code> 同步配置到数据目录</p>
+<p><code>cobbler reposync</code> 同步 <code>yum</code> 仓库</p>
+<p><code>cobbler distro</code> 查看导入的发行版系统信息</p>
+<p><code>cobbler system</code> 查看添加的系统信息</p>
+<p><code>cobbler profile</code> 查看配置信息</p>
+<p><strong><code>安装前请关闭 SELinux</code></strong></p>
+<p>安装主程序包</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># yum install -y cobbler</span></div></pre></td></tr></table></figure>
+<p>查看<code>cobbler</code>服务是否为开机自启动（<code>cobbler</code> 的服务脚本名称为 <code>cobblerd</code>）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># chkconfig --list cobblerd</span></div><div class="line">cobblerd        0:off   1:off   2:off   3:on    4:on    5:on    6:off</div><div class="line"><span class="comment">## 如果将 cobblerd 设置为开机自启动？</span></div><div class="line">[root@Cobbler ~]<span class="comment"># chkconfig cobblerd on</span></div></pre></td></tr></table></figure>
+<p>修改 <code>cobbler</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## 配置文件路径 /etc/cobbler/settings</span></div><div class="line"><span class="comment">## 允许 cobbler 管理 DHCP 服务</span></div><div class="line">manage_dhcp: 1</div><div class="line"><span class="comment">## 运行 cobbler 管理 rsync 服务</span></div><div class="line">manage_rsync: 1</div><div class="line"><span class="comment">## 提供 PXE 启动镜像的的 TFTP 服务器地址</span></div><div class="line">next_server: 192.168.1.200</div><div class="line"><span class="comment">## 开启 PXE 启动</span></div><div class="line">pxe_just_once: 1</div><div class="line"><span class="comment">## cobbler 服务地址</span></div><div class="line">server: 192.168.1.200</div></pre></td></tr></table></figure>
+<p>配置客户端系统密码（也就是客户机在安装完系统后的 root 密码）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## 使用 openssl 生成一个密码</span></div><div class="line">[root@Cobbler ~]<span class="comment"># openssl passwd -1</span></div><div class="line">Password: </div><div class="line">Verifying - Password: </div><div class="line"><span class="variable">$1</span><span class="variable">$VPwt6vsK</span><span class="variable">$Z7uHjzFul98wT</span>/vsyls3u1</div><div class="line"><span class="comment">## 将配置文件中的默认密码改为自己的密码</span></div><div class="line">default_password_crypted: <span class="string">"<span class="variable">$1</span><span class="variable">$VPwt6vsK</span><span class="variable">$Z7uHjzFul98wT</span>/vsyls3u1"</span></div></pre></td></tr></table></figure>
+<p>启动 <code>cobbler</code> 服务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># service cobblerd start</span></div></pre></td></tr></table></figure>
+<p>检测配置是否有问题</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># cobbler check         </span></div><div class="line">httpd does not appear to be running and proxying cobbler, or SELinux is <span class="keyword">in</span> the way. Original traceback:</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"/usr/lib/python2.6/site-packages/cobbler/cli.py"</span>, line 252, <span class="keyword">in</span> check_setup</div><div class="line">    s.ping()</div><div class="line">  File <span class="string">"/usr/lib64/python2.6/xmlrpclib.py"</span>, line 1199, <span class="keyword">in</span> __call__</div><div class="line">    <span class="built_in">return</span> self.__send(self.__name, args)</div><div class="line">  File <span class="string">"/usr/lib64/python2.6/xmlrpclib.py"</span>, line 1489, <span class="keyword">in</span> __request</div><div class="line">    verbose=self.__verbose</div><div class="line">  File <span class="string">"/usr/lib64/python2.6/xmlrpclib.py"</span>, line 1235, <span class="keyword">in</span> request</div><div class="line">    self.send_content(h, request_body)</div><div class="line">  File <span class="string">"/usr/lib64/python2.6/xmlrpclib.py"</span>, line 1349, <span class="keyword">in</span> send_content</div><div class="line">    connection.endheaders()</div><div class="line">  File <span class="string">"/usr/lib64/python2.6/httplib.py"</span>, line 967, <span class="keyword">in</span> endheaders</div><div class="line">    self._send_output()</div><div class="line">  File <span class="string">"/usr/lib64/python2.6/httplib.py"</span>, line 831, <span class="keyword">in</span> _send_output</div><div class="line">    self.send(msg)</div><div class="line">  File <span class="string">"/usr/lib64/python2.6/httplib.py"</span>, line 790, <span class="keyword">in</span> send</div><div class="line">    self.connect()</div><div class="line">  File <span class="string">"/usr/lib64/python2.6/httplib.py"</span>, line 771, <span class="keyword">in</span> connect</div><div class="line">    self.timeout)</div><div class="line">  File <span class="string">"/usr/lib64/python2.6/socket.py"</span>, line 567, <span class="keyword">in</span> create_connection</div><div class="line">    raise error, msg</div><div class="line">error: [Errno 111] Connection refused</div></pre></td></tr></table></figure>
+<p>上面报了一堆吓人的错误，这是因为 <code>httpd</code> 服务没有启动</p>
+<p>因为使用 <code>yum</code> 方式安装 <code>cobbler</code> 系统会自动安装 <code>httpd</code>服务，所有现在只需要启动它即可</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># service httpd start</span></div><div class="line"><span class="comment">## 将 httpd 服务设置为开机自启动</span></div><div class="line">[root@Cobbler ~]<span class="comment"># chkconfig --list httpd</span></div><div class="line">httpd           0:off   1:off   2:off   3:off   4:off   5:off   6:off</div><div class="line">[root@Cobbler ~]<span class="comment"># chkconfig httpd on</span></div></pre></td></tr></table></figure>
+<p>再次检测配置问题</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># cobbler check</span></div><div class="line">The following are potential configuration items that you may want to fix:</div><div class="line"></div><div class="line">1 : dhcpd is not installed</div><div class="line">2 : change <span class="string">'disable'</span> to <span class="string">'no'</span> <span class="keyword">in</span> /etc/xinetd.d/tftp</div><div class="line">3 : some network boot-loaders are missing from /var/lib/cobbler/loaders, you may run <span class="string">'cobbler get-loaders'</span> to download them, or, <span class="keyword">if</span> you only want to handle x86/x86_64 netbooting, you may ensure that you have installed a *recent* version of the syslinux package installed and can ignore this message entirely.  Files <span class="keyword">in</span> this directory, should you want to support all architectures, should include pxelinux.0, menu.c32, elilo.efi, and yaboot. The <span class="string">'cobbler get-loaders'</span> <span class="built_in">command</span> is the easiest way to resolve these requirements.</div><div class="line">4 : change <span class="string">'disable'</span> to <span class="string">'no'</span> <span class="keyword">in</span> /etc/xinetd.d/rsync</div><div class="line">5 : file /etc/xinetd.d/rsync does not exist</div><div class="line">6 : debmirror package is not installed, it will be required to manage debian deployments and repositories</div><div class="line">7 : ksvalidator was not found, install pykickstart</div><div class="line">8 : fencing tools were not found, and are required to use the (optional) power management features. install cman or fence-agents to use them</div><div class="line"></div><div class="line">Restart cobblerd and <span class="keyword">then</span> run <span class="string">'cobbler sync'</span> to apply changes.</div></pre></td></tr></table></figure>
+<p><strong>系统提示有 8 个问题</strong></p>
+<p><strong>问题1:</strong> <code>dhcp</code> 服务没有安装，安装 <code>dhcp</code> 程序包</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># yum install -y dhcp</span></div><div class="line"><span class="comment">## 安装完后 dhcp 还不能启动，因为还没有配置文件</span></div></pre></td></tr></table></figure>
+<p>同步设置</p>
+<p>同步设置后 <code>cobbler</code> 会根据自己的 <code>dhcp</code> 模板配置文件来修改 <code>dhcp</code> 配置文件<br>如果需要修改 <code>dhcp</code> 配置选项可以修改 <code>dhcp</code> 模板后再同步</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># cobbler sync</span></div></pre></td></tr></table></figure>
+<p>启动 <code>DHCP</code> 服务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># service dhcpd start</span></div></pre></td></tr></table></figure>
+<p><strong>问题2：</strong>修改 <code>xinetd</code> 配置文件将 <code>tftp</code> 的禁用选项设置为 no</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># default: off</span></div><div class="line"><span class="comment"># description: The tftp server serves files using the trivial file transfer \</span></div><div class="line"><span class="comment">#       protocol.  The tftp protocol is often used to boot diskless \</span></div><div class="line"><span class="comment">#       workstations, download configuration files to network-aware printers, \</span></div><div class="line"><span class="comment">#       and to start the installation process for some operating systems.</span></div><div class="line">service tftp</div><div class="line">&#123;</div><div class="line">        <span class="built_in">disable</span>                 = no</div><div class="line">        socket_type             = dgram</div><div class="line">        protocol                = udp</div><div class="line">        <span class="built_in">wait</span>                    = yes</div><div class="line">        user                    = root</div><div class="line">        server                  = /usr/sbin/in.tftpd</div><div class="line">        server_args             = -B 1380 -v -s /var/lib/tftpboot</div><div class="line">        per_source              = 11</div><div class="line">        cps                     = 100 2</div><div class="line">        flags                   = IPv4</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>问题3：</strong>缺少启动文件，系统提示可以运行 <code>cobbler get-loaders</code> 下载这些文件，也可以通过安装 <code>syslinux</code> 包获取这些文件，在安装 <code>cobbler</code> 的时候系统也会自动安装这个包（<code>如果是 CentOS 6 包名为 syslinux-nonlinux</code>）</p>
+<p>如果你无法通过网络下载这些文件可以查询 syslinux(CentOS 6 为 syslinux-nonlinux)包列出这些文件的路径，然后将pxelinux.0 和 menu.c32 拷贝到 /var/lib/cobbler/loaders 目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler loaders]<span class="comment"># rpm -ql syslinux-nonlinux | grep 'pxelinux.0\|menu.c32'</span></div><div class="line">/usr/share/syslinux/gpxelinux.0</div><div class="line">/usr/share/syslinux/menu.c32</div><div class="line">/usr/share/syslinux/pxelinux.0</div><div class="line">/usr/share/syslinux/vesamenu.c32</div></pre></td></tr></table></figure>
+<p>通过网络下载启动文件(下载的时候可能会出现失败的情况，多试几次也许会成功)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># cobbler get-loaders</span></div><div class="line">task started: 2017-09-24_093837_get_loaders</div><div class="line">task started (id=Download Bootloader Content, time=Sun Sep 24 09:38:37 2017)</div><div class="line">path /var/lib/cobbler/loaders/README already exists, not overwriting existing content, use --force <span class="keyword">if</span> you wish to update</div><div class="line">downloading http://cobbler.github.io/loaders/COPYING.elilo to /var/lib/cobbler/loaders/COPYING.elilo</div><div class="line">downloading http://cobbler.github.io/loaders/COPYING.yaboot to /var/lib/cobbler/loaders/COPYING.yaboot</div><div class="line">downloading http://cobbler.github.io/loaders/COPYING.syslinux to /var/lib/cobbler/loaders/COPYING.syslinux</div><div class="line">downloading http://cobbler.github.io/loaders/elilo-3.8-ia64.efi to /var/lib/cobbler/loaders/elilo-ia64.efi</div><div class="line">downloading http://cobbler.github.io/loaders/yaboot-1.3.17 to /var/lib/cobbler/loaders/yaboot</div><div class="line">downloading http://cobbler.github.io/loaders/pxelinux.0-3.86 to /var/lib/cobbler/loaders/pxelinux.0</div><div class="line">downloading http://cobbler.github.io/loaders/menu.c32-3.86 to /var/lib/cobbler/loaders/menu.c32</div><div class="line">downloading http://cobbler.github.io/loaders/grub-0.97-x86.efi to /var/lib/cobbler/loaders/grub-x86.efi</div><div class="line">downloading http://cobbler.github.io/loaders/grub-0.97-x86_64.efi to /var/lib/cobbler/loaders/grub-x86_64.efi</div><div class="line">*** TASK COMPLETE ***</div></pre></td></tr></table></figure>
+<p><strong>问题4：</strong>修改 <code>xinetd</code> 配置文件将 <code>rsync</code> 的禁用选项设置为 no</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># vim /etc/xinetd.d/rsync </span></div><div class="line"><span class="comment"># default: off</span></div><div class="line"><span class="comment"># description: The rsync server is a good addition to an ftp server, as it \</span></div><div class="line"><span class="comment">#       allows crc checksumming etc.</span></div><div class="line">service rsync</div><div class="line">&#123;</div><div class="line">        <span class="built_in">disable</span> = no</div><div class="line">        flags           = IPv6</div><div class="line">        socket_type     = stream</div><div class="line">        <span class="built_in">wait</span>            = no</div><div class="line">        user            = root</div><div class="line">        server          = /usr/bin/rsync</div><div class="line">        server_args     = --daemon</div><div class="line">        log_on_failure  += USERID</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再次同步并检测问题</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># cobbler sync</span></div><div class="line">task started: 2017-09-24_101208_sync</div><div class="line">task started (id=Sync, time=Sun Sep 24 10:12:08 2017)</div><div class="line">running pre-sync triggers</div><div class="line">cleaning trees</div><div class="line">removing: /var/lib/tftpboot/pxelinux.cfg/default</div><div class="line">removing: /var/lib/tftpboot/grub/grub-x86_64.efi</div><div class="line">removing: /var/lib/tftpboot/grub/images</div><div class="line">removing: /var/lib/tftpboot/grub/efidefault</div><div class="line">removing: /var/lib/tftpboot/grub/grub-x86.efi</div><div class="line">removing: /var/lib/tftpboot/s390x/profile_list</div><div class="line">copying bootloaders</div><div class="line">trying hardlink /var/lib/cobbler/loaders/pxelinux.0 -&gt; /var/lib/tftpboot/pxelinux.0</div><div class="line">copying: /var/lib/cobbler/loaders/pxelinux.0 -&gt; /var/lib/tftpboot/pxelinux.0</div><div class="line">trying hardlink /var/lib/cobbler/loaders/menu.c32 -&gt; /var/lib/tftpboot/menu.c32</div><div class="line">copying: /var/lib/cobbler/loaders/menu.c32 -&gt; /var/lib/tftpboot/menu.c32</div><div class="line">trying hardlink /var/lib/cobbler/loaders/grub-x86_64.efi -&gt; /var/lib/tftpboot/grub/grub-x86_64.efi</div><div class="line">trying hardlink /var/lib/cobbler/loaders/grub-x86.efi -&gt; /var/lib/tftpboot/grub/grub-x86.efi</div><div class="line">copying distros to tftpboot</div><div class="line">copying images</div><div class="line">generating PXE configuration files</div><div class="line">generating PXE menu structure</div><div class="line">rendering DHCP files</div><div class="line">generating /etc/dhcp/dhcpd.conf</div><div class="line">rendering TFTPD files</div><div class="line">generating /etc/xinetd.d/tftp</div><div class="line">cleaning link caches</div><div class="line">rendering Rsync files</div><div class="line">running post-sync triggers</div><div class="line">running python triggers from /var/lib/cobbler/triggers/sync/post/*</div><div class="line">running python trigger cobbler.modules.sync_post_restart_services</div><div class="line">running: dhcpd -t -q</div><div class="line">received on stdout: </div><div class="line">received on stderr: </div><div class="line">running: service dhcpd restart</div><div class="line">received on stdout: Shutting down dhcpd: [  OK  ]</div><div class="line">Starting dhcpd: [  OK  ]</div><div class="line"></div><div class="line">received on stderr: </div><div class="line">running shell triggers from /var/lib/cobbler/triggers/sync/post/*</div><div class="line">running python triggers from /var/lib/cobbler/triggers/change/*</div><div class="line">running python trigger cobbler.modules.scm_track</div><div class="line">running shell triggers from /var/lib/cobbler/triggers/change/*</div><div class="line">*** TASK COMPLETE ***</div><div class="line">[root@Cobbler ~]<span class="comment"># cobbler check</span></div><div class="line">The following are potential configuration items that you may want to fix:</div><div class="line"></div><div class="line">1 : file /etc/xinetd.d/rsync does not exist</div><div class="line">2 : debmirror package is not installed, it will be required to manage debian deployments and repositories</div><div class="line">3 : ksvalidator was not found, install pykickstart</div><div class="line">4 : fencing tools were not found, and are required to use the (optional) power management features. install cman or fence-agents to use them</div><div class="line"></div><div class="line">Restart cobblerd and <span class="keyword">then</span> run <span class="string">'cobbler sync'</span> to apply changes.</div></pre></td></tr></table></figure>
+<ul>
+<li>问题1 这个文件是存在的但系统还是提示不存在，所以不用管它</li>
+<li>问题2 如果你不使用 <code>debian</code> 系列的系统可以不用管</li>
+<li>问题3 <code>pykickstart</code> 这是一个用来编写和阅读 <code>kickstart</code> 文件的程序，不需要的话可以不管</li>
+<li>问题4 电源管理工具，用不着可以不管</li>
+</ul>
+<p>挂载系统镜像并导入镜像</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># mount /dev/sr0 /mnt/</span></div><div class="line">mount: block device /dev/sr0 is write-protected, mounting <span class="built_in">read</span>-only</div><div class="line"><span class="comment">## import 表示导入镜像</span></div><div class="line"><span class="comment">## --name 为导入的系统设置名称</span></div><div class="line"><span class="comment">## --path 需要导入的镜像路径</span></div><div class="line"><span class="comment">## --arch 导入的系统架构</span></div><div class="line">[root@Cobbler ~]<span class="comment"># cobbler import --name=CentOS-6.9 --path=/mnt/ --arch=x86_64</span></div><div class="line">task started: 2017-09-24_101802_import</div><div class="line">task started (id=Media import, time=Sun Sep 24 10:18:02 2017)</div><div class="line">Found a candidate signature: breed=redhat, version=rhel6</div><div class="line">Found a matching signature: breed=redhat, version=rhel6</div><div class="line">Adding distros from path /var/www/cobbler/ks_mirror/CentOS-6.9-x86_64:</div><div class="line">creating new distro: CentOS-6.9-x86_64</div><div class="line">trying symlink: /var/www/cobbler/ks_mirror/CentOS-6.9-x86_64 -&gt; /var/www/cobbler/links/CentOS-6.9-x86_64</div><div class="line">creating new profile: CentOS-6.9-x86_64</div><div class="line">associating repos</div><div class="line">checking <span class="keyword">for</span> rsync repo(s)</div><div class="line">checking <span class="keyword">for</span> rhn repo(s)</div><div class="line">checking <span class="keyword">for</span> yum repo(s)</div><div class="line">starting descent into /var/www/cobbler/ks_mirror/CentOS-6.9-x86_64 <span class="keyword">for</span> CentOS-6.9-x86_64</div><div class="line">processing repo at : /var/www/cobbler/ks_mirror/CentOS-6.9-x86_64</div><div class="line">need to process repo/comps: /var/www/cobbler/ks_mirror/CentOS-6.9-x86_64</div><div class="line">looking <span class="keyword">for</span> /var/www/cobbler/ks_mirror/CentOS-6.9-x86_64/repodata/*comps*.xml</div><div class="line">Keeping repodata as-is :/var/www/cobbler/ks_mirror/CentOS-6.9-x86_64/repodata</div><div class="line">*** TASK COMPLETE ***</div></pre></td></tr></table></figure>
+<p>列出已导入的发行版</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># cobbler distro list</span></div><div class="line">   CentOS-6.9-x86_64</div></pre></td></tr></table></figure>
+<p>查看发行版详细报告</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># cobbler distro report --name=CentOS-6.9-x86_64</span></div><div class="line">Name                           : CentOS-6.9-x86_64</div><div class="line">Architecture                   : x86_64</div><div class="line">TFTP Boot Files                : &#123;&#125;</div><div class="line">Breed                          : redhat</div><div class="line">Comment                        : </div><div class="line">Fetchable Files                : &#123;&#125;</div><div class="line">Initrd                         : /var/www/cobbler/ks_mirror/CentOS-6.9-x86_64/images/pxeboot/initrd.img</div><div class="line">Kernel                         : /var/www/cobbler/ks_mirror/CentOS-6.9-x86_64/images/pxeboot/vmlinuz</div><div class="line">Kernel Options                 : &#123;&#125;</div><div class="line">Kernel Options (Post Install)  : &#123;&#125;</div><div class="line">Kickstart Metadata             : &#123;<span class="string">'tree'</span>: <span class="string">'http://@@http_server@@/cblr/links/CentOS-6.9-x86_64'</span>&#125;</div><div class="line">Management Classes             : []</div><div class="line">OS Version                     : rhel6</div><div class="line">Owners                         : [<span class="string">'admin'</span>]</div><div class="line">Red Hat Management Key         : &lt;&lt;inherit&gt;&gt;</div><div class="line">Red Hat Management Server      : &lt;&lt;inherit&gt;&gt;</div><div class="line">Template Files                 : &#123;&#125;</div></pre></td></tr></table></figure>
+<p>列出已存在的配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># cobbler profile list</span></div><div class="line">   CentOS-6.9-x86_64</div></pre></td></tr></table></figure>
+<p>查看配置文件详细信息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># cobbler profile report --name=CentOS-6.9-x86_64</span></div><div class="line">Name                           : CentOS-6.9-x86_64</div><div class="line">TFTP Boot Files                : &#123;&#125;</div><div class="line">Comment                        : </div><div class="line">DHCP Tag                       : default</div><div class="line">Distribution                   : CentOS-6.9-x86_64</div><div class="line">Enable gPXE?                   : 0</div><div class="line">Enable PXE Menu?               : 1</div><div class="line">Fetchable Files                : &#123;&#125;</div><div class="line">Kernel Options                 : &#123;&#125;</div><div class="line">Kernel Options (Post Install)  : &#123;&#125;</div><div class="line">Kickstart                      : /var/lib/cobbler/kickstarts/sample_end.ks</div><div class="line">Kickstart Metadata             : &#123;&#125;</div><div class="line">Management Classes             : []</div><div class="line">Management Parameters          : &lt;&lt;inherit&gt;&gt;</div><div class="line">Name Servers                   : [<span class="string">'cobbler_server'</span>]</div><div class="line">Name Servers Search Path       : []</div><div class="line">Owners                         : [<span class="string">'admin'</span>]</div><div class="line">Parent Profile                 : </div><div class="line">Internal proxy                 : </div><div class="line">Red Hat Management Key         : &lt;&lt;inherit&gt;&gt;</div><div class="line">Red Hat Management Server      : &lt;&lt;inherit&gt;&gt;</div><div class="line">Repos                          : []</div><div class="line">Server Override                : &lt;&lt;inherit&gt;&gt;</div><div class="line">Template Files                 : &#123;&#125;</div><div class="line">Virt Auto Boot                 : 1</div><div class="line">Virt Bridge                    : xenbr0</div><div class="line">Virt CPUs                      : 1</div><div class="line">Virt Disk Driver Type          : raw</div><div class="line">Virt File Size(GB)             : 5</div><div class="line">Virt Path                      : </div><div class="line">Virt RAM (MB)                  : 512</div><div class="line">Virt Type                      : kvm</div></pre></td></tr></table></figure>
+<p>创建 <code>kickstart</code> 文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">[root@Cobbler ~]<span class="comment"># vim /var/lib/cobbler/kickstarts/centos-6.9.ks</span></div><div class="line"><span class="comment"># Kickstart file automatically generated by anaconda.</span></div><div class="line"></div><div class="line"><span class="comment">#version=DEVEL</span></div><div class="line">install</div><div class="line">url --url=http://192.168.1.200/cobbler/ks_mirror/CentOS-6.9-x86_64/</div><div class="line">lang en_US.UTF-8</div><div class="line">keyboard us</div><div class="line">network --onboot yes --device eth0 --mtu=1500 --bootproto dhcp --noipv6</div><div class="line">rootpw  --iscrypted <span class="variable">$6</span><span class="variable">$8ls6kGd3I0YGF6Hf</span><span class="variable">$JRsujR1hDeUC9MNYAe4CWM3uUiU9Z8YTayoRDbSKGMULX7yFJbiQlDQtlCUrDkUb2vlbTr07lvKHeH3</span>/VEHaV0</div><div class="line"><span class="comment"># Reboot after installation</span></div><div class="line">reboot</div><div class="line">firewall --service=ssh</div><div class="line">authconfig --enableshadow --passalgo=sha512</div><div class="line">selinux --disabled</div><div class="line">timezone Asia/Shanghai</div><div class="line">bootloader --location=mbr --driveorder=sda --append=<span class="string">"crashkernel=auto rhgb rhgb quiet quiet"</span></div><div class="line"><span class="comment"># Clear the Master Boot Record</span></div><div class="line">zerombr</div><div class="line"><span class="comment"># The following is the partition information you requested</span></div><div class="line"><span class="comment"># Note that any partitions you deleted are not expressed</span></div><div class="line"><span class="comment"># here so unless you clear all partitions first, this is</span></div><div class="line"><span class="comment"># not guaranteed to work</span></div><div class="line">clearpart --all</div><div class="line">part pv.008003 --grow --size=200</div><div class="line">volgroup lvmdisk --pesize=4096 pv.008003</div><div class="line">logvol /<span class="built_in">local</span> --fstype=ext4 --name=<span class="built_in">local</span> --vgname=lvmdisk --size=159240</div><div class="line">logvol / --fstype=ext4 --name=root --vgname=lvmdisk --size=40960</div><div class="line"></div><div class="line">part /boot --fstype=ext4 --size=500</div><div class="line">part swap --size=4096</div><div class="line"></div><div class="line"></div><div class="line">%packages</div><div class="line">@Base</div><div class="line">@Core</div><div class="line">@core</div><div class="line">@server-policy</div><div class="line">@workstation-policy</div><div class="line">lrzsz</div><div class="line">tree</div><div class="line">vim</div><div class="line"></div><div class="line">%end</div></pre></td></tr></table></figure>
+<p>关联 <code>kickstart</code> 文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cobbler profile edit --name=CentOS-6.9-x86_64 --kickstart=/var/lib/cobbler/kickstarts/centos-6.9.ks</div></pre></td></tr></table></figure>
+<p>客户端测试</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/cobbler_cli1.png" alt="客户端读取菜单列表成功"></p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/cobbler_cli2.png" alt="开始安装"></p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/09/17/pxe-install-centos/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/09/18/cobbler/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
