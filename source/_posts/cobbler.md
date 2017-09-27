@@ -1,10 +1,10 @@
 ---
-title: Cobbler 基本应用
+title: Cobbler 基础应用
 date: 2017-09-18 14:47:59
 category: Linux
 tags:
 	- cobbler
-	- 自动化安装系统
+	- 自动化安装操作系统
 ---
 
 
