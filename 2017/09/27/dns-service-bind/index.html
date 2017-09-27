@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>dns service bind | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="bind," />
+  
+
+  <meta name="description" content="bind 搭建私有根域主从实验，涉及主从复制，转发，简单全安限制。 网络示意图  准备工作：  关闭 SELinux 关闭 IPTABLES 除 Client 端其它 Server DNS 地址全部指向自己   服务器安装 bind 包 bind 主程序包 bind-utils 测试工具包 yum install -y bind bind-utils 将所有服务器的 bind 设置为开机自启动 s">
+<meta name="keywords" content="bind">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dns service bind">
+<meta property="og:url" content="http://www.weidong.io/2017/09/27/dns-service-bind/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="bind 搭建私有根域主从实验，涉及主从复制，转发，简单全安限制。 网络示意图  准备工作：  关闭 SELinux 关闭 IPTABLES 除 Client 端其它 Server DNS 地址全部指向自己   服务器安装 bind 包 bind 主程序包 bind-utils 测试工具包 yum install -y bind bind-utils 将所有服务器的 bind 设置为开机自启动 s">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/DNS.png">
+<meta property="og:updated_time" content="2017-09-27T09:09:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="dns service bind">
+<meta name="twitter:description" content="bind 搭建私有根域主从实验，涉及主从复制，转发，简单全安限制。 网络示意图  准备工作：  关闭 SELinux 关闭 IPTABLES 除 Client 端其它 Server DNS 地址全部指向自己   服务器安装 bind 包 bind 主程序包 bind-utils 测试工具包 yum install -y bind bind-utils 将所有服务器的 bind 设置为开机自启动 s">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/DNS.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-dns-service-bind" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">dns service bind</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.09.27</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Bind/">Bind</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/09/27/dns-service-bind/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>bind 搭建私有根域主从实验，涉及主从复制，转发，简单全安限制。</p>
+<p><strong>网络示意图</strong></p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/DNS.png" alt="网络示意图"></p>
+<p><strong>准备工作：</strong></p>
+<ul>
+<li>关闭 SELinux</li>
+<li>关闭 IPTABLES</li>
+<li>除 Client 端其它 Server DNS 地址全部指向自己 </li>
+</ul>
+<p><strong>服务器安装 bind 包</strong></p>
+<p><code>bind</code> 主程序包</p>
+<p><code>bind-utils</code> 测试工具包</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">yum install -y <span class="built_in">bind</span> <span class="built_in">bind</span>-utils</div></pre></td></tr></table></figure>
+<p>将所有服务器的 <code>bind</code> 设置为开机自启动</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">systemctl <span class="built_in">enable</span> named</div></pre></td></tr></table></figure>
+<p><strong>. (根) 域服务器配置</strong></p>
+<p>修改 <code>named.conf</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;options 中的设置为全局设置</div><div class="line">options &#123;</div><div class="line">        ;监听的端口与地址</div><div class="line">        listen-on port 53 &#123; 192.168.1.100; 127.0.0.1; &#125;;</div><div class="line">        ;<span class="built_in">bind</span> 数据目录</div><div class="line">        directory       <span class="string">"/var/named"</span>;</div><div class="line">        ;允许查询解析库的地址</div><div class="line">        allow-query     &#123; any; &#125;;</div><div class="line">        </div><div class="line">        ;关闭递归解析</div><div class="line">        recursion no;</div><div class="line">        ;关闭 dns 安全扩展</div><div class="line">        dnssec-enable no;</div><div class="line">        dnssec-validation no;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line">;定义 .(根)域正向解析域</div><div class="line">zone <span class="string">"."</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> master;</div><div class="line">        ;定义正向解析库 zone 文件</div><div class="line">        file <span class="string">"root.zone"</span>;</div><div class="line">        ;不允许任何地址更新该解析库</div><div class="line">        allow-update &#123; none; &#125;;</div><div class="line">        ;不允许任何地址对该域做区域传送</div><div class="line">        allow-transfer &#123; none; &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">;定义 .(根)域反向解析域</div><div class="line">zone <span class="string">"1.168.192.in-addr.arpa"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> master;</div><div class="line">        ;定义反向解析库 zone 文件</div><div class="line">        file <span class="string">"rev.root.zone"</span>;</div><div class="line">        allow-update &#123; none; &#125;;</div><div class="line">        allow-transfer &#123; none; &#125;;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>创建<code>. (根)</code>域正向解析库 <code>root.zone</code> 文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;定义 dns 缓存最大可缓存 TTL 值为一天</div><div class="line"><span class="variable">$TTL</span> 86400</div><div class="line">;定义区域名称</div><div class="line"><span class="variable">$ORIGIN</span> .</div><div class="line">;起始授权记录( Start Of Authority)</div><div class="line">@       IN      SOA     ns.root.        admin.weidong.com. (</div><div class="line">                                        ;序列号,修改文件时需递增,否则从服务器不会立即同步</div><div class="line">                                        20170927 ; serial</div><div class="line">                                        ;刷新时间,从服务器每隔 1 天主动 pull 一次解析库</div><div class="line">                                        1D       ; refresh</div><div class="line">                                        ;重试时间,同步失败时 1 小时候重新尝试同步解析库</div><div class="line">                                        1H       ; retry</div><div class="line">                                        ;如果长达 1 周无法联系上主服务器从服务器停止服务</div><div class="line">                                        1W       ; expire</div><div class="line">                                        ;接收到不存在或者错误解析条目时将改条目缓存 3 小时 </div><div class="line">                                        3H )     ; minimum</div><div class="line">           IN      NS      ns.root.</div><div class="line">com.    IN      NS      ns.com.</div><div class="line">ns.root.        IN      A       192.168.1.100</div><div class="line">ns.com.        IN      A       192.168.1.99</div></pre></td></tr></table></figure>
+<p>创建<code>. (根)</code>域反向解析库 <code>rev.root.zone</code> 文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="variable">$TTL</span> 86400</div><div class="line"><span class="variable">$ORIGIN</span> 1.168.192.in-addr.arpa.</div><div class="line">@       IN      SOA     ns.root.        admin.weidong.com. (</div><div class="line">                                    20170927 ; serial</div><div class="line">                                        1D       ; refresh</div><div class="line">                                        1H       ; retry</div><div class="line">                                        1W       ; expire</div><div class="line">                                        3H )     ; minimum</div><div class="line">        IN      NS      ns.root.</div><div class="line">        IN      NS      ns.com.</div><div class="line">100     IN      PTR     ns.root.</div><div class="line">99      IN      PTR     ns.com.</div></pre></td></tr></table></figure>
+<p>修改解析库文件权限 (<code>为了安全将解析文件权限设置为 rw-r----- 所属组设置为 named</code>)</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod 640 root.zone rev.root.zone </div><div class="line">chown :named root.zone rev.root.zone</div></pre></td></tr></table></figure>
+<p>启动 <code>bind</code> 服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">systemctl start named</div></pre></td></tr></table></figure>
+<p><strong><code>com</code> 域服务器配置</strong></p>
+<p>修改 <code>named.conf</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">options &#123;</div><div class="line">        listen-on port 53 &#123; 192.168.1.99; 127.0.0.1; &#125;;</div><div class="line">        directory       <span class="string">"/var/named"</span>;</div><div class="line">        allow-query     &#123; any; &#125;;</div><div class="line">        </div><div class="line">        recursion no;</div><div class="line"></div><div class="line">        dnssec-enable no;</div><div class="line">        dnssec-validation no;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">;定义根区域文件</div><div class="line">zone <span class="string">"."</span> IN &#123;</div><div class="line">        ;定义类型为 hint</div><div class="line">        <span class="built_in">type</span> hint;</div><div class="line">        ;定义文件,路径相对于 /var/named/</div><div class="line">        file <span class="string">"named.ca"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"com"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> master;</div><div class="line">        file <span class="string">"com.zone"</span>;</div><div class="line">        allow-update &#123; none; &#125;;</div><div class="line">        allow-transfer &#123; none; &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"1.168.192.in-addr.arpa"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> master;</div><div class="line">        file <span class="string">"rev.com.zone"</span>;</div><div class="line">        allow-update &#123; none; &#125;;</div><div class="line">        allow-transfer &#123; none; &#125;;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>导入 <code>.（根）</code> 域 NS 记录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">dig -t NS . @192.168.1.100 &gt; /var/named/named.ca</div></pre></td></tr></table></figure>
+<p>创建 <code>com</code> 域正向解析库 <code>com.zone</code> 文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="variable">$TTL</span> 86400</div><div class="line"><span class="variable">$ORIGIN</span> com.</div><div class="line">@       IN      SOA     ns.com.        admin.weidong.com. (</div><div class="line">                                        20170926 ; serial</div><div class="line">                                        1D       ; refresh</div><div class="line">                                        1H       ; retry</div><div class="line">                                        1W       ; expire</div><div class="line">                                        3H )     ; minimum</div><div class="line">        IN      NS      ns.com.</div><div class="line">ns.com. IN      A       192.168.1.99</div><div class="line">weidong.com.    IN      NS      ns1.weidong.com.</div><div class="line">weidong.com.    IN      NS      ns2.weidong.com.</div><div class="line">ns1.weidong.com.        IN      A       192.168.1.98</div><div class="line">ns2.weidong.com.        IN      A       192.168.1.97</div></pre></td></tr></table></figure>
+<p>创建 <code>com</code> 域反向解析库 <code>rev.com.zone</code> 文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="variable">$TTL</span> 86400</div><div class="line"><span class="variable">$ORIGIN</span> 1.168.192.in-addr.arpa.</div><div class="line">@       IN      SOA     ns.com.        admin.weidong.com. (</div><div class="line">                                        20170926 ; serial</div><div class="line">                                        1D       ; refresh</div><div class="line">                                        1H       ; retry</div><div class="line">                                        1W       ; expire</div><div class="line">                                        3H )     ; minimum</div><div class="line">        IN      NS      ns.com.</div><div class="line">99      IN      PTR     ns.com.</div><div class="line">98      IN      PTR     ns1.weidong.com.</div><div class="line">97      IN      PTR     ns2.weidong.com.</div></pre></td></tr></table></figure>
+<p>修改文件权限</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod 640 com.zone rev.com.zone </div><div class="line">chown :named com.zone rev.com.zone</div></pre></td></tr></table></figure>
+<p><strong><code>weidong.com master</code> 域主服务器配置</strong></p>
+<p>修改 <code>named.conf</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"></div><div class="line">options &#123;</div><div class="line">        listen-on port 53 &#123; 192.168.1.98; 127.0.0.1; &#125;;</div><div class="line">        directory       <span class="string">"/var/named"</span>;</div><div class="line">        allow-query     &#123; any; &#125;;</div><div class="line">        </div><div class="line">        recursion yes;</div><div class="line"></div><div class="line">        dnssec-enable no;</div><div class="line">        dnssec-validation no;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"."</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> hint;</div><div class="line">        file <span class="string">"named.ca"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"weidong.com"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> master;</div><div class="line">        file <span class="string">"weidong.com.zone"</span>;</div><div class="line">        ;只允许指定的地址更新该解析库</div><div class="line">        allow-update &#123; 192.168.1.97; &#125;;</div><div class="line">        ;只允许指定的地址对该域做区域传送</div><div class="line">        allow-transfer &#123; 192.168.1.97; &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"1.168.192.in-addr.arpa"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> master;</div><div class="line">        file <span class="string">"rev.weidong.com.zone"</span>;</div><div class="line">        allow-update &#123; 192.168.1.97; &#125;;</div><div class="line">        allow-transfer &#123; 192.168.1.97; &#125;;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p> 导入 <code>.（根）</code> 域 NS 记录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">dig -t NS . @192.168.1.100 &gt; /var/named/named.ca</div></pre></td></tr></table></figure>
+<p>创建 <code>weidong.com</code> 域正向解析库文件 <code>weidong.com.zone</code></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="variable">$TTL</span> 86400</div><div class="line"><span class="variable">$ORIGIN</span> weidong.com.</div><div class="line">@       IN      SOA     ns1.weidong.com.        admin.weidong.com. (</div><div class="line">                                        20170926 ; serial</div><div class="line">                                        1D       ; refresh</div><div class="line">                                        1H       ; retry</div><div class="line">                                        1W       ; expire</div><div class="line">                                        3H )     ; minimum</div><div class="line">        IN      NS      ns1.weidong.com.</div><div class="line">        IN      NS      ns2.weidong.com.</div><div class="line">ns1.weidong.com.        IN      A       192.168.1.98</div><div class="line">ns2.weidong.com.        IN      A       192.168.1.97</div><div class="line">sc.weidong.com.        IN      NS      ns1.sc.weidong.com.</div><div class="line">sc.weidong.com.        IN      NS      ns2.sc.weidong.com.</div><div class="line">ns1.sc.weidong.com.     IN      A       192.168.1.96</div><div class="line">ns2.sc.weidong.com.     IN      A       192.168.1.95</div></pre></td></tr></table></figure>
+<p> 创建 <code>weidong.com</code> 域反向解析库文件 <code>rev.weidong.com.zone</code></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="variable">$TTL</span> 86400</div><div class="line"><span class="variable">$ORIGIN</span> 1.168.192.in-addr.arpa.</div><div class="line">@       IN      SOA     ns1.weidong.com.        admin.weidong.com. (</div><div class="line">                                        20170926 ; serial</div><div class="line">                                        1D       ; refresh</div><div class="line">                                        1H       ; retry</div><div class="line">                                        1W       ; expire</div><div class="line">                                        3H )     ; minimum</div><div class="line">        IN      NS      ns1.weidong.com.</div><div class="line">        IN      NS      ns2.weidong.com.</div><div class="line">97      IN      PTR     ns2.weidong.com.</div><div class="line">98      IN      PTR     ns1.weidong.com.</div><div class="line">95      IN      PTR     ns1.sc.weidong.com.</div><div class="line">96      IN      PTR     ns2.sc.weidong.com.</div></pre></td></tr></table></figure>
+<p>修改权限</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod 640 weidong.com.zone rev.weidong.com.zone </div><div class="line">chown :named weidong.com.zone rev.weidong.com.zone</div></pre></td></tr></table></figure>
+<p><strong>配置 <code>weidong.com</code> 域从服务器</strong></p>
+<p>修改 <code>named.conf</code> 配置文件 </p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">options &#123;</div><div class="line">        listen-on port 53 &#123; 192.168.1.97; 127.0.0.1; &#125;;</div><div class="line">        directory       <span class="string">"/var/named"</span>;</div><div class="line">        allow-query     &#123; any; &#125;;</div><div class="line">        </div><div class="line">        recursion yes;</div><div class="line"></div><div class="line">        dnssec-enable no;</div><div class="line">        dnssec-validation no;</div><div class="line">        </div><div class="line">zone <span class="string">"."</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> hint;</div><div class="line">        file <span class="string">"named.ca"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"weidong.com"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> slave;</div><div class="line">        masters &#123; 192.168.1.98; &#125;;</div><div class="line">        file <span class="string">"slaves/weidong.com.zone"</span>;</div><div class="line">        allow-update &#123; none; &#125;;</div><div class="line">        allow-transfer &#123; none; &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"1.168.192.in-addr.arpa"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> slave;</div><div class="line">        masters &#123; 192.168.1.98; &#125;;</div><div class="line">        file <span class="string">"slaves/rev.weidong.com.zone"</span>;</div><div class="line">        allow-update &#123; none; &#125;;</div><div class="line">        allow-transfer &#123; none; &#125;;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>导入 <code>.（根）</code> 域 NS 记录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">dig -t NS . @192.168.1.100 &gt; /var/named/named.ca</div></pre></td></tr></table></figure>
+<p>启动 <code>bind</code> 服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">systemctl start named</div></pre></td></tr></table></figure>
+<p>检查解析库是否同步成功</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">ls -l slaves/</div><div class="line">-rw-r--r-- 1 named named 528 Sep 27 13:53 rev.weidong.com.zone</div><div class="line">-rw-r--r-- 1 named named 561 Sep 27 13:51 weidong.com.zone</div></pre></td></tr></table></figure>
+<p><strong>子域 <code>sc.weidong.com</code> 主服务器配置</strong></p>
+<p>修改 <code>named.conf</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">options &#123;</div><div class="line">        listen-on port 53 &#123; 192.168.1.96; 127.0.0.1; &#125;;</div><div class="line">        directory       <span class="string">"/var/named"</span>;</div><div class="line">        allow-query     &#123; any; &#125;;</div><div class="line">        </div><div class="line">        recursion yes;</div><div class="line"></div><div class="line">        dnssec-enable no;</div><div class="line">        dnssec-validation no;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"."</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> hint;</div><div class="line">        file <span class="string">"named.ca"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"sc.weidong.com"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> master;</div><div class="line">        file <span class="string">"sc.weidong.com.zone"</span>;</div><div class="line">        allow-update &#123; 192.168.1.95; &#125;;</div><div class="line">        allow-transfer &#123;192.168.195; &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"1.168.192.in-addr.arpa"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> master;</div><div class="line">        file <span class="string">"rev.sc.weidong.com.zone"</span>;</div><div class="line">        allow-update &#123; 192.168.1.95; &#125;;</div><div class="line">        allow-transfer &#123;192.168.195; &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">;对父域做转发</div><div class="line">zone <span class="string">"weidong.com"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> forward;</div><div class="line">        forward only;</div><div class="line">        forwarders  &#123; 192.168.1.98; &#125;;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>导入 <code>.（根）</code> 域 NS 记录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">dig -t NS . @192.168.1.100 &gt; /var/named/named.ca</div></pre></td></tr></table></figure>
+<p>创建 <code>sc.weidong.com</code> 正向解析库文件 <code>sc.weidong.com.zone</code></p>
+ <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="variable">$TTL</span> 86400</div><div class="line"><span class="variable">$ORIGIN</span> sc.weidong.com.</div><div class="line">@       IN      SOA     ns1.sc.weidong.com.     admin.weidong.com. (</div><div class="line">                                       20170927  ; serial</div><div class="line">                                        1D       ; refresh</div><div class="line">                                        1H       ; retry</div><div class="line">                                        1W       ; expire</div><div class="line">                                        3H )     ; minimum</div><div class="line">        IN      NS      ns1.sc.weidong.com.</div><div class="line">        IN      NS      ns2.sc.weidong.com.</div><div class="line">ns1.sc.weidong.com.     IN      A       192.168.1.96</div><div class="line">ns2.sc.weidong.com.     IN      A       192.168.1.95</div><div class="line">webserver.sc.weidong.com.       IN      A       192.168.1.96</div><div class="line">webserver.sc.weidong.com.       IN      A       192.168.1.95</div><div class="line">www.sc.weidong.com.     IN      CNAME   webserver.sc.weidong.com.</div></pre></td></tr></table></figure>
+<p>创建 <code>sc.weidong.com</code>  域反向解析库文件 <code>rev.sc.weidong.com.zone</code></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="variable">$TTL</span> 86400</div><div class="line"><span class="variable">$ORIGIN</span> 1.168.192.in-addr.arpa.</div><div class="line">@       IN      SOA     ns1.sc.weidong.com      admin.weidong.com. (</div><div class="line">                                        20170927 ; serial</div><div class="line">                                        1D       ; refresh</div><div class="line">                                        1H       ; retry</div><div class="line">                                        1W       ; expire</div><div class="line">                                        3H )     ; minimum</div><div class="line">        IN      NS      ns1.sc.weidong.com.</div><div class="line">        IN      NS      ns2.sc.weidong.com.</div><div class="line">96      IN      PTR     ns1.sc.weidong.com.</div><div class="line">95      IN      PTR     ns2.sc.weidong.com.</div><div class="line">96      IN      PTR     webserver.sc.weidong.com.</div><div class="line">95      IN      PTR     webserver.sc.weidong.com.</div></pre></td></tr></table></figure>
+<p>修改文件权限</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod 640 sc.weidong.com.zone rev.sc.weidong.com.zone</div><div class="line">chown :named sc.weidong.com.zone rev.sc.weidong.com.zone</div></pre></td></tr></table></figure>
+<p>启动 <code>bind</code> 服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">systemctl start named</div></pre></td></tr></table></figure>
+<p><strong>子域 <code>sc.weidong.com</code> 从服务器配置</strong></p>
+<p>修改 <code>named.conf</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">options &#123;</div><div class="line">        listen-on port 53 &#123; 192.168.1.95; 127.0.0.1; &#125;;</div><div class="line">        directory       <span class="string">"/var/named"</span>;</div><div class="line">        allow-query     &#123; any; &#125;;</div><div class="line">        </div><div class="line">        recursion yes;</div><div class="line"></div><div class="line">        dnssec-enable no;</div><div class="line">        dnssec-validation no;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"."</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> hint;</div><div class="line">        file <span class="string">"named.ca"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"sc.weidong.com"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> slave;</div><div class="line">        masters &#123; 192.168.1.96; &#125;;</div><div class="line">        file <span class="string">"slaves/sc.weidong.com.zone"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"1.168.192.in-addr.arpa"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> slave;</div><div class="line">        masters &#123; 192.168.1.96; &#125;;</div><div class="line">        file <span class="string">"slaves/rev.sc.weidong.com.zone"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"weidong.com"</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> forward;</div><div class="line">        forward only;</div><div class="line">        forwarders &#123; 192.168.1.98; &#125;;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>导入 <code>.（根）</code> 域 NS 记录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">dig -t NS . @192.168.1.100 &gt; /var/named/named.ca</div></pre></td></tr></table></figure>
+<p>启动 <code>bind</code> 服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">systemctl start named</div></pre></td></tr></table></figure>
+<p>检查解析库是否同步成功</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">-rw-r--r-- 1 named named 434 Sep 27 15:39 rev.sc.weidong.com.zone</div><div class="line">-rw-r--r-- 1 named named 419 Sep 27 13:54 sc.weidong.com.zone</div></pre></td></tr></table></figure>
+<p><strong>配置 ISP DNS SERVER</strong></p>
+<p>ISP DNS 只需要做 dns 缓存与递归，用户在向他请求时，他无法解析的地址需要从 <code>.(根)</code> 上去找，网络上的 DNS 服务器通常是不做递归查询的，当然用户端也是无法做递归的，所以需要由 ISP 的 DNS 服务器来为用户做递归解析查询。</p>
+<p>修改 <code>named.conf</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">options &#123;</div><div class="line">        listen-on port 53 &#123; 192.168.1.94; 127.0.0.1; &#125;;</div><div class="line">        directory       <span class="string">"/var/named"</span>;</div><div class="line">        allow-query     &#123; any; &#125;;</div><div class="line">        </div><div class="line">        recursion yes;</div><div class="line"></div><div class="line">        dnssec-enable no;</div><div class="line">        dnssec-validation no;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">zone <span class="string">"."</span> IN &#123;</div><div class="line">        <span class="built_in">type</span> hint;</div><div class="line">        file <span class="string">"named.ca"</span>;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>导入 <code>.（根）</code> 域 NS 记录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">dig -t NS . @192.168.1.100 &gt; /var/named/named.ca</div></pre></td></tr></table></figure>
+<p><strong>客户端测试</strong></p>
+<p>客户端 DNS 服务指向 ISP DNS 使用 <code>dig</code> 命令做跟踪查询（ <code>trace</code>）</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">[root@client ~]<span class="comment"># cat /etc/resolv.conf </span></div><div class="line"><span class="comment"># Generated by NetworkManager</span></div><div class="line">nameserver 192.168.1.94</div><div class="line">[root@client ~]<span class="comment"># dig www.sc.weidong.com +trace</span></div><div class="line"></div><div class="line">; &lt;&lt;&gt;&gt; DiG 9.9.4-RedHat-9.9.4-37.el7 &lt;&lt;&gt;&gt; www.sc.weidong.com +trace</div><div class="line">;; global options: +cmd</div><div class="line">.                       74827   IN      NS      ns.root.</div><div class="line">;; Received 64 bytes from 192.168.1.94<span class="comment">#53(192.168.1.94) in 3 ms</span></div><div class="line"></div><div class="line">com.                    86400   IN      NS      ns.com.</div><div class="line">;; Received 80 bytes from 192.168.1.100<span class="comment">#53(ns.root) in 3 ms</span></div><div class="line"></div><div class="line">weidong.com.            86400   IN      NS      ns1.weidong.com.</div><div class="line">weidong.com.            86400   IN      NS      ns2.weidong.com.</div><div class="line">;; Received 115 bytes from 192.168.1.99<span class="comment">#53(ns.com) in 5 ms</span></div><div class="line"></div><div class="line">sc.weidong.com.         86400   IN      NS      ns1.sc.weidong.com.</div><div class="line">sc.weidong.com.         86400   IN      NS      ns2.sc.weidong.com.</div><div class="line">;; Received 115 bytes from 192.168.1.98<span class="comment">#53(ns1.weidong.com) in 9 ms</span></div><div class="line"></div><div class="line">www.sc.weidong.com.     86400   IN      CNAME   webserver.sc.weidong.com.</div><div class="line">webserver.sc.weidong.com. 86400 IN      A       192.168.1.95</div><div class="line">webserver.sc.weidong.com. 86400 IN      A       192.168.1.96</div><div class="line">sc.weidong.com.         86400   IN      NS      ns1.sc.weidong.com.</div><div class="line">sc.weidong.com.         86400   IN      NS      ns2.sc.weidong.com.</div><div class="line">;; Received 171 bytes from 192.168.1.96<span class="comment">#53(ns1.sc.weidong.com) in 0 ms</span></div></pre></td></tr></table></figure>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/09/18/cobbler/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/09/27/dns-service-bind/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
