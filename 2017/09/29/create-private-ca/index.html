@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>创建私有 CA 与签发证书 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="CA,openssl,private ca," />
+  
+
+  <meta name="description" content="环境：  系统 CentOS 7.3 openssl 版本 openssl-1.0.1e-60.el7.x86_64  openssl 配置文件 /etc/pki/tls/openssl.cnf 信息匹配策略：  match：要求申请填写的信息与 CA 设置信息必须一致 supplied：必须填写的信息 optional：可以填也可以不填   创建根 CA 自签证书 创建必要文件 ;创建数据库文件">
+<meta name="keywords" content="CA,openssl,private ca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="创建私有 CA 与签发证书">
+<meta property="og:url" content="http://www.weidong.io/2017/09/29/create-private-ca/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="环境：  系统 CentOS 7.3 openssl 版本 openssl-1.0.1e-60.el7.x86_64  openssl 配置文件 /etc/pki/tls/openssl.cnf 信息匹配策略：  match：要求申请填写的信息与 CA 设置信息必须一致 supplied：必须填写的信息 optional：可以填也可以不填   创建根 CA 自签证书 创建必要文件 ;创建数据库文件">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/root_ca.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/intermediate_ca.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/app_ca.png">
+<meta property="og:updated_time" content="2017-09-29T08:57:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="创建私有 CA 与签发证书">
+<meta name="twitter:description" content="环境：  系统 CentOS 7.3 openssl 版本 openssl-1.0.1e-60.el7.x86_64  openssl 配置文件 /etc/pki/tls/openssl.cnf 信息匹配策略：  match：要求申请填写的信息与 CA 设置信息必须一致 supplied：必须填写的信息 optional：可以填也可以不填   创建根 CA 自签证书 创建必要文件 ;创建数据库文件">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/root_ca.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-create-private-ca" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">创建私有 CA 与签发证书</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.09.29</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/09/29/create-private-ca/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>环境：</p>
+<ul>
+<li>系统 CentOS 7.3</li>
+<li>openssl 版本 openssl-1.0.1e-60.el7.x86_64</li>
+</ul>
+<p><code>openssl</code> 配置文件 <code>/etc/pki/tls/openssl.cnf</code></p>
+<p>信息匹配策略：</p>
+<ul>
+<li>match：要求申请填写的信息与 CA 设置信息必须一致</li>
+<li>supplied：必须填写的信息</li>
+<li>optional：可以填也可以不填 </li>
+</ul>
+<p>创建根 CA 自签证书</p>
+<p>创建必要文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;创建数据库文件</div><div class="line">touch /etc/pki/CA/index.txt</div><div class="line">;创建证书列表数据库并定义起始序号</div><div class="line"><span class="built_in">echo</span> 01 /etc/pki/CA/serial</div><div class="line">;创建证书吊销列表数据库并定义起始序号</div><div class="line"><span class="built_in">echo</span> 01 /etc/pki/CA/crlnumber</div></pre></td></tr></table></figure>
+<p>生成私钥文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"> ;进入 CA 配置目录</div><div class="line"> <span class="built_in">cd</span> /etc/pki/CA/</div><div class="line"> ;将改命令括起来并使用 <span class="built_in">umask</span> 066，表示该设置仅在当前命令中生效；</div><div class="line"> ;genrsa: 使用支持数字签名与加密的 rsa 算法</div><div class="line"> ;-out: 保存位置(在 CA 配置文件 /etc/pki/tls/openssl.cnf 定义)</div><div class="line"> ;-des3: 是否加密(可选，使用改选项后每次使用该证书时需要输入密码)</div><div class="line"> ;2048: 密钥长度(可用 4096、8192 等)</div><div class="line"> (<span class="built_in">umask</span> 066 ; openssl genrsa -out private/cakey.pem -des3 2048)</div><div class="line"> Generating RSA private key, 2048 bit long modulus</div><div class="line">.................+++</div><div class="line">...................................+++</div><div class="line">e is 65537 (0x10001)</div><div class="line">Enter pass phrase <span class="keyword">for</span> private/cakey.pem: ;输入密码</div><div class="line">Verifying - Enter pass phrase <span class="keyword">for</span> private/cakey.pem: ;确认密码</div></pre></td></tr></table></figure>
+<p>生成自签名证书</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;-new: 生成新证书签署请求</div><div class="line">;-x509: 专用于 CA 生成自签证书</div><div class="line">;-key: 生成请求时用到的私钥文件</div><div class="line">;-days n: 证书有效期限</div><div class="line">;-out: 保存位置</div><div class="line">openssl req -new -x509 -key private/cakey.pem -out private/cacert.pem</div><div class="line">Enter pass phrase <span class="keyword">for</span> private/cakey.pem:	;私钥文件的密码</div><div class="line">You are about to be asked to enter information that will be incorporated</div><div class="line">into your certificate request.</div><div class="line">What you are about to enter is what is called a Distinguished Name or a DN.</div><div class="line">There are quite a few fields but you can leave some blank</div><div class="line">For some fields there will be a default value,</div><div class="line">If you enter <span class="string">'.'</span>, the field will be left blank.</div><div class="line">-----</div><div class="line">;以下信息规则在 openssl.cnf 定义，如果为 match 那么这里填写的是什么，证书申请者也必须填什么</div><div class="line">Country Name (2 letter code) [XX]:CN</div><div class="line">State or Province Name (full name) []:Sichuan</div><div class="line">Locality Name (eg, city) [Default City]:Chengdu</div><div class="line">Organization Name (eg, company) [Default Company Ltd]:New world Ltd.</div><div class="line">Organizational Unit Name (eg, section) []:</div><div class="line">Common Name (eg, your name or your server<span class="string">'s hostname) []:weidong.io</span></div><div class="line"><span class="string">Email Address []:1993plus@gmail.com</span></div></pre></td></tr></table></figure>
+<p><code>/etc/pki/CA</code>文件结构</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">tree</div><div class="line">.</div><div class="line">├── cacert.pem</div><div class="line">├── certs</div><div class="line">├── crl</div><div class="line">├── crlnumber</div><div class="line">├── index.txt</div><div class="line">├── newcerts</div><div class="line">├── private</div><div class="line">│   └── cakey.pem</div><div class="line">└── serial</div></pre></td></tr></table></figure>
+<p>客户端申请证书</p>
+<p>给应用服务生成私钥文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /etc/pki/tls/</div><div class="line">(<span class="built_in">umask</span> 066 ; openssl genrsa -out private/app.key 2048)</div><div class="line">Generating RSA private key, 2048 bit long modulus</div><div class="line">................+++</div><div class="line">..............................+++</div><div class="line">e is 65537 (0x10001)</div></pre></td></tr></table></figure>
+<p>生成证书申请文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">openssl req -new -key private/app.key -out app.csr</div><div class="line">You are about to be asked to enter information that will be incorporated</div><div class="line">into your certificate request.</div><div class="line">What you are about to enter is what is called a Distinguished Name or a DN.</div><div class="line">There are quite a few fields but you can leave some blank</div><div class="line">For some fields there will be a default value,</div><div class="line">If you enter <span class="string">'.'</span>, the field will be left blank.</div><div class="line">-----</div><div class="line">Country Name (2 letter code) [XX]:CN</div><div class="line">State or Province Name (full name) []:Sichuan</div><div class="line">Locality Name (eg, city) [Default City]:Chengdu</div><div class="line">Organization Name (eg, company) [Default Company Ltd]:New world Ltd.</div><div class="line">Organizational Unit Name (eg, section) []:</div><div class="line">Common Name (eg, your name or your server<span class="string">'s hostname) []:test.io   </span></div><div class="line"><span class="string">Email Address []:</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">Please enter the following '</span>extra<span class="string">' attributes</span></div><div class="line"><span class="string">to be sent with your certificate request</span></div><div class="line"><span class="string">A challenge password []:</span></div><div class="line"><span class="string">An optional company name []:</span></div></pre></td></tr></table></figure>
+<p>将证书申请文件传到根 <code>CA</code> 服务器上颁发证书</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">openssl ca -<span class="keyword">in</span> ~/app.csr -out /etc/pki/CA/certs/app.crt -days 365</div><div class="line">Using configuration from /etc/pki/tls/openssl.cnf</div><div class="line">;输入 CA 私钥密码</div><div class="line">Enter pass phrase <span class="keyword">for</span> /etc/pki/CA/private/cakey.pem:</div><div class="line">Check that the request matches the signature</div><div class="line">Signature ok</div><div class="line">Certificate Details:</div><div class="line">        Serial Number: 1 (0x1)</div><div class="line">        Validity</div><div class="line">            Not Before: Sep 29 04:45:06 2017 GMT</div><div class="line">            Not After : Sep 29 04:45:06 2018 GMT</div><div class="line">        Subject:</div><div class="line">            countryName               = CN</div><div class="line">            stateOrProvinceName       = Sichuan</div><div class="line">            organizationName          = New world Ltd.</div><div class="line">            commonName                = test.io</div><div class="line">        X509v3 extensions:</div><div class="line">            X509v3 Basic Constraints: </div><div class="line">                CA:FALSE</div><div class="line">            Netscape Comment: </div><div class="line">                OpenSSL Generated Certificate</div><div class="line">            X509v3 Subject Key Identifier: </div><div class="line">                46:3A:C7:6D:A2:4C:B9:F0:E5:44:B3:2C:49:B5:06:6D:06:63:E7:55</div><div class="line">            X509v3 Authority Key Identifier: </div><div class="line">                keyid:7E:D6:7F:B6:EA:06:AF:61:BE:D2:FA:D7:6A:DC:BE:0C:47:6A:CC:AD</div><div class="line"></div><div class="line">Certificate is to be certified until Sep 29 04:45:06 2018 GMT (365 days)</div><div class="line">;确认签发证书</div><div class="line">Sign the certificate? [y/n]:y</div><div class="line"></div><div class="line">;提交请求</div><div class="line">1 out of 1 certificate requests certified, commit? [y/n]y</div><div class="line">Write out database with 1 new entries</div><div class="line">Data Base Updated</div></pre></td></tr></table></figure>
+<p>此时数据库中会增加一条数据</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">cat index.txt</div><div class="line">V       180929044506Z           01      unknown /C=CN/ST=Sichuan/O=New world Ltd./CN=test.io</div></pre></td></tr></table></figure>
+<p>现在把证书传给客户端就可以使用了</p>
+<p>查看证书信息</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;-text:  查看所有信息</div><div class="line">openssl x509 -<span class="keyword">in</span> app.crt -noout -text</div><div class="line">Certificate:</div><div class="line">    Data:</div><div class="line">        Version: 3 (0x2)</div><div class="line">        Serial Number: 1 (0x1)</div><div class="line">    Signature Algorithm: sha256WithRSAEncryption</div><div class="line">        Issuer: C=CN, ST=Sichuan, L=Chengdu, O=New world Ltd., CN=weidong.io/emailAddress=1993plus@gmail.com</div><div class="line">        Validity</div><div class="line">            Not Before: Sep 29 04:45:06 2017 GMT</div><div class="line">            Not After : Sep 29 04:45:06 2018 GMT</div><div class="line">        Subject: C=CN, ST=Sichuan, O=New world Ltd., CN=test.io</div><div class="line">        Subject Public Key Info:</div><div class="line">            Public Key Algorithm: rsaEncryption</div><div class="line">                Public-Key: (2048 bit)</div><div class="line">                ...略...</div><div class="line">;-subject: 查看证书所有者信息</div><div class="line">openssl x509 -<span class="keyword">in</span> app.crt -noout -subject</div><div class="line">subject= /C=CN/ST=Sichuan/O=New world Ltd./CN=test.io</div><div class="line">;-issuer: 查看证书颁发者信息</div><div class="line">openssl x509 -<span class="keyword">in</span> app.crt -noout -issuer</div><div class="line">issuer= /C=CN/ST=Sichuan/L=Chengdu/O=New world Ltd./CN=weidong.io/emailAddress=1993plus@gmail.com</div><div class="line">;-serial: 查看证书序列号</div><div class="line">openssl x509 -<span class="keyword">in</span> app.crt -noout -serial</div><div class="line">serial=01</div><div class="line">;-dates: 查看证书有效期</div><div class="line"> openssl x509 -<span class="keyword">in</span> app.crt -noout -dates</div><div class="line">notBefore=Sep 29 04:45:06 2017 GMT</div><div class="line">notAfter=Sep 29 04:45:06 2018 GMT</div></pre></td></tr></table></figure>
+<p><code>CA</code> 吊销证书</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">;确认证书序列号</div><div class="line">openssl x509 -in app.crt -noout -serial</div><div class="line">serial=01</div><div class="line">;确认序列号后吊销证书</div><div class="line">openssl ca -revoke /etc/pki/CA/newcerts/01.pem </div><div class="line">Using configuration from /etc/pki/tls/openssl.cnf</div><div class="line">; 输入 CA 私钥密码</div><div class="line">Enter pass phrase for /etc/pki/CA/private/cakey.pem:</div><div class="line">Revoking Certificate 01.</div><div class="line">Data Base Updated</div><div class="line">;更新证书吊销列表</div><div class="line">ca -gencrl -out /etc/pki/CA/crl/crl.pem</div><div class="line">Using configuration from /etc/pki/tls/openssl.cnf</div><div class="line">Enter pass phrase for /etc/pki/CA/private/cakey.pem:</div><div class="line">;查看 crl  文件</div><div class="line">openssl crl -in /etc/pki/CA/crl/crl.pem -noout -text</div><div class="line">Certificate Revocation List (CRL):</div><div class="line">        Version 2 (0x1)</div><div class="line">    Signature Algorithm: sha256WithRSAEncryption</div><div class="line">        Issuer: /C=CN/ST=Sichuan/L=Chengdu/O=New world Ltd./CN=weidong.io/emailAddress=1993plus@gmail.com</div><div class="line">        Last Update: Sep 29 05:32:08 2017 GMT</div><div class="line">        Next Update: Oct 29 05:32:08 2017 GMT</div><div class="line">        CRL extensions:</div><div class="line">            X509v3 CRL Number: </div><div class="line">                1</div><div class="line">Revoked Certificates:</div><div class="line">    Serial Number: 01</div><div class="line">        Revocation Date: Sep 29 05:30:29 2017 GMT</div></pre></td></tr></table></figure>
+<p>申请中级 <code>CA</code></p>
+<p>创建必要文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">touch index.txt</div><div class="line"><span class="built_in">echo</span> 01 &gt; serial</div><div class="line"><span class="built_in">echo</span> 01 &gt; crlnumber</div></pre></td></tr></table></figure>
+<p>生成私钥文件 </p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">openssl genrsa -out private/cakey.pem 2048)  </div><div class="line">Generating RSA private key, 2048 bit long modulus</div><div class="line">.........................................+++</div><div class="line">...............................................................................................+++</div><div class="line">e is 65537 (0x10001)</div></pre></td></tr></table></figure>
+<p>生成证书申请文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">[root@com-domain CA]<span class="comment"># openssl req -new -key private/cakey.pem -out intermediate.csr </span></div><div class="line">You are about to be asked to enter information that will be incorporated</div><div class="line">into your certificate request.</div><div class="line">What you are about to enter is what is called a Distinguished Name or a DN.</div><div class="line">There are quite a few fields but you can leave some blank</div><div class="line">For some fields there will be a default value,</div><div class="line">If you enter <span class="string">'.'</span>, the field will be left blank.</div><div class="line">-----</div><div class="line">Country Name (2 letter code) [XX]:CN</div><div class="line">State or Province Name (full name) []:Sichuan</div><div class="line">Locality Name (eg, city) [Default City]:Chengdu</div><div class="line">Organization Name (eg, company) [Default Company Ltd]:Intermediate CA Ltd.</div><div class="line">Organizational Unit Name (eg, section) []:CA </div><div class="line">Common Name (eg, your name or your server<span class="string">'s hostname) []:www.intermediate.net</span></div><div class="line"><span class="string">Email Address []:245860762@qq.com</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">Please enter the following '</span>extra<span class="string">' attributes</span></div><div class="line"><span class="string">to be sent with your certificate request</span></div><div class="line"><span class="string">A challenge password []:</span></div><div class="line"><span class="string">An optional company name []:Intermediate Ca Ltd.</span></div></pre></td></tr></table></figure>
+<p><code>CA</code> 签发证书</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;-policy: 使用其它规则</div><div class="line">openssl ca -extensions v3_ca -<span class="keyword">in</span> intermediate.csr -out /etc/pki/CA/certs/intermediate.crt -policy policy_anything -days 3650</div><div class="line">Using configuration from /etc/pki/tls/openssl.cnf</div><div class="line">Check that the request matches the signature</div><div class="line">Signature ok</div><div class="line">Certificate Details:</div><div class="line">        Serial Number: 4 (0x4)</div><div class="line">        Validity</div><div class="line">            Not Before: Sep 29 08:18:24 2017 GMT</div><div class="line">            Not After : Sep 27 08:18:24 2027 GMT</div><div class="line">        Subject:</div><div class="line">            countryName               = CN</div><div class="line">            stateOrProvinceName       = Sichuan</div><div class="line">            localityName              = Chengdu</div><div class="line">            organizationName          = Intermediate CA Ltd.</div><div class="line">            organizationalUnitName    = CA</div><div class="line">            commonName                = www.intermediate.net</div><div class="line">            emailAddress              = 245860762@qq.com</div><div class="line">        X509v3 extensions:</div><div class="line">            X509v3 Subject Key Identifier: </div><div class="line">                BB:A0:46:6B:58:EC:AB:A8:86:C2:EB:B2:DE:96:D5:FB:27:57:31:D1</div><div class="line">            X509v3 Authority Key Identifier: </div><div class="line">                keyid:FE:DA:06:54:99:24:5E:10:A4:DB:20:46:FA:D3:11:02:BE:BA:96:0F</div><div class="line"></div><div class="line">            X509v3 Basic Constraints: </div><div class="line">                CA:TRUE</div><div class="line">Certificate is to be certified until Sep 27 08:18:24 2027 GMT (3650 days)</div><div class="line">Sign the certificate? [y/n]:y</div><div class="line"></div><div class="line"></div><div class="line">1 out of 1 certificate requests certified, commit? [y/n]y</div><div class="line">Write out database with 1 new entries</div><div class="line">Data Base Updated</div></pre></td></tr></table></figure>
+<p>现在把证书传给中级 <code>CA</code> 服务器到 <code>/etc/pki/CA</code> 目录下并改名为 <code>cacert.pem</code> </p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mv intermediate.crt cacert.pem</div></pre></td></tr></table></figure>
+<p>现在中 <code>CA</code> 也可以为申请者颁发证书了</p>
+<p>为应用申请证书</p>
+<p>生成私钥文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">(<span class="built_in">umask</span> 066 ; openssl genrsa -out private/app.key 2048)</div></pre></td></tr></table></figure>
+<p>生成证书申请文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">openssl req -new -key private/app.key -out www.weidong.io.csr</div><div class="line">You are about to be asked to enter information that will be incorporated</div><div class="line">into your certificate request.</div><div class="line">What you are about to enter is what is called a Distinguished Name or a DN.</div><div class="line">There are quite a few fields but you can leave some blank</div><div class="line">For some fields there will be a default value,</div><div class="line">If you enter <span class="string">'.'</span>, the field will be left blank.</div><div class="line">-----</div><div class="line">Country Name (2 letter code) [XX]:CN</div><div class="line">State or Province Name (full name) []:Sichuan</div><div class="line">Locality Name (eg, city) [Default City]:Chengdu</div><div class="line">Organization Name (eg, company) [Default Company Ltd]:Intermediate CA Ltd.</div><div class="line">Organizational Unit Name (eg, section) []:Opt</div><div class="line">Common Name (eg, your name or your server<span class="string">'s hostname) []:www.weidong.io</span></div><div class="line"><span class="string">Email Address []:1993plus@gmail.com</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">Please enter the following '</span>extra<span class="string">' attributes</span></div><div class="line"><span class="string">to be sent with your certificate request</span></div><div class="line"><span class="string">A challenge password []:</span></div><div class="line"><span class="string">An optional company name []:</span></div></pre></td></tr></table></figure>
+<p>使用中级 <code>CA</code> 为应用签发证书</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">openssl ca -<span class="keyword">in</span> ~/www.weidong.io.csr -out certs/www.weidong.io.crt -days 365</div><div class="line">Using configuration from /etc/pki/tls/openssl.cnf</div><div class="line">Check that the request matches the signature</div><div class="line">Signature ok</div><div class="line">Certificate Details:</div><div class="line">        Serial Number: 2 (0x2)</div><div class="line">        Validity</div><div class="line">            Not Before: Sep 29 08:39:46 2017 GMT</div><div class="line">            Not After : Sep 29 08:39:46 2018 GMT</div><div class="line">        Subject:</div><div class="line">            countryName               = CN</div><div class="line">            stateOrProvinceName       = Sichuan</div><div class="line">            organizationName          = Intermediate CA Ltd.</div><div class="line">            organizationalUnitName    = Opt</div><div class="line">            commonName                = www.weidong.io</div><div class="line">            emailAddress              = 1993plus@gmail.com</div><div class="line">        X509v3 extensions:</div><div class="line">            X509v3 Basic Constraints: </div><div class="line">                CA:FALSE</div><div class="line">            Netscape Comment: </div><div class="line">                OpenSSL Generated Certificate</div><div class="line">            X509v3 Subject Key Identifier: </div><div class="line">                D6:E7:42:F6:19:DB:65:14:F0:47:94:62:13:54:F7:EE:13:09:5C:BC</div><div class="line">            X509v3 Authority Key Identifier: </div><div class="line">                keyid:BB:A0:46:6B:58:EC:AB:A8:86:C2:EB:B2:DE:96:D5:FB:27:57:31:D1</div><div class="line"></div><div class="line">Certificate is to be certified until Sep 29 08:39:46 2018 GMT (365 days)</div><div class="line">Sign the certificate? [y/n]:y</div><div class="line"></div><div class="line"></div><div class="line">1 out of 1 certificate requests certified, commit? [y/n]y</div><div class="line">Write out database with 1 new entries</div><div class="line">Data Base Updated</div></pre></td></tr></table></figure>
+<p>现在把证书传给申请者就可以使用了</p>
+<p>你也可以在 <code>Windows</code> 或者 MAC OS 上查看证书文件</p>
+<p>根 <code>CA</code></p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/root_ca.png" alt="Root CA"></p>
+<p>中级 <code>CA</code></p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/intermediate_ca.png" alt="intermediate CA"></p>
+<p>应用证书文件</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/app_ca.png" alt="app certificate"></p>
+<p><strong>FAQ</strong></p>
+<ul>
+<li>如果在签发证书的时候没有创建 <code>index.txt</code> 数据库文件会提示以下错误信息</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/etc/pki/CA/index.txt: No such file or directory</div><div class="line">unable to open <span class="string">'/etc/pki/CA/index.txt'</span></div><div class="line">139854476003232:error:02001002:system library:fopen:No such file or directory:bss_file.c:398:fopen(<span class="string">'/etc/pki/CA/index.txt'</span>,<span class="string">'r'</span>)</div><div class="line">139854476003232:error:20074002:BIO routines:FILE_CTRL:system lib:bss_file.c:400:</div></pre></td></tr></table></figure>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/09/27/dns-service-bind/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/09/29/create-private-ca/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
