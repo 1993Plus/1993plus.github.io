@@ -24,7 +24,7 @@
 <meta property="og:description" content="一次完整的 http 请求处理过程  1.建立连接：接收或者拒绝连接请求 2.接收请求：接收客户端请求报文中对某资源的一次请求的过程 Web 访问响应模型（Web I/O ）  单进程 I/O 模型：启动一个进程处理用户请求，一次只处理一个，多个请求被串行响应 多进程 I/O 模型：并行启动多个进程，每个进程响应一个连接请求 复用 I/O 结构：启动一个进程，同时响应 N 个连接请求实现方法：多线">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/web_request.jpg">
-<meta property="og:updated_time" content="2017-10-06T13:24:46.000Z">
+<meta property="og:updated_time" content="2017-10-06T13:28:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一次完整的 HTTP 请求过程">
 <meta name="twitter:description" content="一次完整的 http 请求处理过程  1.建立连接：接收或者拒绝连接请求 2.接收请求：接收客户端请求报文中对某资源的一次请求的过程 Web 访问响应模型（Web I/O ）  单进程 I/O 模型：启动一个进程处理用户请求，一次只处理一个，多个请求被串行响应 多进程 I/O 模型：并行启动多个进程，每个进程响应一个连接请求 复用 I/O 结构：启动一个进程，同时响应 N 个连接请求实现方法：多线">
@@ -271,6 +271,7 @@
 </ol>
 <p><strong>6.发送响应报文</strong><br>web 服务器通过连接发送数据时也会面临与接收数据一样的问题。服务器可能有多条到各个客户端的连接，有些是空闲的，有些在向服务器发送数据，还有一些在向客户端回送响应数据。服务器要记录连接的状态，还要特别注意对持久连接的处理。对非持久连接而言，服务器应该在发送了整条报文之后，关闭自己这一端的连接。对持久连接来说，连接可能仍保持打开状态，在这种情况下，服务器要正确地计算 Content-Length 首部，不然客户端就无法知道响应什么时候结束了。</p>
 <p><strong>7.记录日志</strong><br>最后，当事务结束时，web 服务器会在日志文件中添加一个条目，描述已执行的事务</p>
+<p>END!</p>
 
     
   </div>
