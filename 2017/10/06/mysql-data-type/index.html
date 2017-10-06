@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>MySQL(MariaDB) 数据类型 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="MySQL,MariaDB,数据类型,data type," />
+  
+
+  <meta name="description" content="MySQL 数据类型 MySQL 支持多种数据类型  数值类型 日期/时间类型 字符串（字符）类型  选择正确的数据类型对于获得高性能至关重要，三大原则：  更小的通常更好，尽量使用可正确存储数据的最小数据类型 简单就好，简单数据类型的操作通常需要更少的 CPU 运算周期 尽量避免 NULL  ,包含为 NULL 的列，对 MySQL 更难优化  整型  tinyint(m) 1 个字节 范围（-">
+<meta name="keywords" content="MySQL,MariaDB,数据类型,data type">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL(MariaDB) 数据类型">
+<meta property="og:url" content="http://www.weidong.io/2017/10/06/mysql-data-type/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="MySQL 数据类型 MySQL 支持多种数据类型  数值类型 日期/时间类型 字符串（字符）类型  选择正确的数据类型对于获得高性能至关重要，三大原则：  更小的通常更好，尽量使用可正确存储数据的最小数据类型 简单就好，简单数据类型的操作通常需要更少的 CPU 运算周期 尽量避免 NULL  ,包含为 NULL 的列，对 MySQL 更难优化  整型  tinyint(m) 1 个字节 范围（-">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-06T08:12:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL(MariaDB) 数据类型">
+<meta name="twitter:description" content="MySQL 数据类型 MySQL 支持多种数据类型  数值类型 日期/时间类型 字符串（字符）类型  选择正确的数据类型对于获得高性能至关重要，三大原则：  更小的通常更好，尽量使用可正确存储数据的最小数据类型 简单就好，简单数据类型的操作通常需要更少的 CPU 运算周期 尽量避免 NULL  ,包含为 NULL 的列，对 MySQL 更难优化  整型  tinyint(m) 1 个字节 范围（-">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-mysql-data-type" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">MySQL(MariaDB) 数据类型</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.06</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/MySQL-MariaDB/">MySQL(MariaDB)</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/06/mysql-data-type/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>MySQL 数据类型</strong></p>
+<p><strong>MySQL 支持多种数据类型</strong></p>
+<ul>
+<li>数值类型</li>
+<li>日期/时间类型</li>
+<li>字符串（字符）类型</li>
+</ul>
+<p><strong>选择正确的数据类型对于获得高性能至关重要，三大原则：</strong></p>
+<ol>
+<li>更小的通常更好，尽量使用可正确存储数据的最小数据类型</li>
+<li>简单就好，简单数据类型的操作通常需要更少的 CPU 运算周期</li>
+<li>尽量避免 NULL  ,包含为 NULL 的列，对 MySQL 更难优化</li>
+</ol>
+<p><strong>整型</strong></p>
+<ol>
+<li><code>tinyint(m)</code> 1 个字节 范围（-128~127)    </li>
+<li><code>smallint(m)</code> 2 个字节 范围 （-32768~32767）</li>
+<li><code>mediumint(m)</code> 3 字节 范围 （-8388608~8388607）</li>
+<li><code>int(m)</code> 4个字节 范围 （-2147483648~2147483647）</li>
+<li><code>bigint(m)</code> 8个字节 范围 (+-9.22*10 的 18 次方)</li>
+</ol>
+<p><code>取值范围如果加了 UNSIGNED ,最大值将翻倍，如 tinyint unsigned 的取值范围为 0~255</code></p>
+<p><code>int(m) 里的 m 表示 SELECT 查询结果的显示宽度，并不影响实际的取值范围</code></p>
+<p>MySQL 可以为整型类型指定宽度，例如 INT(10)，对大多数应用来说这是没有意义的，因为它不会限制值的合法范围，只是规定了 MySQL 的一些交互工具（例如 MySQL 命令行客户端）用来显示字符的个数。对于存储和计算来说 INT(1) 和 INT(20) 是相同的。</p>
+<p><strong>浮点型</strong></p>
+<p><code>float</code> 和 <code>double</code> ,也叫近似值</p>
+<p><code>float(m,d)</code> 单精度浮点型 8 位精度（4 个字节）m 总个数，d 小数位数</p>
+<p><code>double(m,d)</code> 双精度浮点型 16 位精度 ( 8 个字节) m 总个数，d 小数位数</p>
+<p>设定一个字段，定义为 <code>float(6,3)</code>,如果插入一个数 123.45678，实际数据库里存的是 123.456，但总个数还以实际为准，即 6 位。</p>
+<p><strong>定点数</strong></p>
+<p>在数据库中存放的是精确值，以十进制格式存储</p>
+<p><code>decimal(m,d)</code> 参数 m&lt;65 是总个数，d&lt;30 且 d&lt;m 是小数位</p>
+<p><code>MySQL 5.0</code> 和更高版本将数值打包保存到一个二进制字符串中（每 4 个字节存 9 个数字）</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">decimal(18,9)</div></pre></td></tr></table></figure>
+<p>小数位两边将各存储 9 个数字，一共使用 9 个字节，小数点前的数字用 4 个字节，小数点后的数字使用 4 个字节，小数点本身占 1 个字节。</p>
+<p>浮点型在存储同样范围的值时，通常比 <code>decimal</code> 使用更少的空间。<code>float</code> 使用 4 个字节存储，<code>doubel</code> 使用 8 个字节。</p>
+<p>因为需要额外的空间和计算开销，所以应该尽量只在对小数进行精确计算是才使用 <code>decimal</code> ；比如存储财务数据。但在数据量比较大的时候，可以考虑使用 <code>bigint</code> 代替 <code>decimal</code> 。</p>
+<p><strong>字符串</strong></p>
+<p><code>char(n)</code> 固定长度，最多 255 个字符</p>
+<p><code>varchar(n)</code> 可变长度，最多 65535 个字符</p>
+<p><code>tinytext</code> 可变长度，最多 255 个字符</p>
+<p><code>text</code> 可变长度，最多 65535 个字符</p>
+<p><code>mediumtext</code> 可变长度，最多 2 的 24 次方 -1 个字符</p>
+<p><code>longtext</code> 可变长度，最多 2 的 32 次方 -1 个字符</p>
+<p><code>binary(m)</code> 固定长度，可存二进制或字符，允许长度为 0~m 个字节</p>
+<p><code>varbinary(m)</code> 可变长度，可存二进制或字符，允许长度为 0~m 个字节</p>
+<p><code>enum(set)</code> 枚举，set 为一个集合</p>
+<p><strong><code>char</code> 和 <code>varchar</code></strong></p>
+<ol>
+<li><code>char(n)</code>  若存入的字符数小于 n，则以空格补齐，查询时再将空格去掉。所以 <code>char</code> 类型存储的字符串末尾不能有空格；<code>varchar</code> 不限于此。</li>
+<li><code>char(n)</code> 固定长度，<code>char(4)</code> 不管是存入的几个字符，都将占用 4 个字节，<code>varchar</code> 是存入的实际字符数 +1 个字节，所以 <code>varchar(4)</code> ，存入 3 个字符将占用 4 个字节。</li>
+<li><code>char</code> 类型的字符串检索速度要比 <code>varchar</code> 类型的快。</li>
+</ol>
+<p><strong>varchar 和 text</strong></p>
+<ol>
+<li><code>varchar</code> 可指定 n，<code>text</code> 不能指定，内部存储 <code>varchar</code> 是存入的实际字符数 +1 个字节，<code>text</code> 是实际字符数 +2 个字节。</li>
+<li><code>text</code> 类型不能有默认值</li>
+<li><code>varchar</code> 可直接创建索引，<code>text</code> 创建索引要指定前多少个字符。<code>varchar</code> 查询速度快于 <code>text</code></li>
+</ol>
+<p><strong>二进制数据 BLOB</strong></p>
+<ol>
+<li><code>BLOB</code> 和 <code>TEXT</code> 存储方式不同，<code>TEXT</code> 以文本方式存储，英文存储区分大小写，而 <code>BLOB</code> 是以二进制方式存储，不区分大小写。</li>
+<li><code>BLOB</code> 存储的数据只能整体读出。</li>
+<li><code>TEXT</code> 可以指定字符集，<code>BLOB</code> 不能指定字符集。</li>
+</ol>
+<p><strong>日期时间类型</strong></p>
+<ol>
+<li><code>date</code> 日期 ‘2008-08-08’</li>
+<li><code>time</code> 时间 ‘12:59:59’</li>
+<li><code>datetime</code> 日期时间’2008-08-08 12:59:59’</li>
+<li><code>timestamp</code> 自动存储记录修改时间</li>
+<li><code>year(2)</code> ,<code>year(4)</code> 年份（两位数表示与四位数表示）</li>
+</ol>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/09/29/create-private-ca/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/06/mysql-data-type/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
