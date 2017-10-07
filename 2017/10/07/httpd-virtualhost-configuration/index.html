@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>HTTPD VirtualHost 配置 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="httpd,virtualhost," />
+  
+
+  <meta name="description" content="HTTPD 虚拟主机配置 基于 IP 地址创建 添加三个 IP 地址 192.168.1.101/24192.168.1.102/24192.168.1.103/24 DocumentRoot 分别为 /var/www/website1	;对应 IP 地址 192.168.1.101/24/var/www/website2	;对应 IP 地址 192.168.1.102/24/var/www/we">
+<meta name="keywords" content="httpd,virtualhost">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPD VirtualHost 配置">
+<meta property="og:url" content="http://www.weidong.io/2017/10/07/httpd-virtualhost-configuration/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="HTTPD 虚拟主机配置 基于 IP 地址创建 添加三个 IP 地址 192.168.1.101/24192.168.1.102/24192.168.1.103/24 DocumentRoot 分别为 /var/www/website1	;对应 IP 地址 192.168.1.101/24/var/www/website2	;对应 IP 地址 192.168.1.102/24/var/www/we">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-07T14:15:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTPD VirtualHost 配置">
+<meta name="twitter:description" content="HTTPD 虚拟主机配置 基于 IP 地址创建 添加三个 IP 地址 192.168.1.101/24192.168.1.102/24192.168.1.103/24 DocumentRoot 分别为 /var/www/website1	;对应 IP 地址 192.168.1.101/24/var/www/website2	;对应 IP 地址 192.168.1.102/24/var/www/we">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-httpd-virtualhost-configuration" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">HTTPD VirtualHost 配置</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.07</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/HTTPD/">HTTPD</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/07/httpd-virtualhost-configuration/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>HTTPD 虚拟主机配置</strong></p>
+<p><strong>基于 IP 地址创建</strong></p>
+<p>添加三个 IP 地址</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">192.168.1.101/24</div><div class="line">192.168.1.102/24</div><div class="line">192.168.1.103/24</div></pre></td></tr></table></figure>
+<p><code>DocumentRoot</code> 分别为</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/var/www/website1	;对应 IP 地址 192.168.1.101/24</div><div class="line">/var/www/website2	;对应 IP 地址 192.168.1.102/24</div><div class="line">/var/www/website3	;对应 IP 地址 192.168.1.103/24</div></pre></td></tr></table></figure>
+<p>为了方便管理应该为虚拟主机创建单独的配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/httpd/conf.d/vhost.conf</div><div class="line"></div><div class="line">&lt;virtualhost 192.168.1.101:80&gt;</div><div class="line">DocumentRoot <span class="string">"/var/www/website1"</span></div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost 192.168.1.102:80&gt;</div><div class="line">DocumentRoot <span class="string">"/var/www/website2"</span></div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost 192.168.1.103:80&gt;</div><div class="line">DocumentRoot <span class="string">"/var/www/website3"</span></div><div class="line">&lt;/virtualhost&gt;</div></pre></td></tr></table></figure>
+<p>重载配置文件访问测试</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">service httpd reload</div><div class="line"></div><div class="line">curl 192.168.1.101</div><div class="line">Virtual Host 1</div><div class="line">curl 192.168.1.102</div><div class="line">Virtual Host 2</div><div class="line">curl 192.168.1.103</div><div class="line">Virtual Host 3</div></pre></td></tr></table></figure>
+<p>添加日志文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/httpd/conf.d/vhost.conf </div><div class="line"></div><div class="line">&lt;virtualhost 192.168.1.101:80&gt;</div><div class="line">DocumentRoot <span class="string">"/var/www/website1"</span></div><div class="line">ErrorLog logs/website1_error_log</div><div class="line">CustomLog logs/website1_access_log common</div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost 192.168.1.102:80&gt;</div><div class="line">DocumentRoot <span class="string">"/var/www/website2"</span></div><div class="line">ErrorLog logs/website2_error_log</div><div class="line">CustomLog logs/website2_access_log common</div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost 192.168.1.103:80&gt;</div><div class="line">DocumentRoot <span class="string">"/var/www/website3"</span></div><div class="line">ErrorLog logs/website3_error_log</div><div class="line">CustomLog logs/website3_access_log common</div><div class="line">&lt;/virtualhost&gt;</div></pre></td></tr></table></figure>
+<p>查看日志</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">cat /var/<span class="built_in">log</span>/httpd/website*</div><div class="line">192.168.1.101 - - [05/Oct/2017:04:24:56 +0800] <span class="string">"GET / HTTP/1.1"</span> 200 15</div><div class="line">192.168.1.102 - - [05/Oct/2017:04:24:58 +0800] <span class="string">"GET / HTTP/1.1"</span> 200 15</div><div class="line">192.168.1.103 - - [05/Oct/2017:04:25:01 +0800] <span class="string">"GET / HTTP/1.1"</span> 200 15</div></pre></td></tr></table></figure>
+<p><strong>基于端口创建</strong></p>
+<p>使用同一个 IP 不同端口</p>
+<p>监听端口分别为 81,82,83, IP 地址都使用 192.168.1.101</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/httpd/conf.d/vhost.conf </div><div class="line">Listen 192.168.1.101:81</div><div class="line">Listen 192.168.1.101:82</div><div class="line">Listen 192.168.1.101:83</div><div class="line"></div><div class="line">&lt;virtualhost 192.168.1.101:81&gt;</div><div class="line">DocumentRoot <span class="string">"/var/www/website1"</span></div><div class="line">ErrorLog logs/website1_error_log</div><div class="line">CustomLog logs/website1_access_log common</div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost 192.168.1.101:82&gt;</div><div class="line">DocumentRoot <span class="string">"/var/www/website2"</span></div><div class="line">ErrorLog logs/website2_error_log</div><div class="line">CustomLog logs/website2_access_log common</div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost 192.168.1.101:83&gt;</div><div class="line">DocumentRoot <span class="string">"/var/www/website3"</span></div><div class="line">ErrorLog logs/website3_error_log</div><div class="line">CustomLog logs/website3_access_log common</div><div class="line">&lt;/virtualhost&gt;</div></pre></td></tr></table></figure>
+<p>重启服务访问测试</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">service httpd restart</div><div class="line"></div><div class="line">curl 192.168.1.101:81</div><div class="line">Virtual Host 1</div><div class="line">curl 192.168.1.101:82</div><div class="line">Virtual Host 2</div><div class="line">curl 192.168.1.101:83</div><div class="line">Virtual Host 3</div></pre></td></tr></table></figure>
+<p><strong>基于 FQDN</strong></p>
+<p>域名分别为</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">www.website1.com</div><div class="line">www.website2.com</div><div class="line">www.website3.com</div></pre></td></tr></table></figure>
+<p>虚拟主机配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Namevirtualhost *:80</div><div class="line">&lt;virtualhost *:80&gt;</div><div class="line">ServerName www.website1.com</div><div class="line">DocumentRoot <span class="string">"/var/www/website1"</span></div><div class="line">ErrorLog logs/website1_error_log</div><div class="line">CustomLog logs/website1_access_log common</div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost *:80&gt;</div><div class="line">ServerName www.website2.com</div><div class="line">DocumentRoot <span class="string">"/var/www/website2"</span></div><div class="line">ErrorLog logs/website2_error_log</div><div class="line">CustomLog logs/website2_access_log common</div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost *:80&gt;</div><div class="line">ServerName www.website3.com</div><div class="line">DocumentRoot <span class="string">"/var/www/website3"</span></div><div class="line">ErrorLog logs/website3_error_log</div><div class="line">CustomLog logs/website3_access_log common</div><div class="line">&lt;/virtualhost&gt;</div></pre></td></tr></table></figure>
+<p>如果没有配置 DNS 服务器可以通过修改 hosts 文件来测试</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/hosts</div><div class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</div><div class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</div><div class="line">192.168.1.101   www.website1.com</div><div class="line">192.168.1.101   www.website2.com</div><div class="line">192.168.1.101   www.website3.com</div></pre></td></tr></table></figure>
+<p>重启 httpd 服务访问测试</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">service httpd restart</div><div class="line"></div><div class="line">curl www.website1.com</div><div class="line">Virtual Host 1</div><div class="line">curl www.website2.com</div><div class="line">Virtual Host 2</div><div class="line">curl www.website3.com</div><div class="line">Virtual Host 3</div></pre></td></tr></table></figure>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/07/httpd常见配置/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/07/httpd-virtualhost-configuration/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

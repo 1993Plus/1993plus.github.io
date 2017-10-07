@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>httpd(2.2) 常见配置 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="web,httpd," />
+  
+
+  <meta name="description" content="解决 HTTPD 服务启动错误提示 [root@localhost ~]# service httpd startStarting httpd: httpd: Could not reliably determine the server&amp;apos;s fully qualified domain name, using localhost.localdomain for ServerName">
+<meta name="keywords" content="web,httpd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="httpd(2.2) 常见配置">
+<meta property="og:url" content="http://www.weidong.io/2017/10/07/httpd常见配置/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="解决 HTTPD 服务启动错误提示 [root@localhost ~]# service httpd startStarting httpd: httpd: Could not reliably determine the server&amp;apos;s fully qualified domain name, using localhost.localdomain for ServerName">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-07T11:58:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="httpd(2.2) 常见配置">
+<meta name="twitter:description" content="解决 HTTPD 服务启动错误提示 [root@localhost ~]# service httpd startStarting httpd: httpd: Could not reliably determine the server&amp;apos;s fully qualified domain name, using localhost.localdomain for ServerName">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-httpd常见配置" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">httpd(2.2) 常见配置</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.07</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/HTTPD/">HTTPD</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/07/httpd常见配置/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>解决 <code>HTTPD</code> 服务启动错误提示</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@localhost ~]# service httpd start</div><div class="line">Starting httpd: httpd: Could not reliably determine the server&apos;s fully qualified domain name, using localhost.localdomain for ServerName</div><div class="line">                                                           [  OK  ]</div></pre></td></tr></table></figure>
+<p>修改配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">;/etc/httpd/conf/httpd.conf</div><div class="line">;修改字段</div><div class="line">#ServerName www.example.com:80</div><div class="line">;修改后，地址可自行设置</div><div class="line">ServerName 127.0.0.1:80</div></pre></td></tr></table></figure>
+<p>再次启动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">service httpd start</div><div class="line">Starting httpd:                                            [  OK  ]</div></pre></td></tr></table></figure>
+<p><strong><code>ServerTokens</code></strong></p>
+<p>官方文档地址：<a href="http://httpd.apache.org/docs/2.2/mod/core.html#servertokens" target="_blank" rel="external">http://httpd.apache.org/docs/2.2/mod/core.html#servertokens</a></p>
+<p>该指令控制发送回给客户端的服务器响应头字段是否包括服务器的通用os类型的描述，以及关于被编译模块的信息。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ServerTokens Prod[uctOnly]</div><div class="line">Server sends (e.g.): Server: Apache</div><div class="line">ServerTokens Major</div><div class="line">Server sends (e.g.): Server: Apache/2</div><div class="line">ServerTokens Minor</div><div class="line">Server sends (e.g.): Server: Apache/2.0</div><div class="line">ServerTokens Min[imal]</div><div class="line">Server sends (e.g.): Server: Apache/2.0.41</div><div class="line">ServerTokens OS</div><div class="line">Server sends (e.g.): Server: Apache/2.0.41 (Unix)</div><div class="line">ServerTokens Full (or not specified)</div><div class="line">Server sends (e.g.): Server: Apache/2.0.41 (Unix) PHP/4.2.2 MyMod/1.2</div></pre></td></tr></table></figure>
+<p>为了安全考虑通常建议设置为 <code>Prod</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/etc/httpd/conf/httpd.conf</div><div class="line">;默认值为 OS</div><div class="line">ServerTokens OS</div><div class="line">;修改为 Prod</div><div class="line">ServerTokens Prod</div><div class="line">;重新载入配置文件</div><div class="line">service httpd reload</div><div class="line">;使用 curl 工具测试；加上 -I 参数，只看头部</div><div class="line">curl -I 127.0.0.1</div><div class="line">HTTP/1.1 200 OK</div><div class="line">Date: Wed, 04 Oct 2017 14:46:17 GMT</div><div class="line">Server: Apache</div><div class="line">Last-Modified: Sat, 02 Sep 2017 19:49:05 GMT</div><div class="line">ETag: &quot;14024f-16-5583a2b8666e9&quot;</div><div class="line">Accept-Ranges: bytes</div><div class="line">Content-Length: 22</div><div class="line">Connection: close</div><div class="line">Content-Type: text/html; charset=UTF-8</div></pre></td></tr></table></figure>
+<p><strong>Listen</strong></p>
+<p>官方文档地址：<a href="http://httpd.apache.org/docs/2.2/mod/mpm_common.html#listen" target="_blank" rel="external">http://httpd.apache.org/docs/2.2/mod/mpm_common.html#listen</a></p>
+<ul>
+<li>Listen 指令配置 HTTPD 只监听特定的IP地址或端口；默认情况下，它响应所有IP接口的请求。Listen 是一个必需的指令。如果它不在配置文件中，服务器将无法启动。</li>
+<li>Listen 指令告诉服务器接受指定 Port 或 Address Port组合的传入请求。如果只指定了一个端口号，服务器将在所有接口上监听给定端口。如果给定一个IP地址和一个端口，服务器将只监听给定的端口和接口。</li>
+<li>多个侦听指令可用于指定要侦听的多个地址和端口。服务器将响应来自任何列出的地址和端口的请求。</li>
+</ul>
+<p>例如要同时监听在 80 与 8080 端口上</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/etc/httpd/conf/httpd.conf</div><div class="line">Listen 80</div><div class="line">Listen 8080</div><div class="line">;重新载入配置文件</div><div class="line">service httpd reload</div><div class="line">;查看服务器端口监听状态</div><div class="line">ss -tan | grep &apos;80\|8080&apos;   </div><div class="line">LISTEN     0      128                      :::8080                    :::*     </div><div class="line">LISTEN     0      128                      :::80                      :::*</div></pre></td></tr></table></figure>
+<p>监听在指定的 <code>IP PORT</code> 上</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/etc/httpd/conf/httpd.conf</div><div class="line">;现在服务器有两个 IP，分别为 192.168.1.200,192.168.1.201</div><div class="line">;设置让它只监听 192.168.1.201 8080 上</div><div class="line">Listen 192.168.1.201:8080</div><div class="line">;重启 httpd 服务</div><div class="line">service httpd restart</div><div class="line">;测试结果</div><div class="line">curl 127.0.0.1</div><div class="line">curl: (7) couldn&apos;t connect to host</div><div class="line">curl 192.168.1.200</div><div class="line">curl: (7) couldn&apos;t connect to host</div><div class="line">curl 192.168.1.201</div><div class="line">curl: (7) couldn&apos;t connect to host</div><div class="line">;现在除了 192.168.1.201:8080 可以访问，其它地址都无法访问了</div><div class="line">curl 192.168.1.201:8080</div><div class="line">&lt;h1&gt;Hello world!&lt;/h1&gt;</div></pre></td></tr></table></figure>
+<p><strong>KeepAlive</strong></p>
+<p>官方文档地址：<a href="http://httpd.apache.org/docs/2.2/mod/core.html#keepalive" target="_blank" rel="external">http://httpd.apache.org/docs/2.2/mod/core.html#keepalive</a></p>
+<p>Persistent Connection: 连接建立，每个资源获取完成后不会断开连接，而是继续等待其它的请求完成，默认是关闭的。</p>
+<p>断开条件由 <code>MaxKeepAliveRequests</code> 与 <code>KeepAliveTimeout</code> 决定</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">;默认设置</div><div class="line">MaxKeepAliveRequests 100	;表示当请求数量达到 100 后断开</div><div class="line">KeepAliveTimeout 15		;以秒(seconds)为单位，连接时间到达 15 秒后断开</div></pre></td></tr></table></figure>
+<p>副作用：对并发访问量较大的服务器，持久连接功能会使有些请求得不到响应</p>
+<p>修改配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/etc/httpd/conf/httpd.conf</div><div class="line">KeepAlive On</div><div class="line">MaxKeepAliveRequests 100</div><div class="line">KeepAliveTimeout 50</div><div class="line">;使用 telnet 客户端测试</div><div class="line">telnet 192.168.1.200 80</div><div class="line">Trying 192.168.1.200...</div><div class="line">Connected to 192.168.1.200.</div><div class="line">Escape character is &apos;^]&apos;.</div><div class="line">GET /index.html HTTP/1.1	;第一次请求资源</div><div class="line">HOST: 192.168.1.200</div><div class="line"></div><div class="line">HTTP/1.1 200 OK</div><div class="line">Date: Wed, 04 Oct 2017 16:01:10 GMT</div><div class="line">Server: Apache</div><div class="line">Last-Modified: Sat, 02 Sep 2017 19:49:05 GMT</div><div class="line">ETag: &quot;14024f-16-5583a2b8666e9&quot;</div><div class="line">Accept-Ranges: bytes</div><div class="line">Content-Length: 22</div><div class="line">Content-Type: text/html; charset=UTF-8</div><div class="line"></div><div class="line">&lt;h1&gt;Hello world!&lt;/h1&gt;</div><div class="line">GET /index2.html HTTP/1.1	;第二次请求资源</div><div class="line">HOST: 192.168.1.200</div><div class="line"></div><div class="line">HTTP/1.1 200 OK</div><div class="line">Date: Wed, 04 Oct 2017 16:01:39 GMT</div><div class="line">Server: Apache</div><div class="line">Last-Modified: Wed, 04 Oct 2017 15:02:22 GMT</div><div class="line">ETag: &quot;141217-18-55ab9e5189d4b&quot;</div><div class="line">Accept-Ranges: bytes</div><div class="line">Content-Length: 24</div><div class="line">Content-Type: text/html; charset=UTF-8</div><div class="line"></div><div class="line">&lt;h1&gt;Hello world!-2&lt;/h1&gt;</div><div class="line">Connection closed by foreign host.</div></pre></td></tr></table></figure>
+<p><strong>MPM (Multi-Processing Module) 多路处理模块</strong></p>
+<ul>
+<li><p>prefork</p>
+<p>prefork 模式默认配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;IfModule prefork.c&gt;</div><div class="line">StartServers       8	;初始子进程数</div><div class="line">MinSpareServers    5	;最小空闲子进程数(当剩余的子进程数小于 5 个时新开子进程)</div><div class="line">MaxSpareServers   20	;最大空闲子进程数(客户端在访问结束后可存活的子进程数)</div><div class="line">ServerLimit      256	;最多进程数，最大 2000</div><div class="line">MaxClients       256	;最大并发，应该与 ServerLimit 的值相等</div><div class="line">MaxRequestsPerChild  4000	;子进程处理的最多请求数量，当达到这个值时将被父进程杀死，释放内存</div><div class="line">&lt;/IfModule&gt;</div><div class="line">;MaxRequestsPerChild 的值为 0 时将永远不释放内存</div></pre></td></tr></table></figure>
+</li>
+<li><p>worker</p>
+</li>
+</ul>
+<p>worker 模式默认配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;IfModule worker.c&gt;</div><div class="line">StartServers         4	;初始进程数</div><div class="line">MaxClients         300	;最大请求数</div><div class="line">MinSpareThreads     25	;最小空闲线程数</div><div class="line">MaxSpareThreads     75	;最大空闲线程数</div><div class="line">ThreadsPerChild     25	;每个子进程可开启的线程数</div><div class="line">MaxRequestsPerChild  0</div><div class="line">&lt;/IfModule&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li>event(测试阶段)</li>
+</ul>
+<p>httpd 2.2 不支持同时编译多个模块，所以只能编译时选定一个；rpm 安装的包提供三个二进制程序文件，分别用于实现对不同 PMP 机制的支持</p>
+<p>要查看当前使用的模式可以通过查看进程名称来确认</p>
+<p>如果进程名为 <code>httpd</code> 即为 <code>prefork</code> 模式，如果是 <code>httpd.worker</code> 则为 <code>worker</code> 模式</p>
+<p>可以通过修改配置文件 <code>vim /etc/sysconfig/httpd</code> 来更改模式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">;找到这一行将前面的 “#” 去掉，重启 httpd 服务即可</div><div class="line">#HTTPD=/usr/sbin/httpd.worker</div></pre></td></tr></table></figure>
+<p><strong>查看模块列表</strong></p>
+<p>查看静态编译的模块</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">httpd -l</div></pre></td></tr></table></figure>
+<p>查看静态编译及动态装载的模块</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">httpd -M</div></pre></td></tr></table></figure>
+<p>动态模块加载不需要重启即可生效<br>动态模块路径</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/usr/lib64/httpd/modules/</div></pre></td></tr></table></figure>
+<p><strong>DSO(Dynamic Shared Object)</strong></p>
+<p>加载动态模块配置</p>
+<p>格式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">LoadModule		&lt;mod_name&gt;		&lt;mod_path&gt;</div></pre></td></tr></table></figure>
+<p>系统自带的一些模块</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">LoadModule auth_basic_module modules/mod_auth_basic.so</div><div class="line">LoadModule auth_digest_module modules/mod_auth_digest.so</div><div class="line">LoadModule authn_file_module modules/mod_authn_file.so</div><div class="line">LoadModule authn_alias_module modules/mod_authn_alias.so</div></pre></td></tr></table></figure>
+<p>这些模块的路径使用的是一个相对路径，相对于 <code>ServerRoot</code> 的值，默认 <code>/etc/httpd</code> </p>
+<p>另外一种方法就是单独创建一个配置文件来加载模块，这些配置文件应放在 <code>conf.d</code> 目录下，配置文件必须以 <code>&quot;.conf&quot;</code> 结尾，因为这是由 <code>Include</code> 指令决定的</p>
+<p><strong>定义 Main Server 的页面路径</strong></p>
+<p>页面路径由 <code>DocumentRoot</code> 来定义，指定的路径为 URL 路径的起始位置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">DocumentRoot &quot;/var/www/html&quot;</div></pre></td></tr></table></figure>
+<p>当更改了这个值时需要调整 SELinux</p>
+<p><strong>定义站点主页面</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">DirectoryIndex index.html index.html.var</div></pre></td></tr></table></figure>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/07/httpd相关配置文件/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/10/07/httpd-virtualhost-configuration/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/07/httpd常见配置/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
