@@ -24,7 +24,7 @@
 <meta property="og:description" content="HTTPD(2.2)  deflate_module 官方文档地址：http://httpd.apache.org/docs/2.2/mod/mod_deflate.html mod_deflate 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。 优点：节约带宽 缺点：消耗 CPU ，有些较老的浏览器不支持 支持压缩的文件类型 text/html text/p">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/deflate_1.png">
-<meta property="og:updated_time" content="2017-10-08T13:17:02.000Z">
+<meta property="og:updated_time" content="2017-10-08T13:31:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="httpd(2.2) deflate modules">
 <meta name="twitter:description" content="HTTPD(2.2)  deflate_module 官方文档地址：http://httpd.apache.org/docs/2.2/mod/mod_deflate.html mod_deflate 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。 优点：节约带宽 缺点：消耗 CPU ，有些较老的浏览器不支持 支持压缩的文件类型 text/html text/p">
@@ -224,7 +224,7 @@
 
   <div class="article-content">
     
-      <p>HTTPD(2.2)  deflate_module</p>
+      <p><strong>HTTPD(2.2)  deflate_module</strong></p>
 <p>官方文档地址：<a href="http://httpd.apache.org/docs/2.2/mod/mod_deflate.html" target="_blank" rel="external">http://httpd.apache.org/docs/2.2/mod/mod_deflate.html</a></p>
 <p><code>mod_deflate</code> 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。</p>
 <p>优点：节约带宽</p>
@@ -248,6 +248,8 @@
 <p><strong>针对特定浏览器执行压缩</strong></p>
 <p>官方示例</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">BrowserMatch ^Mozilla/4 gzip-only-text/html</div><div class="line">BrowserMatch ^Mozilla/4\.0[678] no-gzip</div><div class="line">BrowserMatch \bMSIE !no-gzip !gzip-only-text/html</div></pre></td></tr></table></figure>
+<p><strong>压缩级别</strong></p>
+<p>压缩级别由 <code>DeflateCompressionLevel</code> 指令控制，压缩级别从 1-9 ，压缩等级越高，压缩比就越高，但会更消耗 CPU 资源；</p>
 <p>END!</p>
 
     
