@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 
 
-  <html class="light page-categoriesMACOS">
+  <html class="light page-post">
 
 
 <head>
   <meta charset="utf-8">
   
-  <title>Category: MACOS | Weidong</title>
+  <title>httpd(2.2) server status modules | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="Linux,Linux运维" />
+    <meta name="keywords" content="httpd,server_status_mod," />
   
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Weidong">
-<meta property="og:url" content="http://www.weidong.io/categories/MACOS/index.html">
+  <meta name="description" content="HTTPD(2.2) 服务状态监控模块 status_module status_module 模块是 httpd 中一个用来监控 httpd 服务端各种状态信息的模块 查看模块是否已加载 httpd -M | grep statusstatus_module (shared)	;有表示已加载Syntax OK 修改配置文件 ;默认该配置是被注释了，需要将前面的 &quot;#&quot; 号去掉&amp;lt;Locati">
+<meta name="keywords" content="httpd,server_status_mod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="httpd(2.2) server status modules">
+<meta property="og:url" content="http://www.weidong.io/2017/10/08/httpd-server-status-mod/index.html">
 <meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="HTTPD(2.2) 服务状态监控模块 status_module status_module 模块是 httpd 中一个用来监控 httpd 服务端各种状态信息的模块 查看模块是否已加载 httpd -M | grep statusstatus_module (shared)	;有表示已加载Syntax OK 修改配置文件 ;默认该配置是被注释了，需要将前面的 &quot;#&quot; 号去掉&amp;lt;Locati">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/server-status1.png">
+<meta property="og:updated_time" content="2017-10-08T06:57:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Weidong">
+<meta name="twitter:title" content="httpd(2.2) server status modules">
+<meta name="twitter:description" content="HTTPD(2.2) 服务状态监控模块 status_module status_module 模块是 httpd 中一个用来监控 httpd 服务端各种状态信息的模块 查看模块是否已加载 httpd -M | grep statusstatus_module (shared)	;有表示已加载Syntax OK 修改配置文件 ;默认该配置是被注释了，需要将前面的 &quot;#&quot; 号去掉&amp;lt;Locati">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/server-status1.png">
 
   
 
@@ -84,17 +91,8 @@
     <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
   
 
-  <div class="content content-category">
-  <div class="page-header">
-
-  
-    <div class="breadcrumb">
-      <div class="location">分类</div>
-      <i class="icon-location"></i>
-    </div>
-  
-
-  
+  <div class="post-header CENTER">
+   
   <div class="toolbox">
     <a class="toolbox-entry" href="/">
       <span class="toolbox-entry-text">盒子</span>
@@ -173,249 +171,97 @@
   </div>
 
 
-
-  <div class="box-blog-info">
-    <a class="avatar" href="/">
-      <img src="https://avatars0.githubusercontent.com/u/5886066?v=3&amp;s=460" alt="" />
-    </a>
-    <div class="info">
-      <h3 class="name" style="font-family: calligraffittiregular">
-        Weidong.Z
-      </h3>
-      <div class="slogan">
-        Find the bug of the world
-      </div>
-    </div>
-  </div>
-
 </div>
 
-  <section class="category-box">
-  <div class="category-title">分类</div>
-  <div class="category-list">
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-httpd-server-status-mod" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">httpd(2.2) server status modules</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.08</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/HTTPD/">HTTPD</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/08/httpd-server-status-mod/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
     
-      <a class="category-item" href="#Bind">
-        <span class="category-name">Bind</span>
-        <span class="category-size">( 1 )</span>
-      </a>
-    
-      <a class="category-item" href="#HTTP">
-        <span class="category-name">HTTP</span>
-        <span class="category-size">( 1 )</span>
-      </a>
-    
-      <a class="category-item" href="#HTTPD">
-        <span class="category-name">HTTPD</span>
-        <span class="category-size">( 5 )</span>
-      </a>
-    
-      <a class="category-item" href="#Linux">
-        <span class="category-name">Linux</span>
-        <span class="category-size">( 6 )</span>
-      </a>
-    
-      <a class="category-item" href="#MACOS">
-        <span class="category-name">MACOS</span>
-        <span class="category-size">( 1 )</span>
-      </a>
-    
-      <a class="category-item" href="#MySQL(MariaDB)">
-        <span class="category-name">MySQL(MariaDB)</span>
-        <span class="category-size">( 1 )</span>
-      </a>
+      <p>HTTPD(2.2) 服务状态监控模块 <code>status_module</code></p>
+<p><code>status_module</code> 模块是 httpd 中一个用来监控 httpd 服务端各种状态信息的模块</p>
+<p>查看模块是否已加载</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">httpd -M | grep status</div><div class="line">status_module (shared)	;有表示已加载</div><div class="line">Syntax OK</div></pre></td></tr></table></figure>
+<p>修改配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;默认该配置是被注释了，需要将前面的 <span class="string">"#"</span> 号去掉</div><div class="line">&lt;Location /server-status&gt;	;<span class="string">"/"</span> 后面的字段可以自定义修改，访问的时候将它放到地址后面</div><div class="line">    SetHandler server-status</div><div class="line">    Order deny,allow</div><div class="line">    Deny from all</div><div class="line">    Allow from 192.168.1.0/24	;允许访问的地址</div><div class="line">&lt;/Location&gt;</div></pre></td></tr></table></figure>
+<p>重启服务测试</p>
+<p>在浏览器地址栏中输入 <a href="http://SERVER_IP/server-status" target="_blank" rel="external">http://SERVER_IP/server-status</a> </p>
+<p>例如我现在服务端的 IP 地址是 192.168.1.101，那地址就是 <a href="http://192.168.1.101/server-status" target="_blank" rel="external">http://192.168.1.101/server-status</a></p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/server-status1.png" alt="访问测试"></p>
+<p>如果想查看更详细的信息，那就将 <code>ExtendedStatus On</code> 取消注释即可</p>
+
     
   </div>
-</section>
-
-  <ul class="list-post"><li id="Bind" class="item-category-name item-title item-title-0">
-  <!--
-    <a href="" class="text-year">
-   -->
-    Bind
-    <span class="category-count">( 1 )</span>
-  <!--
-  </a>
-   -->
-</li>
-<li class="item-post item">
-  <span class="post-date">09-27</span>
-
-  
-  <a class="post-title" href="/2017/09/27/dns-service-bind/">dns service bind</a>
+</article>
 
 
-</li>
-<li id="HTTP" class="item-category-name item-title item-title-1">
-  <!--
-    <a href="" class="text-year">
-   -->
-    HTTP
-    <span class="category-count">( 1 )</span>
-  <!--
-  </a>
-   -->
-</li>
-<li class="item-post item">
-  <span class="post-date">10-06</span>
+   
 
-  
-  <a class="post-title" href="/2017/10/06/one-http-request-process/">一次完整的 HTTP 请求过程</a>
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/07/httpd-virtualhost-configuration/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
 
 
-</li>
-<li id="HTTPD" class="item-category-name item-title item-title-2">
-  <!--
-    <a href="" class="text-year">
-   -->
-    HTTPD
-    <span class="category-count">( 5 )</span>
-  <!--
-  </a>
-   -->
-</li>
-<li class="item-post item">
-  <span class="post-date">10-08</span>
-
-  
-  <a class="post-title" href="/2017/10/08/httpd-server-status-mod/">httpd(2.2) server status modules</a>
 
 
-</li>
-<li class="item-post item">
-  <span class="post-date">10-07</span>
-
-  
-  <a class="post-title" href="/2017/10/07/httpd-virtualhost-configuration/">httpd(2.2) virtualhost 配置</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">10-07</span>
-
-  
-  <a class="post-title" href="/2017/10/07/httpd常见配置/">httpd(2.2) 常见配置</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">10-07</span>
-
-  
-  <a class="post-title" href="/2017/10/07/httpd相关配置文件/">httpd(2.2)相关配置文件</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">10-06</span>
-
-  
-  <a class="post-title" href="/2017/10/06/httpd-introduction/">Httpd 简介</a>
-
-
-</li>
-<li id="Linux" class="item-category-name item-title item-title-3">
-  <!--
-    <a href="" class="text-year">
-   -->
-    Linux
-    <span class="category-count">( 6 )</span>
-  <!--
-  </a>
-   -->
-</li>
-<li class="item-post item">
-  <span class="post-date">09-29</span>
-
-  
-  <a class="post-title" href="/2017/09/29/create-private-ca/">创建私有 CA 与签发证书</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">09-18</span>
-
-  
-  <a class="post-title" href="/2017/09/18/cobbler/">Cobbler 基础应用</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">09-17</span>
-
-  
-  <a class="post-title" href="/2017/09/17/pxe-install-centos/">CentOS 7 搭建操作系统自动化安装服务</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">09-15</span>
-
-  
-  <a class="post-title" href="/2017/09/15/parted/">使用 parted 创建磁盘分区</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">09-15</span>
-
-  
-  <a class="post-title" href="/2017/09/15/systemd-basic-opt/">systemd 基础应用</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">07-17</span>
-
-  
-  <a class="post-title" href="/2017/07/17/Linux-获取帮助/">Linux 获取帮助</a>
-
-
-</li>
-<li id="MACOS" class="item-category-name item-title item-title-4">
-  <!--
-    <a href="" class="text-year">
-   -->
-    MACOS
-    <span class="category-count">( 1 )</span>
-  <!--
-  </a>
-   -->
-</li>
-<li class="item-post item">
-  <span class="post-date">09-13</span>
-
-  
-  <a class="post-title" href="/2017/09/13/uninstall-nodejs-md/">MACOS 中删除 nodejs</a>
-
-
-</li>
-<li id="MySQL(MariaDB)" class="item-category-name item-title item-title-0">
-  <!--
-    <a href="" class="text-year">
-   -->
-    MySQL(MariaDB)
-    <span class="category-count">( 1 )</span>
-  <!--
-  </a>
-   -->
-</li>
-<li class="item-post item">
-  <span class="post-date">10-06</span>
-
-  
-  <a class="post-title" href="/2017/10/06/mysql-data-type/">MySQL(MariaDB) 数据类型</a>
-
-
-</li>
-</ul>
 </div>
 
 
   <a id="backTop" class="back-top">
     <i class="icon-angle-up"></i>
   </a>
-
-
 
 
 
@@ -503,6 +349,44 @@
 </div>
 
 
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/08/httpd-server-status-mod/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
 
   
 
