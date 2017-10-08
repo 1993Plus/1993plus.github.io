@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="Weidong">
 <meta property="og:description" content="HTTPD(2.2) 虚拟主机配置 基于 IP 地址创建 添加三个 IP 地址 192.168.1.101/24192.168.1.102/24192.168.1.103/24 DocumentRoot 分别为 /var/www/website1	;对应 IP 地址 192.168.1.101/24/var/www/website2	;对应 IP 地址 192.168.1.102/24/var/w">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-07T14:34:42.000Z">
+<meta property="og:updated_time" content="2017-10-08T11:13:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="httpd(2.2) virtualhost 配置">
 <meta name="twitter:description" content="HTTPD(2.2) 虚拟主机配置 基于 IP 地址创建 添加三个 IP 地址 192.168.1.101/24192.168.1.102/24192.168.1.103/24 DocumentRoot 分别为 /var/www/website1	;对应 IP 地址 192.168.1.101/24/var/www/website2	;对应 IP 地址 192.168.1.102/24/var/w">
@@ -248,7 +248,7 @@
 <p>虚拟主机配置文件</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Namevirtualhost *:80</div><div class="line">&lt;virtualhost *:80&gt;</div><div class="line">ServerName www.website1.com</div><div class="line">DocumentRoot <span class="string">"/var/www/website1"</span></div><div class="line">ErrorLog logs/website1_error_log</div><div class="line">CustomLog logs/website1_access_log common</div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost *:80&gt;</div><div class="line">ServerName www.website2.com</div><div class="line">DocumentRoot <span class="string">"/var/www/website2"</span></div><div class="line">ErrorLog logs/website2_error_log</div><div class="line">CustomLog logs/website2_access_log common</div><div class="line">&lt;/virtualhost&gt;</div><div class="line"></div><div class="line">&lt;virtualhost *:80&gt;</div><div class="line">ServerName www.website3.com</div><div class="line">DocumentRoot <span class="string">"/var/www/website3"</span></div><div class="line">ErrorLog logs/website3_error_log</div><div class="line">CustomLog logs/website3_access_log common</div><div class="line">&lt;/virtualhost&gt;</div></pre></td></tr></table></figure>
 <p>如果没有配置 DNS 服务器可以通过修改 hosts 文件来测试</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/hosts</div><div class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</div><div class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</div><div class="line">192.168.1.101   www.website1.com</div><div class="line">192.168.1.101   www.website2.com</div><div class="line">192.168.1.101   www.website3.com</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/hosts</div><div class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</div><div class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</div><div class="line">192.168.1.101   www.website1.com www.website2.com www.website3.com</div></pre></td></tr></table></figure>
 <p>重启 httpd 服务访问测试</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">service httpd restart</div><div class="line"></div><div class="line">curl www.website1.com</div><div class="line">Virtual Host 1</div><div class="line">curl www.website2.com</div><div class="line">Virtual Host 2</div><div class="line">curl www.website3.com</div><div class="line">Virtual Host 3</div></pre></td></tr></table></figure>
 <p>END!</p>
