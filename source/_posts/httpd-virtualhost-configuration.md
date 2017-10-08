@@ -1,5 +1,5 @@
 ---
-title: HTTPD VirtualHost 配置
+title: httpd(2.2) virtualhost 配置
 date: 2017-10-07 22:13:22
 category: HTTPD
 tags:
@@ -7,7 +7,7 @@ tags:
 	- virtualhost
 ---
 
-**HTTPD 虚拟主机配置**
+**HTTPD(2.2) 虚拟主机配置**
 
 **基于 IP 地址创建**
 
