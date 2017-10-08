@@ -7,28 +7,28 @@
 <head>
   <meta charset="utf-8">
   
-  <title>httpd(2.2) server status modules | Weidong</title>
+  <title>httpd(2.2) deflate modules | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="httpd,server_status_mod," />
+    <meta name="keywords" content="httpd,gzip,deflate," />
   
 
-  <meta name="description" content="HTTPD(2.2) 服务状态监控模块 status_module status_module 模块是 httpd 中一个用来监控 httpd 服务端各种状态信息的模块 查看模块是否已加载 httpd -M | grep statusstatus_module (shared)	;有表示已加载Syntax OK 修改配置文件 ;默认该配置是被注释了，需要将前面的 &quot;#&quot; 号去掉&amp;lt;Locati">
-<meta name="keywords" content="httpd,server_status_mod">
+  <meta name="description" content="HTTPD(2.2)  deflate_module 官方文档地址：http://httpd.apache.org/docs/2.2/mod/mod_deflate.html mod_deflate 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。 优点：节约带宽 缺点：消耗 CPU ，有些较老的浏览器不支持 支持压缩的文件类型 text/html text/p">
+<meta name="keywords" content="httpd,gzip,deflate">
 <meta property="og:type" content="article">
-<meta property="og:title" content="httpd(2.2) server status modules">
-<meta property="og:url" content="http://www.weidong.io/2017/10/08/httpd-server-status-mod/index.html">
+<meta property="og:title" content="httpd(2.2) deflate modules">
+<meta property="og:url" content="http://www.weidong.io/2017/10/08/httpd-deflate-mod/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="HTTPD(2.2) 服务状态监控模块 status_module status_module 模块是 httpd 中一个用来监控 httpd 服务端各种状态信息的模块 查看模块是否已加载 httpd -M | grep statusstatus_module (shared)	;有表示已加载Syntax OK 修改配置文件 ;默认该配置是被注释了，需要将前面的 &quot;#&quot; 号去掉&amp;lt;Locati">
+<meta property="og:description" content="HTTPD(2.2)  deflate_module 官方文档地址：http://httpd.apache.org/docs/2.2/mod/mod_deflate.html mod_deflate 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。 优点：节约带宽 缺点：消耗 CPU ，有些较老的浏览器不支持 支持压缩的文件类型 text/html text/p">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/server-status1.png">
-<meta property="og:updated_time" content="2017-10-08T06:57:20.000Z">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/deflate_1.png">
+<meta property="og:updated_time" content="2017-10-08T13:17:02.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="httpd(2.2) server status modules">
-<meta name="twitter:description" content="HTTPD(2.2) 服务状态监控模块 status_module status_module 模块是 httpd 中一个用来监控 httpd 服务端各种状态信息的模块 查看模块是否已加载 httpd -M | grep statusstatus_module (shared)	;有表示已加载Syntax OK 修改配置文件 ;默认该配置是被注释了，需要将前面的 &quot;#&quot; 号去掉&amp;lt;Locati">
-<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/server-status1.png">
+<meta name="twitter:title" content="httpd(2.2) deflate modules">
+<meta name="twitter:description" content="HTTPD(2.2)  deflate_module 官方文档地址：http://httpd.apache.org/docs/2.2/mod/mod_deflate.html mod_deflate 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。 优点：节约带宽 缺点：消耗 CPU ，有些较老的浏览器不支持 支持压缩的文件类型 text/html text/p">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/deflate_1.png">
 
   
 
@@ -177,9 +177,9 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-httpd-server-status-mod" class="article article-type-post" itemprop="blogPost">
+   <article id="post-httpd-deflate-mod" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">httpd(2.2) server status modules</h1>
+    <h1 class="post-title">httpd(2.2) deflate modules</h1>
 
     <div class="article-meta">
       <span>
@@ -205,7 +205,7 @@
       
         <span>
           <i class="icon-comment"></i>
-          <a href="http://www.weidong.io/2017/10/08/httpd-server-status-mod/#disqus_thread"></a>
+          <a href="http://www.weidong.io/2017/10/08/httpd-deflate-mod/#disqus_thread"></a>
         </span>
       
 
@@ -224,17 +224,31 @@
 
   <div class="article-content">
     
-      <p>HTTPD(2.2) 服务状态监控模块 <code>status_module</code></p>
-<p><code>status_module</code> 模块是 httpd 中一个用来监控 httpd 服务端各种状态信息的模块</p>
-<p>查看模块是否已加载</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">httpd -M | grep status</div><div class="line">status_module (shared)	;有表示已加载</div><div class="line">Syntax OK</div></pre></td></tr></table></figure>
-<p>修改配置文件</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;默认该配置是被注释了，需要将前面的 <span class="string">"#"</span> 号去掉</div><div class="line">&lt;Location /server-status&gt;	;<span class="string">"/"</span> 后面的字段可以自定义修改，访问的时候将它放到地址后面</div><div class="line">    SetHandler server-status</div><div class="line">    Order deny,allow</div><div class="line">    Deny from all</div><div class="line">    Allow from 192.168.1.0/24	;允许访问的地址</div><div class="line">&lt;/Location&gt;</div></pre></td></tr></table></figure>
-<p>重启服务测试</p>
-<p>在浏览器地址栏中输入 <a href="http://SERVER_IP/server-status" target="_blank" rel="external">http://SERVER_IP/server-status</a> </p>
-<p>例如我现在服务端的 IP 地址是 192.168.1.101，那地址就是 <a href="http://192.168.1.101/server-status" target="_blank" rel="external">http://192.168.1.101/server-status</a></p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/server-status1.png" alt="访问测试"></p>
-<p>如果想查看更详细的信息，那就将 <code>ExtendedStatus On</code> 取消注释即可</p>
+      <p>HTTPD(2.2)  deflate_module</p>
+<p>官方文档地址：<a href="http://httpd.apache.org/docs/2.2/mod/mod_deflate.html" target="_blank" rel="external">http://httpd.apache.org/docs/2.2/mod/mod_deflate.html</a></p>
+<p><code>mod_deflate</code> 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。</p>
+<p>优点：节约带宽</p>
+<p>缺点：消耗 CPU ，有些较老的浏览器不支持</p>
+<p>支持压缩的文件类型</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">text/html text/plain text/xml text/css text/javascript application/javascript</div></pre></td></tr></table></figure>
+<p>确认模块是否加载</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">httpd -M | grep deflate</div><div class="line"> deflate_module (shared)</div><div class="line">Syntax OK</div></pre></td></tr></table></figure>
+<p>开启压缩指令</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">SetOutputFilter DEFLATE</div></pre></td></tr></table></figure>
+<p>如果要将压缩限制为一般的 <code>MIME</code> 类型，可以使用 <code>AddOutputFilterByType</code> 指令。</p>
+<p>为了方便管理建议单独创建一个配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/httpd/conf.d/deflate.conf</div><div class="line">SetOutputFilter DEFLATE</div><div class="line">&lt;Directory <span class="string">"/var/www/website1"</span>&gt;		;压缩指定目录的文件</div><div class="line">AddOutputFilterByType DEFLATE text/html		;指定要压缩的文件类型</div><div class="line">&lt;/Directory&gt;</div></pre></td></tr></table></figure>
+<p>重启服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">service httpd restart</div></pre></td></tr></table></figure>
+<p>测试文件原大小</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">-rw-r--r--. 1 root root 481918 Oct  5 11:49 /var/www/website1/test.html</div></pre></td></tr></table></figure>
+<p>浏览器访问测试</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/deflate_1.png" alt="压缩后大小"></p>
+<p>可以看到原文件大小为 481918 个字节，压缩后大小只有 41751 个字节了。</p>
+<p><strong>针对特定浏览器执行压缩</strong></p>
+<p>官方示例</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">BrowserMatch ^Mozilla/4 gzip-only-text/html</div><div class="line">BrowserMatch ^Mozilla/4\.0[678] no-gzip</div><div class="line">BrowserMatch \bMSIE !no-gzip !gzip-only-text/html</div></pre></td></tr></table></figure>
+<p>END!</p>
 
     
   </div>
@@ -245,10 +259,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/10/07/httpd-virtualhost-configuration/">
+    <a class="show pull-left" href="/2017/10/08/httpd-server-status-mod/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/08/httpd-deflate-mod/">
+    <a class="hide pull-right" href="/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -362,7 +376,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'http://www.weidong.io/2017/10/08/httpd-server-status-mod/';
+    var disqus_url = 'http://www.weidong.io/2017/10/08/httpd-deflate-mod/';
     
     (function(){
       var dsq = document.createElement('script');
