@@ -181,9 +181,7 @@ CustomLog logs/website3_access_log common
 vim /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-192.168.1.101   www.website1.com
-192.168.1.101   www.website2.com
-192.168.1.101   www.website3.com
+192.168.1.101   www.website1.com www.website2.com www.website3.com
 ```
 
 重启 httpd 服务访问测试
