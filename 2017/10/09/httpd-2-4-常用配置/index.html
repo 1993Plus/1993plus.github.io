@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>httpd(2.4) 常用配置 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Linux,Linux运维" />
+  
+
+  <meta name="description" content="httpd 2.4 常用配置 切换 MPM 在 conf.modules.d 目录下默认有 7 个文件，其中 00-mpm.conf 这个配置文件就是配置 MPM 模块的 ls -l /etc/httpd/conf.modules.d/-rw-r--r-- 1 root root 3739 Nov 15  2016 00-base.conf-rw-r--r-- 1 root root  139 N">
+<meta property="og:type" content="article">
+<meta property="og:title" content="httpd(2.4) 常用配置">
+<meta property="og:url" content="http://www.weidong.io/2017/10/09/httpd-2-4-常用配置/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="httpd 2.4 常用配置 切换 MPM 在 conf.modules.d 目录下默认有 7 个文件，其中 00-mpm.conf 这个配置文件就是配置 MPM 模块的 ls -l /etc/httpd/conf.modules.d/-rw-r--r-- 1 root root 3739 Nov 15  2016 00-base.conf-rw-r--r-- 1 root root  139 N">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-09T10:57:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="httpd(2.4) 常用配置">
+<meta name="twitter:description" content="httpd 2.4 常用配置 切换 MPM 在 conf.modules.d 目录下默认有 7 个文件，其中 00-mpm.conf 这个配置文件就是配置 MPM 模块的 ls -l /etc/httpd/conf.modules.d/-rw-r--r-- 1 root root 3739 Nov 15  2016 00-base.conf-rw-r--r-- 1 root root  139 N">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-httpd-2-4-常用配置" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">httpd(2.4) 常用配置</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.09</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/09/httpd-2-4-常用配置/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>httpd 2.4 常用配置</strong></p>
+<p><strong>切换 MPM</strong></p>
+<p>在 <code>conf.modules.d</code> 目录下默认有 7 个文件，其中 <code>00-mpm.conf</code> 这个配置文件就是配置 <code>MPM</code> 模块的</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">ls -l /etc/httpd/conf.modules.d/</div><div class="line">-rw-r--r-- 1 root root 3739 Nov 15  2016 00-base.conf</div><div class="line">-rw-r--r-- 1 root root  139 Nov 15  2016 00-dav.conf</div><div class="line">-rw-r--r-- 1 root root   41 Nov 15  2016 00-lua.conf</div><div class="line">-rw-r--r-- 1 root root  742 Nov 15  2016 00-mpm.conf</div><div class="line">-rw-r--r-- 1 root root  957 Nov 15  2016 00-proxy.conf</div><div class="line">-rw-r--r-- 1 root root   88 Nov 15  2016 00-systemd.conf</div><div class="line">-rw-r--r-- 1 root root  451 Nov 15  2016 01-cgi.conf</div></pre></td></tr></table></figure>
+<p>打开 <code>00-mpm.conf</code> 其中主要的就是以下 3 行，默认使用的是 <code>prefork</code> 模式</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">LoadModule mpm_prefork_module modules/mod_mpm_prefork.so	; prefork 模式</div><div class="line"><span class="comment">#LoadModule mpm_worker_module modules/mod_mpm_worker.so		; worker 模式</span></div><div class="line"><span class="comment">#LoadModule mpm_event_module modules/mod_mpm_event.so		; event 模式</span></div><div class="line">; 这三种模式只能开其中一个，不使用的模式就直接注释掉</div></pre></td></tr></table></figure>
+<p><strong>访问控制</strong></p>
+<p>没有明确授权的目录，默认拒绝</p>
+<p>允许所有主机访问</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Require all granted</div></pre></td></tr></table></figure>
+<p>拒绝所有主机访问</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Require all denied</div></pre></td></tr></table></figure>
+<p>控制特定的 IP 访问</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Require ip IP-Address	; 允许指定 IP 的访问</div><div class="line">Require not ip IP-Address	; 拒绝指定 IP 的访问</div></pre></td></tr></table></figure>
+<p>控制特定的主机访问</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Require host HOSTNAME&#123;FQDN|Domin.tld&#125;	; 允许指定主机的访问</div><div class="line">Require not host HOSTNAME&#123;FQDN|Domin.tld&#125;	; 拒绝指定主机的访问</div></pre></td></tr></table></figure>
+<p>允许所有 IP 后，拒绝指定 IP 访问</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">&lt;RequireAll&gt;</div><div class="line">	Require all granted</div><div class="line">	Require not ip 192.168.1.1	; 这个 IP 将被拒绝访问</div><div class="line">&lt;/RequireAll&gt;</div></pre></td></tr></table></figure>
+<p>拒绝所有 IP 后，允许特定 IP 访问</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">&lt;RequireAny&gt;</div><div class="line">	Require all denied</div><div class="line">	Require ip 192.168.1.1	; 只允许这个 IP 访问</div><div class="line">&lt;/RequireAny&gt;</div></pre></td></tr></table></figure>
+<p>现在添加一个新的 <code>DocumentRoot</code> 路径</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim website.conf</div><div class="line">DocumentRoot <span class="string">"/website"</span></div></pre></td></tr></table></figure>
+<p>使用 curl 来测试</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl -I 127.0.0.1</div><div class="line">HTTP/1.1 403 Forbidden	; 403 因为权限问题被拒绝访问了</div><div class="line">Date: Mon, 09 Oct 2017 09:31:37 GMT</div><div class="line">Server: Apache/2.4.6 (CentOS)</div><div class="line">Last-Modified: Thu, 16 Oct 2014 13:20:58 GMT</div><div class="line">ETag: <span class="string">"1321-5058a1e728280"</span></div><div class="line">Accept-Ranges: bytes</div><div class="line">Content-Length: 4897</div><div class="line">Content-Type: text/html; charset=UTF-8</div></pre></td></tr></table></figure>
+<p>允许所有主机访问</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim website.conf</div><div class="line">DocumentRoot <span class="string">"/website"</span></div><div class="line">&lt;Directory <span class="string">"/website"</span>&gt;</div><div class="line">Require all granted</div><div class="line">&lt;/Directory&gt;</div></pre></td></tr></table></figure>
+<p>使用 curl 来测试</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl 127.0.0.1   </div><div class="line">Hello World!</div></pre></td></tr></table></figure>
+<p>拒绝所有的 IP 访问，只允许 192.168.1.101 这个 IP 访问</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">DocumentRoot <span class="string">"/website"</span></div><div class="line">&lt;Directory <span class="string">"/website"</span>&gt;</div><div class="line">&lt;RequireAny&gt;</div><div class="line">Require all denied</div><div class="line">Require ip 192.168.1.101</div><div class="line">&lt;/RequireAny&gt;</div><div class="line">&lt;/Directory&gt;</div></pre></td></tr></table></figure>
+<p>由于这里只允许 192.168.1.101 这个地址访问，这将意味着本机也无法访问了</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl  -I 127.0.0.1</div><div class="line">HTTP/1.1 403 Forbidden		; 403 权限被拒绝</div><div class="line">Date: Mon, 09 Oct 2017 09:47:38 GMT</div><div class="line">Server: Apache/2.4.6 (CentOS)</div><div class="line">Last-Modified: Thu, 16 Oct 2014 13:20:58 GMT</div><div class="line">ETag: <span class="string">"1321-5058a1e728280"</span></div><div class="line">Accept-Ranges: bytes</div><div class="line">Content-Length: 4897</div><div class="line">Content-Type: text/html; charset=UTF-8</div></pre></td></tr></table></figure>
+<p>在 192.168.1.101 主机上访问</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl -I 192.168.1.98</div><div class="line">HTTP/1.1 200 OK		; 状态码 200，访问成功</div><div class="line">Date: Mon, 09 Oct 2017 09:48:06 GMT</div><div class="line">Server: Apache/2.4.6 (CentOS)</div><div class="line">Last-Modified: Mon, 09 Oct 2017 09:24:49 GMT</div><div class="line">ETag: <span class="string">"d-55b19c32359ed"</span></div><div class="line">Accept-Ranges: bytes</div><div class="line">Content-Length: 13</div><div class="line">Content-Type: text/html; charset=UTF-8</div></pre></td></tr></table></figure>
+<p><strong>虚拟主机</strong></p>
+<p>在 httpd 2.4 中配置基于 FQDN 的虚拟主机取消了 <code>NameVirtualHost</code> 指令，而是直接使用 <code>VirtualHost</code> 指令</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">&lt;VirtualHost *:80&gt;</div><div class="line">        ServerName www.weidong.io</div><div class="line">        DocumentRoot <span class="string">"/website"</span></div><div class="line">        &lt;Directory <span class="string">"/website"</span>&gt;</div><div class="line">                Require all granted</div><div class="line">        &lt;/Directory&gt;</div><div class="line">&lt;/VirtualHost&gt;</div></pre></td></tr></table></figure>
+<p>访问测试</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl www.weidong.io    </div><div class="line">Hello World!</div></pre></td></tr></table></figure>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/09/httpd-2-4-new-feature/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/09/httpd-2-4-常用配置/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -7,30 +7,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>httpd 实现 https | Weidong</title>
+  <title>httpd(2.4) 新特性 | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="Linux,Linux运维" />
+    <meta name="keywords" content="httpd,httpd2.4," />
   
 
-  <meta name="description" content="httpd 实现 https 向 CA 申请证书 搭建私有 CA 与颁发证书：http://www.weidong.io/2017/09/29/create-private-ca/ 为了方便管理可以将证书与私钥文件放到一个指定的位置 ls -l /etc/httpd/ssl/-rw-r--r-- 1 root root 4614 Oct  5 14:17 cacert.pem		; 证书颁发机构的">
+  <meta name="description" content="HTTPD-2.4  HTTPD 2.4 新特性  MPM 支持运行为 DSO （动态共享对象）机制；以模块形式按需加载 event MPM 生产环境可用 异步读写机制 支持没个模块及每个目录的单独日志级别定义 每个请求相关的专用配置 增强版的表达式分析 毫秒级别持久连接时长定义 基于 FQDN 的虚拟主机不需要 NameVirtualHost 指令 新指令，AllowOverrideList 支">
+<meta name="keywords" content="httpd,httpd2.4">
 <meta property="og:type" content="article">
-<meta property="og:title" content="httpd 实现 https">
-<meta property="og:url" content="http://www.weidong.io/2017/10/09/httpd-https/index.html">
+<meta property="og:title" content="httpd(2.4) 新特性">
+<meta property="og:url" content="http://www.weidong.io/2017/10/09/httpd-2-4-new-feature/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="httpd 实现 https 向 CA 申请证书 搭建私有 CA 与颁发证书：http://www.weidong.io/2017/09/29/create-private-ca/ 为了方便管理可以将证书与私钥文件放到一个指定的位置 ls -l /etc/httpd/ssl/-rw-r--r-- 1 root root 4614 Oct  5 14:17 cacert.pem		; 证书颁发机构的">
+<meta property="og:description" content="HTTPD-2.4  HTTPD 2.4 新特性  MPM 支持运行为 DSO （动态共享对象）机制；以模块形式按需加载 event MPM 生产环境可用 异步读写机制 支持没个模块及每个目录的单独日志级别定义 每个请求相关的专用配置 增强版的表达式分析 毫秒级别持久连接时长定义 基于 FQDN 的虚拟主机不需要 NameVirtualHost 指令 新指令，AllowOverrideList 支">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https1.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https2.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https3.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https4.png">
-<meta property="og:updated_time" content="2017-10-09T04:51:14.000Z">
+<meta property="og:updated_time" content="2017-10-09T08:30:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="httpd 实现 https">
-<meta name="twitter:description" content="httpd 实现 https 向 CA 申请证书 搭建私有 CA 与颁发证书：http://www.weidong.io/2017/09/29/create-private-ca/ 为了方便管理可以将证书与私钥文件放到一个指定的位置 ls -l /etc/httpd/ssl/-rw-r--r-- 1 root root 4614 Oct  5 14:17 cacert.pem		; 证书颁发机构的">
-<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https1.png">
+<meta name="twitter:title" content="httpd(2.4) 新特性">
+<meta name="twitter:description" content="HTTPD-2.4  HTTPD 2.4 新特性  MPM 支持运行为 DSO （动态共享对象）机制；以模块形式按需加载 event MPM 生产环境可用 异步读写机制 支持没个模块及每个目录的单独日志级别定义 每个请求相关的专用配置 增强版的表达式分析 毫秒级别持久连接时长定义 基于 FQDN 的虚拟主机不需要 NameVirtualHost 指令 新指令，AllowOverrideList 支">
 
   
 
@@ -179,9 +175,9 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-httpd-https" class="article article-type-post" itemprop="blogPost">
+   <article id="post-httpd-2-4-new-feature" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">httpd 实现 https</h1>
+    <h1 class="post-title">httpd(2.4) 新特性</h1>
 
     <div class="article-meta">
       <span>
@@ -197,12 +193,17 @@
       
 
       
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/HTTPD/">HTTPD</a>
+  </span>
+
 
 
       
         <span>
           <i class="icon-comment"></i>
-          <a href="http://www.weidong.io/2017/10/09/httpd-https/#disqus_thread"></a>
+          <a href="http://www.weidong.io/2017/10/09/httpd-2-4-new-feature/#disqus_thread"></a>
         </span>
       
 
@@ -221,37 +222,43 @@
 
   <div class="article-content">
     
-      <p><strong>httpd 实现 https</strong></p>
-<p><strong>向 CA 申请证书</strong></p>
-<p>搭建私有 CA 与颁发证书：<a href="http://www.weidong.io/2017/09/29/create-private-ca/">http://www.weidong.io/2017/09/29/create-private-ca/</a></p>
-<p>为了方便管理可以将证书与私钥文件放到一个指定的位置</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">ls -l /etc/httpd/ssl/</div><div class="line">-rw-r--r-- 1 root root 4614 Oct  5 14:17 cacert.pem		; 证书颁发机构的证书文件</div><div class="line">-rw-r--r-- 1 root root 6182 Oct  5 14:15 weidong.io.crt	; 申请到的证书文件</div><div class="line">-rw-r--r-- 1 root root 1756 Oct  5 14:10 weidong.io.csr	; 证书申请文件</div><div class="line">-rw------- 1 root root 3243 Oct  5 14:06 weidong.io.key	; 私钥文件</div></pre></td></tr></table></figure>
-<p><strong>安装模块</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">yum install -y mod_ssl</div></pre></td></tr></table></figure>
-<p>修改配置文件</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">SSLCertificateFile /etc/httpd/ssl/weidong.io.crt	; 证书文件路径</div><div class="line">SSLCertificateKeyFile /etc/httpd/ssl/weidong.io.key	; 私钥文件路径</div><div class="line">SSLCACertificateFile /etc/httpd/ssl/cacert.pem	; 证书颁发机构的证书文件路径</div></pre></td></tr></table></figure>
-<p>重启 <code>httpd</code> 服务</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">service httpd restart</div></pre></td></tr></table></figure>
-<p>如果你的客户端浏览器已经信任了该证书的根证书，那应该就能正常访问了，如果没有信任将会出现错误提示</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/httpd_https1.png" alt="访问测试"></p>
-<p>查看证书</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/httpd_https2.png" alt="查看证书"></p>
-<p>域名的主机位使用 “*” 表示使用泛域名，这将意味着在访问该域名时，只要是在 weidong.io 域中的域名都可以使用 https</p>
-<p>但现在还有一个问题，那就是如果我在地址栏直接输入 www.weidong.io ，它是不会使用 https ，这时候就需要做 URL 重定向，当收到 <a href="http://www.weidong.io">http://www.weidong.io</a> 的请求时就将 URL 重定向到 <a href="https://www.weidong.io">https://www.weidong.io</a> </p>
-<p>详细信息可查看官方文档：<a href="http://httpd.apache.org/docs/2.2/mod/mod_alias.html#redirect" target="_blank" rel="external">http://httpd.apache.org/docs/2.2/mod/mod_alias.html#redirect</a><br>常用到的就是 301 永久重定向，302 临时重定向</p>
-<p><strong>URL 重定向</strong></p>
-<p>指令</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Redirect</div><div class="line">Redirect permanent / URL	; 代表 301 永久重定向</div><div class="line">Redirect temp / URL	; 代表 302 临时重定向</div></pre></td></tr></table></figure>
-<p>具体实现</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/httpd/conf.d/vhost.conf </div><div class="line">Namevirtualhost *:80</div><div class="line">&lt;virtualhost *:80&gt;</div><div class="line">ServerName www.weidong.io</div><div class="line">DocumentRoot <span class="string">"/var/www/website1"</span></div><div class="line">Redirect temp / https://www.weidong.io/	; 使用临时重定向到 https</div><div class="line">ErrorLog logs/website1_error_log</div><div class="line">CustomLog logs/website1_access_log combined</div><div class="line">&lt;/virtualhost&gt;</div></pre></td></tr></table></figure>
-<p> 抓包查看跳转情况</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/httpd_https3.png" alt="抓包查看跳转情况"></p>
-<p>试试 301 永久重定向</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Redirect permanent / https://www.weidong.io/	; 使用临时重定向到 https</div></pre></td></tr></table></figure>
-<p>抓包查看跳转情况</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/httpd_https4.png" alt="抓包查看跳转情况"></p>
-<p><strong>什么时候使用 301,302 呢？</strong></p>
-<p>如果你有一个老地址已经确定不实用了话建议使用 301，像 http 转 https 这种，因为 http 协议的 URL 地址还会使用到，所以一般使用 302 重定向，因为这会关系到搜索引擎优化问题</p>
+      <p><strong>HTTPD-2.4 </strong></p>
+<p>HTTPD 2.4 新特性</p>
+<ul>
+<li>MPM 支持运行为 DSO （动态共享对象）机制；以模块形式按需加载</li>
+<li>event MPM 生产环境可用</li>
+<li>异步读写机制</li>
+<li>支持没个模块及每个目录的单独日志级别定义</li>
+<li>每个请求相关的专用配置</li>
+<li>增强版的表达式分析</li>
+<li>毫秒级别持久连接时长定义</li>
+<li>基于 FQDN 的虚拟主机不需要 NameVirtualHost 指令</li>
+<li>新指令，AllowOverrideList</li>
+<li>支持用户自定义变量</li>
+<li>更低的内存消耗</li>
+</ul>
+<p>修改了一些配置机制</p>
+<p>不再支持使用 Order，Deny，Allow，来做基于 IP 的访问控制</p>
+<p>新模块</p>
+<ul>
+<li>mod_proxy_fcgi（FastCGI Protocol backend for mod_proxy）</li>
+<li>mod_remoteip（Replaces the apparent client remote IP address and hostname for the request with the  IP address list presented by a proxies or a load balancer via the request headers）</li>
+<li>mod_retelimit（Provides Bandwidth Rate Limiting for clients）</li>
+</ul>
+<p>配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/etc/httpd/conf/httpd.conf</div><div class="line">/etc/httpd/conf.d/*.conf</div></pre></td></tr></table></figure>
+<p>模块相关配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/etc/httpd/conf.modules.d/*.conf</div></pre></td></tr></table></figure>
+<p>systemd unit fiel</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/usr/lib/systemd/system/httpd.service</div></pre></td></tr></table></figure>
+<p>主程序文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/usr/sbin/httpd</div><div class="line">; 与之前版本不同的是主程序只有一个，切换 MPM 模式使用模块的形式切换</div></pre></td></tr></table></figure>
+<p>日志文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/var/<span class="built_in">log</span>/httpd/</div><div class="line">access_log	;访问日志</div><div class="line">error_log	;错误日志</div></pre></td></tr></table></figure>
+<p>默认站点文档路径</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/var/www/html</div></pre></td></tr></table></figure>
+<p>模块文件路径</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/usr/lib64/modules</div></pre></td></tr></table></figure>
 <p>END!</p>
 
     
@@ -263,10 +270,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/10/08/https/">
+    <a class="show pull-left" href="/2017/10/09/httpd-https/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/09/httpd-2-4-new-feature/">
+    <a class="show pull-right" href="/2017/10/09/httpd-2-4-常用配置/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -380,7 +387,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'http://www.weidong.io/2017/10/09/httpd-https/';
+    var disqus_url = 'http://www.weidong.io/2017/10/09/httpd-2-4-new-feature/';
     
     (function(){
       var dsq = document.createElement('script');
