@@ -7,28 +7,30 @@
 <head>
   <meta charset="utf-8">
   
-  <title>httpd(2.2) deflate modules | Weidong</title>
+  <title>httpd 实现 https | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="httpd,gzip,deflate," />
+    <meta name="keywords" content="Linux,Linux运维" />
   
 
-  <meta name="description" content="HTTPD(2.2)  deflate_module 官方文档地址：http://httpd.apache.org/docs/2.2/mod/mod_deflate.html mod_deflate 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。 优点：节约带宽 缺点：消耗 CPU ，有些较老的浏览器不支持 支持压缩的文件类型 text/html text/p">
-<meta name="keywords" content="httpd,gzip,deflate">
+  <meta name="description" content="httpd 实现 https 向 CA 申请证书 搭建私有 CA 与颁发证书：http://www.weidong.io/2017/09/29/create-private-ca/ 为了方便管理可以将证书与私钥文件放到一个指定的位置 ls -l /etc/httpd/ssl/-rw-r--r-- 1 root root 4614 Oct  5 14:17 cacert.pem		; 证书颁发机构的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="httpd(2.2) deflate modules">
-<meta property="og:url" content="http://www.weidong.io/2017/10/08/httpd-deflate-mod/index.html">
+<meta property="og:title" content="httpd 实现 https">
+<meta property="og:url" content="http://www.weidong.io/2017/10/09/httpd-https/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="HTTPD(2.2)  deflate_module 官方文档地址：http://httpd.apache.org/docs/2.2/mod/mod_deflate.html mod_deflate 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。 优点：节约带宽 缺点：消耗 CPU ，有些较老的浏览器不支持 支持压缩的文件类型 text/html text/p">
+<meta property="og:description" content="httpd 实现 https 向 CA 申请证书 搭建私有 CA 与颁发证书：http://www.weidong.io/2017/09/29/create-private-ca/ 为了方便管理可以将证书与私钥文件放到一个指定的位置 ls -l /etc/httpd/ssl/-rw-r--r-- 1 root root 4614 Oct  5 14:17 cacert.pem		; 证书颁发机构的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/deflate_1.png">
-<meta property="og:updated_time" content="2017-10-08T13:31:04.000Z">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https2.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https3.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https4.png">
+<meta property="og:updated_time" content="2017-10-09T04:51:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="httpd(2.2) deflate modules">
-<meta name="twitter:description" content="HTTPD(2.2)  deflate_module 官方文档地址：http://httpd.apache.org/docs/2.2/mod/mod_deflate.html mod_deflate 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。 优点：节约带宽 缺点：消耗 CPU ，有些较老的浏览器不支持 支持压缩的文件类型 text/html text/p">
-<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/deflate_1.png">
+<meta name="twitter:title" content="httpd 实现 https">
+<meta name="twitter:description" content="httpd 实现 https 向 CA 申请证书 搭建私有 CA 与颁发证书：http://www.weidong.io/2017/09/29/create-private-ca/ 为了方便管理可以将证书与私钥文件放到一个指定的位置 ls -l /etc/httpd/ssl/-rw-r--r-- 1 root root 4614 Oct  5 14:17 cacert.pem		; 证书颁发机构的">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/httpd_https1.png">
 
   
 
@@ -177,14 +179,14 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-httpd-deflate-mod" class="article article-type-post" itemprop="blogPost">
+   <article id="post-httpd-https" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">httpd(2.2) deflate modules</h1>
+    <h1 class="post-title">httpd 实现 https</h1>
 
     <div class="article-meta">
       <span>
         <i class="icon-calendar"></i>
-        <span>2017.10.08</span>
+        <span>2017.10.09</span>
       </span>
 
       
@@ -195,17 +197,12 @@
       
 
       
-  <span class="article-category">
-    <i class="icon-list"></i>
-    <a class="article-category-link" href="/categories/HTTPD/">HTTPD</a>
-  </span>
-
 
 
       
         <span>
           <i class="icon-comment"></i>
-          <a href="http://www.weidong.io/2017/10/08/httpd-deflate-mod/#disqus_thread"></a>
+          <a href="http://www.weidong.io/2017/10/09/httpd-https/#disqus_thread"></a>
         </span>
       
 
@@ -224,32 +221,37 @@
 
   <div class="article-content">
     
-      <p><strong>HTTPD(2.2)  deflate_module</strong></p>
-<p>官方文档地址：<a href="http://httpd.apache.org/docs/2.2/mod/mod_deflate.html" target="_blank" rel="external">http://httpd.apache.org/docs/2.2/mod/mod_deflate.html</a></p>
-<p><code>mod_deflate</code> 模块提供了一个压缩输出过滤器，它允许服务器的输出被压缩，然后再通过网络发送给客户端。</p>
-<p>优点：节约带宽</p>
-<p>缺点：消耗 CPU ，有些较老的浏览器不支持</p>
-<p>支持压缩的文件类型</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">text/html text/plain text/xml text/css text/javascript application/javascript</div></pre></td></tr></table></figure>
-<p>确认模块是否加载</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">httpd -M | grep deflate</div><div class="line"> deflate_module (shared)</div><div class="line">Syntax OK</div></pre></td></tr></table></figure>
-<p>开启压缩指令</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">SetOutputFilter DEFLATE</div></pre></td></tr></table></figure>
-<p>如果要将压缩限制为一般的 <code>MIME</code> 类型，可以使用 <code>AddOutputFilterByType</code> 指令。</p>
-<p>为了方便管理建议单独创建一个配置文件</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/httpd/conf.d/deflate.conf</div><div class="line">SetOutputFilter DEFLATE</div><div class="line">&lt;Directory <span class="string">"/var/www/website1"</span>&gt;		;压缩指定目录的文件</div><div class="line">AddOutputFilterByType DEFLATE text/html		;指定要压缩的文件类型</div><div class="line">&lt;/Directory&gt;</div></pre></td></tr></table></figure>
-<p>重启服务</p>
+      <p><strong>httpd 实现 https</strong></p>
+<p><strong>向 CA 申请证书</strong></p>
+<p>搭建私有 CA 与颁发证书：<a href="http://www.weidong.io/2017/09/29/create-private-ca/">http://www.weidong.io/2017/09/29/create-private-ca/</a></p>
+<p>为了方便管理可以将证书与私钥文件放到一个指定的位置</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">ls -l /etc/httpd/ssl/</div><div class="line">-rw-r--r-- 1 root root 4614 Oct  5 14:17 cacert.pem		; 证书颁发机构的证书文件</div><div class="line">-rw-r--r-- 1 root root 6182 Oct  5 14:15 weidong.io.crt	; 申请到的证书文件</div><div class="line">-rw-r--r-- 1 root root 1756 Oct  5 14:10 weidong.io.csr	; 证书申请文件</div><div class="line">-rw------- 1 root root 3243 Oct  5 14:06 weidong.io.key	; 私钥文件</div></pre></td></tr></table></figure>
+<p><strong>安装模块</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">yum install -y mod_ssl</div></pre></td></tr></table></figure>
+<p>修改配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">SSLCertificateFile /etc/httpd/ssl/weidong.io.crt	; 证书文件路径</div><div class="line">SSLCertificateKeyFile /etc/httpd/ssl/weidong.io.key	; 私钥文件路径</div><div class="line">SSLCACertificateFile /etc/httpd/ssl/cacert.pem	; 证书颁发机构的证书文件路径</div></pre></td></tr></table></figure>
+<p>重启 <code>httpd</code> 服务</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">service httpd restart</div></pre></td></tr></table></figure>
-<p>测试文件原大小</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">-rw-r--r--. 1 root root 481918 Oct  5 11:49 /var/www/website1/test.html</div></pre></td></tr></table></figure>
-<p>浏览器访问测试</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/deflate_1.png" alt="压缩后大小"></p>
-<p>可以看到原文件大小为 481918 个字节，压缩后大小只有 41751 个字节了。</p>
-<p><strong>针对特定浏览器执行压缩</strong></p>
-<p>官方示例</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">BrowserMatch ^Mozilla/4 gzip-only-text/html</div><div class="line">BrowserMatch ^Mozilla/4\.0[678] no-gzip</div><div class="line">BrowserMatch \bMSIE !no-gzip !gzip-only-text/html</div></pre></td></tr></table></figure>
-<p><strong>压缩级别</strong></p>
-<p>压缩级别由 <code>DeflateCompressionLevel</code> 指令控制，压缩级别从 1-9 ，压缩等级越高，压缩比就越高，但会更消耗 CPU 资源；</p>
+<p>如果你的客户端浏览器已经信任了该证书的根证书，那应该就能正常访问了，如果没有信任将会出现错误提示</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/httpd_https1.png" alt="访问测试"></p>
+<p>查看证书</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/httpd_https2.png" alt="查看证书"></p>
+<p>域名的主机位使用 “*” 表示使用泛域名，这将意味着在访问该域名时，只要是在 weidong.io 域中的域名都可以使用 https</p>
+<p>但现在还有一个问题，那就是如果我在地址栏直接输入 www.weidong.io ，它是不会使用 https ，这时候就需要做 URL 重定向，当收到 <a href="http://www.weidong.io">http://www.weidong.io</a> 的请求时就将 URL 重定向到 <a href="https://www.weidong.io">https://www.weidong.io</a> </p>
+<p>详细信息可查看官方文档：<a href="http://httpd.apache.org/docs/2.2/mod/mod_alias.html#redirect" target="_blank" rel="external">http://httpd.apache.org/docs/2.2/mod/mod_alias.html#redirect</a><br>常用到的就是 301 永久重定向，302 临时重定向</p>
+<p><strong>URL 重定向</strong></p>
+<p>指令</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Redirect</div><div class="line">Redirect permanent / URL	; 代表 301 永久重定向</div><div class="line">Redirect temp / URL	; 代表 302 临时重定向</div></pre></td></tr></table></figure>
+<p>具体实现</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/httpd/conf.d/vhost.conf </div><div class="line">Namevirtualhost *:80</div><div class="line">&lt;virtualhost *:80&gt;</div><div class="line">ServerName www.weidong.io</div><div class="line">DocumentRoot <span class="string">"/var/www/website1"</span></div><div class="line">Redirect temp / https://www.weidong.io/	; 使用临时重定向到 https</div><div class="line">ErrorLog logs/website1_error_log</div><div class="line">CustomLog logs/website1_access_log combined</div><div class="line">&lt;/virtualhost&gt;</div></pre></td></tr></table></figure>
+<p> 抓包查看跳转情况</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/httpd_https3.png" alt="抓包查看跳转情况"></p>
+<p>试试 301 永久重定向</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">Redirect permanent / https://www.weidong.io/	; 使用临时重定向到 https</div></pre></td></tr></table></figure>
+<p>抓包查看跳转情况</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/httpd_https4.png" alt="抓包查看跳转情况"></p>
+<p><strong>什么时候使用 301,302 呢？</strong></p>
+<p>如果你有一个老地址已经确定不实用了话建议使用 301，像 http 转 https 这种，因为 http 协议的 URL 地址还会使用到，所以一般使用 302 重定向，因为这会关系到搜索引擎优化问题</p>
 <p>END!</p>
 
     
@@ -261,10 +263,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/10/08/httpd-server-status-mod/">
+    <a class="show pull-left" href="/2017/10/08/https/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/08/https/">
+    <a class="hide pull-right" href="/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -378,7 +380,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'http://www.weidong.io/2017/10/08/httpd-deflate-mod/';
+    var disqus_url = 'http://www.weidong.io/2017/10/09/httpd-https/';
     
     (function(){
       var dsq = document.createElement('script');
