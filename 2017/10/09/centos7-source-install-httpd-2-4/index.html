@@ -7,26 +7,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>httpd(2.4) 新特性 | Weidong</title>
+  <title>CentOS7 编译安装 httpd 2.4 | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="httpd2.4,httpd," />
+    <meta name="keywords" content="httpd2.4,make,编译安装," />
   
 
-  <meta name="description" content="HTTPD-2.4  HTTPD 2.4 新特性  MPM 支持运行为 DSO （动态共享对象）机制；以模块形式按需加载 event MPM 生产环境可用 异步读写机制 支持没个模块及每个目录的单独日志级别定义 每个请求相关的专用配置 增强版的表达式分析 毫秒级别持久连接时长定义 基于 FQDN 的虚拟主机不需要 NameVirtualHost 指令 新指令，AllowOverrideList 支">
-<meta name="keywords" content="httpd2.4,httpd">
+  <meta name="description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
+<meta name="keywords" content="httpd2.4,make,编译安装">
 <meta property="og:type" content="article">
-<meta property="og:title" content="httpd(2.4) 新特性">
-<meta property="og:url" content="http://www.weidong.io/2017/10/09/httpd-2-4-new-feature/index.html">
+<meta property="og:title" content="CentOS7 编译安装 httpd 2.4">
+<meta property="og:url" content="http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="HTTPD-2.4  HTTPD 2.4 新特性  MPM 支持运行为 DSO （动态共享对象）机制；以模块形式按需加载 event MPM 生产环境可用 异步读写机制 支持没个模块及每个目录的单独日志级别定义 每个请求相关的专用配置 增强版的表达式分析 毫秒级别持久连接时长定义 基于 FQDN 的虚拟主机不需要 NameVirtualHost 指令 新指令，AllowOverrideList 支">
+<meta property="og:description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-09T08:30:20.000Z">
+<meta property="og:updated_time" content="2017-10-09T14:02:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="httpd(2.4) 新特性">
-<meta name="twitter:description" content="HTTPD-2.4  HTTPD 2.4 新特性  MPM 支持运行为 DSO （动态共享对象）机制；以模块形式按需加载 event MPM 生产环境可用 异步读写机制 支持没个模块及每个目录的单独日志级别定义 每个请求相关的专用配置 增强版的表达式分析 毫秒级别持久连接时长定义 基于 FQDN 的虚拟主机不需要 NameVirtualHost 指令 新指令，AllowOverrideList 支">
+<meta name="twitter:title" content="CentOS7 编译安装 httpd 2.4">
+<meta name="twitter:description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
 
   
 
@@ -175,9 +175,9 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-httpd-2-4-new-feature" class="article article-type-post" itemprop="blogPost">
+   <article id="post-centos7-source-install-httpd-2-4" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">httpd(2.4) 新特性</h1>
+    <h1 class="post-title">CentOS7 编译安装 httpd 2.4</h1>
 
     <div class="article-meta">
       <span>
@@ -203,7 +203,7 @@
       
         <span>
           <i class="icon-comment"></i>
-          <a href="http://www.weidong.io/2017/10/09/httpd-2-4-new-feature/#disqus_thread"></a>
+          <a href="http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/#disqus_thread"></a>
         </span>
       
 
@@ -222,43 +222,27 @@
 
   <div class="article-content">
     
-      <p><strong>HTTPD-2.4 </strong></p>
-<p>HTTPD 2.4 新特性</p>
-<ul>
-<li>MPM 支持运行为 DSO （动态共享对象）机制；以模块形式按需加载</li>
-<li>event MPM 生产环境可用</li>
-<li>异步读写机制</li>
-<li>支持没个模块及每个目录的单独日志级别定义</li>
-<li>每个请求相关的专用配置</li>
-<li>增强版的表达式分析</li>
-<li>毫秒级别持久连接时长定义</li>
-<li>基于 FQDN 的虚拟主机不需要 NameVirtualHost 指令</li>
-<li>新指令，AllowOverrideList</li>
-<li>支持用户自定义变量</li>
-<li>更低的内存消耗</li>
-</ul>
-<p>修改了一些配置机制</p>
-<p>不再支持使用 Order，Deny，Allow，来做基于 IP 的访问控制</p>
-<p>新模块</p>
-<ul>
-<li>mod_proxy_fcgi（FastCGI Protocol backend for mod_proxy）</li>
-<li>mod_remoteip（Replaces the apparent client remote IP address and hostname for the request with the  IP address list presented by a proxies or a load balancer via the request headers）</li>
-<li>mod_retelimit（Provides Bandwidth Rate Limiting for clients）</li>
-</ul>
-<p>配置文件</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/etc/httpd/conf/httpd.conf</div><div class="line">/etc/httpd/conf.d/*.conf</div></pre></td></tr></table></figure>
-<p>模块相关配置文件</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/etc/httpd/conf.modules.d/*.conf</div></pre></td></tr></table></figure>
-<p>systemd unit fiel</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/usr/lib/systemd/system/httpd.service</div></pre></td></tr></table></figure>
-<p>主程序文件</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/usr/sbin/httpd</div><div class="line">; 与之前版本不同的是主程序只有一个，切换 MPM 模式使用模块的形式切换</div></pre></td></tr></table></figure>
-<p>日志文件</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/var/<span class="built_in">log</span>/httpd/</div><div class="line">access_log	;访问日志</div><div class="line">error_log	;错误日志</div></pre></td></tr></table></figure>
-<p>默认站点文档路径</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/var/www/html</div></pre></td></tr></table></figure>
-<p>模块文件路径</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/usr/lib64/modules</div></pre></td></tr></table></figure>
+      <p><strong>CentOS 7 编译安装 httpd 2.4</strong></p>
+<p><strong>创建所需要的用户与组</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">useradd -r apache -s /sbin/nologin</div><div class="line">; -r 创建系统用户</div><div class="line">; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统</div></pre></td></tr></table></figure>
+<p><strong>安装必要依赖包</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-devel wget</div></pre></td></tr></table></figure>
+<p><strong>下载源码包</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;切换到 /usr/<span class="built_in">local</span>/src 下使用 wget 或其它方式将源码包放到这个目录中</div><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/</div><div class="line">wget http://mirrors.shuosc.org/apache//httpd/httpd-2.4.28.tar.gz</div><div class="line">;解压包</div><div class="line">tar xvf httpd-2.4.28.tar.gz</div><div class="line">;进入到解压出来的目录内</div><div class="line"><span class="built_in">cd</span> httpd-2.4.28/</div></pre></td></tr></table></figure>
+<p><strong>执行编译</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">./configure \	;可以在这条命令后面使用 --<span class="built_in">help</span> 查看帮助与一些编译参数</div><div class="line">--prefix=/usr/<span class="built_in">local</span>/httpd24 \	;编译安装路径</div><div class="line">--<span class="built_in">enable</span>-so \</div><div class="line">--<span class="built_in">enable</span>-cgi \</div><div class="line">--with-zlib \</div><div class="line">--with-pcre \</div><div class="line">--<span class="built_in">enable</span>-proxy \</div><div class="line">--<span class="built_in">enable</span>-ssl \</div><div class="line">--<span class="built_in">enable</span>-modules=most \</div><div class="line">--<span class="built_in">enable</span>-mpms-shared=all \</div><div class="line">--<span class="built_in">enable</span>-rewrite \</div><div class="line">--with-mpm=prefork</div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<p><strong>修改守护进程运行用户与组</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /usr/<span class="built_in">local</span>/httpd24/conf/httpd.conf</div><div class="line">User apache</div><div class="line">Group apache</div></pre></td></tr></table></figure>
+<p><strong>将 httpd 程序路径加入到 <code>PATH</code> 环境变量中</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/httpd24/bin/:<span class="variable">$PATH</span> &gt; /etc/profile.d/httpd.sh</div><div class="line">; 使用 <span class="built_in">source</span> 重新读取改文件</div><div class="line"><span class="built_in">source</span> /etc/profile.d/httpd.sh</div></pre></td></tr></table></figure>
+<p>添加开机自启动</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/rc.d/rc.local</div><div class="line">/usr/<span class="built_in">local</span>/httpd24/bin/apachectl -k start</div></pre></td></tr></table></figure>
+<p>在 CentOS 7 中 rc.local 默认是没有执行权限的所以还要为它添加执行权限才行</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod +x /etc/rc.d/rc.local</div></pre></td></tr></table></figure>
+<p>使用 <code>apachectl</code> </p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">apachectl -k start		;启动 httpd 服务</div><div class="line">			 restart	;重启 httpd 服务</div><div class="line">			 stop		;停止 httpd 服务</div></pre></td></tr></table></figure>
+<p><strong>访问测试</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl 127.0.0.1</div><div class="line">&lt;html&gt;&lt;body&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</div></pre></td></tr></table></figure>
 <p>END!</p>
 
     
@@ -270,10 +254,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/10/09/httpd-https/">
+    <a class="show pull-left" href="/2017/10/09/httpd-2-4-常用配置/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/09/httpd-2-4-常用配置/">
+    <a class="show pull-right" href="/2017/10/10/centos6-source-install-httpd-2-4/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -387,7 +371,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'http://www.weidong.io/2017/10/09/httpd-2-4-new-feature/';
+    var disqus_url = 'http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/';
     
     (function(){
       var dsq = document.createElement('script');

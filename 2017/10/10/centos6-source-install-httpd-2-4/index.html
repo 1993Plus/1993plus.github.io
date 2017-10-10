@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>CentOS6 源码安装 httpd 2.4 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="httpd2.4,centos6," />
+  
+
+  <meta name="description" content="CentOS 6 编译安装 httpd 2.4 在 CentOS 6 系统上 yum 仓库是没有提供 httpd 2.4 ，只有 2.2 版本的，这时如果要想在 CentOS 6 系统上使用 httpd 2.4 就只有自己编译安装了，在编译安装 httpd 2.4 时又会遇到一个问题，因为 httpd 是依赖于 apr，apr-util 这两个运行库的，在 CentOS 6 yum 仓库中提供的这">
+<meta name="keywords" content="httpd2.4,centos6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS6 源码安装 httpd 2.4">
+<meta property="og:url" content="http://www.weidong.io/2017/10/10/centos6-source-install-httpd-2-4/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="CentOS 6 编译安装 httpd 2.4 在 CentOS 6 系统上 yum 仓库是没有提供 httpd 2.4 ，只有 2.2 版本的，这时如果要想在 CentOS 6 系统上使用 httpd 2.4 就只有自己编译安装了，在编译安装 httpd 2.4 时又会遇到一个问题，因为 httpd 是依赖于 apr，apr-util 这两个运行库的，在 CentOS 6 yum 仓库中提供的这">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-10T12:38:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS6 源码安装 httpd 2.4">
+<meta name="twitter:description" content="CentOS 6 编译安装 httpd 2.4 在 CentOS 6 系统上 yum 仓库是没有提供 httpd 2.4 ，只有 2.2 版本的，这时如果要想在 CentOS 6 系统上使用 httpd 2.4 就只有自己编译安装了，在编译安装 httpd 2.4 时又会遇到一个问题，因为 httpd 是依赖于 apr，apr-util 这两个运行库的，在 CentOS 6 yum 仓库中提供的这">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-centos6-source-install-httpd-2-4" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">CentOS6 源码安装 httpd 2.4</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.10</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/HTTPD/">HTTPD</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/10/centos6-source-install-httpd-2-4/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>CentOS 6 编译安装 httpd 2.4</p>
+<p>在 CentOS 6 系统上 yum 仓库是没有提供 httpd 2.4 ，只有 2.2 版本的，这时如果要想在 CentOS 6 系统上使用 httpd 2.4 就只有自己编译安装了，在编译安装 httpd 2.4 时又会遇到一个问题，因为 httpd 是依赖于 apr，apr-util 这两个运行库的，在 CentOS 6 yum 仓库中提供的这两个库版本安装包是 1.3.9 的，而 httpd 2.4 依赖这两个库的版本是 1.4 .0 以上的，所以这两个库也要自行解决。</p>
+<p><code>关闭 SELinux</code></p>
+<p><code>关闭 iptables</code></p>
+<p>到 Apache 官方网站下载 apr，apr-util 的源码包（<a href="http://apr.apache.org/）" target="_blank" rel="external">http://apr.apache.org/）</a></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;将两个包放到 /usr/<span class="built_in">local</span>/src/ 目录下</div><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/</div><div class="line">wget http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-1.6.2.tar.gz</div><div class="line">wget http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-util-1.6.0.tar.gz</div></pre></td></tr></table></figure>
+<p>下载 https 2.4 源码包，本次测试下载版本为<code>httpd-2.4.28</code>  (<a href="http://httpd.apache.org/" target="_blank" rel="external">http://httpd.apache.org/</a>)</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">wget http://mirrors.shuosc.org/apache//httpd/httpd-2.4.28.tar.gz</div></pre></td></tr></table></figure>
+<p>解压 httpd 源码包</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">tar xf httpd-2.4.28.tar.gz</div></pre></td></tr></table></figure>
+<p>将 apr 源码包解压，并移动改名放到<code>httpd-2.4.28/srclib</code> 目录下</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mv apr-1.6.2 httpd-2.4.28/srclib/apr</div></pre></td></tr></table></figure>
+<p>将 apr-util 源码包解压，并移动改名放到 <code>httpd-2.4.28/srclib</code> 目录下</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mv apr-util-1.6.0 httpd-2.4.28/srclib/apr-util</div></pre></td></tr></table></figure>
+<p>进入 <code>httpd-2.4.28</code> 目录内开始执行编译安装</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> httpd-2.4.28/</div><div class="line">;编译参数</div><div class="line">./configure \</div><div class="line">--prefix=/usr/<span class="built_in">local</span>/httpd24 \</div><div class="line">--<span class="built_in">enable</span>-so \</div><div class="line">--<span class="built_in">enable</span>-cgi \</div><div class="line">--with-zlib \</div><div class="line">--with-pcre \</div><div class="line">--<span class="built_in">enable</span>-proxy \</div><div class="line">--<span class="built_in">enable</span>-ssl \</div><div class="line">--<span class="built_in">enable</span>-modules=most \</div><div class="line">--<span class="built_in">enable</span>-mpms-shared=all \</div><div class="line">--<span class="built_in">enable</span>-rewrite \</div><div class="line">--with-included-apr \</div><div class="line">--with-mpm=prefork</div><div class="line"></div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<p>创建守护进程运行用户</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;将 home 目录指向 httpd documentroot 目录，当然也可以修改配置文件来更改一个目录</div><div class="line">useradd apache -r -m -d /usr/<span class="built_in">local</span>/httpd24/htdocs/ -s /sbin/nologin</div></pre></td></tr></table></figure>
+<p>修改 httpd 配置文件，将运行用户改为 apache</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /usr/<span class="built_in">local</span>/httpd24/conf/httpd.conf</div><div class="line">User apache</div><div class="line">Group apache</div></pre></td></tr></table></figure>
+<p>创建服务控制脚本</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/init.d/httpd</div><div class="line"></div><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># httpd        Startup script for the Apache HTTP Server</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># chkconfig: - 85 15</span></div><div class="line"><span class="comment"># description: The Apache HTTP Server is an efficient and extensible  \</span></div><div class="line"><span class="comment">#              server implementing the current HTTP standards.</span></div><div class="line"><span class="comment"># processname: httpd</span></div><div class="line"><span class="comment"># config: /etc/httpd/conf/httpd.conf</span></div><div class="line"><span class="comment"># config: /etc/sysconfig/httpd</span></div><div class="line"><span class="comment"># pidfile: /var/run/httpd/httpd.pid</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment">### BEGIN INIT INFO</span></div><div class="line"><span class="comment"># Provides: httpd</span></div><div class="line"><span class="comment"># Required-Start: $local_fs $remote_fs $network $named</span></div><div class="line"><span class="comment"># Required-Stop: $local_fs $remote_fs $network</span></div><div class="line"><span class="comment"># Should-Start: distcache</span></div><div class="line"><span class="comment"># Short-Description: start and stop Apache HTTP Server</span></div><div class="line"><span class="comment"># Description: The Apache HTTP Server is an extensible server </span></div><div class="line"><span class="comment">#  implementing the current HTTP standards.</span></div><div class="line"><span class="comment">### END INIT INFO</span></div><div class="line"></div><div class="line"><span class="comment"># Source function library.</span></div><div class="line">. /etc/rc.d/init.d/<span class="built_in">functions</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ -f /etc/sysconfig/httpd ]; <span class="keyword">then</span></div><div class="line">        . /etc/sysconfig/httpd</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="comment"># Start httpd in the C locale by default.</span></div><div class="line">HTTPD_LANG=<span class="variable">$&#123;HTTPD_LANG-"C"&#125;</span></div><div class="line"></div><div class="line"><span class="comment"># This will prevent initlog from swallowing up a pass-phrase prompt if</span></div><div class="line"><span class="comment"># mod_ssl needs a pass-phrase from the user.</span></div><div class="line">INITLOG_ARGS=<span class="string">""</span></div><div class="line"></div><div class="line"><span class="comment"># Set HTTPD=/usr/sbin/httpd.worker in /etc/sysconfig/httpd to use a server</span></div><div class="line"><span class="comment"># with the thread-based "worker" MPM; BE WARNED that some modules may not</span></div><div class="line"><span class="comment"># work correctly with a thread-based MPM; notably PHP will refuse to start.</span></div><div class="line"></div><div class="line"><span class="comment"># Path to the apachectl script, server binary, and short-form for messages.</span></div><div class="line">apachectl=/usr/<span class="built_in">local</span>/httpd24/bin/apachectl</div><div class="line">httpd=<span class="variable">$&#123;HTTPD-/usr/local/httpd24/bin/httpd&#125;</span></div><div class="line">prog=httpd</div><div class="line">pidfile=<span class="variable">$&#123;PIDFILE-/usr/local/httpd24/logs/httpd.pid&#125;</span></div><div class="line">lockfile=<span class="variable">$&#123;LOCKFILE-/var/lock/subsys/httpd&#125;</span></div><div class="line">RETVAL=0</div><div class="line">STOP_TIMEOUT=<span class="variable">$&#123;STOP_TIMEOUT-10&#125;</span></div><div class="line"></div><div class="line"><span class="comment"># The semantics of these two functions differ from the way apachectl does</span></div><div class="line"><span class="comment"># things -- attempting to start while running is a failure, and shutdown</span></div><div class="line"><span class="comment"># when not running is also a failure.  So we just do it the way init scripts</span></div><div class="line"><span class="comment"># are expected to behave here.</span></div><div class="line"><span class="function"><span class="title">start</span></span>() &#123;</div><div class="line">        <span class="built_in">echo</span> -n $<span class="string">"Starting <span class="variable">$prog</span>: "</span></div><div class="line">        LANG=<span class="variable">$HTTPD_LANG</span> daemon --pidfile=<span class="variable">$&#123;pidfile&#125;</span> <span class="variable">$httpd</span> <span class="variable">$OPTIONS</span></div><div class="line">        RETVAL=$?</div><div class="line">        <span class="built_in">echo</span></div><div class="line">        [ <span class="variable">$RETVAL</span> = 0 ] &amp;&amp; touch <span class="variable">$&#123;lockfile&#125;</span></div><div class="line">        <span class="built_in">return</span> <span class="variable">$RETVAL</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment"># When stopping httpd, a delay (of default 10 second) is required</span></div><div class="line"><span class="comment"># before SIGKILLing the httpd parent; this gives enough time for the</span></div><div class="line"><span class="comment"># httpd parent to SIGKILL any errant children.</span></div><div class="line"><span class="function"><span class="title">stop</span></span>() &#123;</div><div class="line">        status -p <span class="variable">$&#123;pidfile&#125;</span> <span class="variable">$httpd</span> &gt; /dev/null</div><div class="line">        <span class="keyword">if</span> [[ $? = 0 ]]; <span class="keyword">then</span></div><div class="line">                <span class="built_in">echo</span> -n $<span class="string">"Stopping <span class="variable">$prog</span>: "</span></div><div class="line">                killproc -p <span class="variable">$&#123;pidfile&#125;</span> -d <span class="variable">$&#123;STOP_TIMEOUT&#125;</span> <span class="variable">$httpd</span></div><div class="line">        <span class="keyword">else</span></div><div class="line">                <span class="built_in">echo</span> -n $<span class="string">"Stopping <span class="variable">$prog</span>: "</span></div><div class="line">                success</div><div class="line">        <span class="keyword">fi</span></div><div class="line">        RETVAL=$?</div><div class="line">        <span class="built_in">echo</span></div><div class="line">        [ <span class="variable">$RETVAL</span> = 0 ] &amp;&amp; rm -f <span class="variable">$&#123;lockfile&#125;</span> <span class="variable">$&#123;pidfile&#125;</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="title">reload</span></span>() &#123;</div><div class="line">    <span class="built_in">echo</span> -n $<span class="string">"Reloading <span class="variable">$prog</span>: "</span></div><div class="line">    <span class="keyword">if</span> ! LANG=<span class="variable">$HTTPD_LANG</span> <span class="variable">$httpd</span> <span class="variable">$OPTIONS</span> -t &gt;&amp;/dev/null; <span class="keyword">then</span></div><div class="line">        RETVAL=6</div><div class="line">        <span class="built_in">echo</span> $<span class="string">"not reloading due to configuration syntax error"</span></div><div class="line">        failure $<span class="string">"not reloading <span class="variable">$httpd</span> due to configuration syntax error"</span></div><div class="line">    <span class="keyword">else</span></div><div class="line">        <span class="comment"># Force LSB behaviour from killproc</span></div><div class="line">        LSB=1 killproc -p <span class="variable">$&#123;pidfile&#125;</span> <span class="variable">$httpd</span> -HUP</div><div class="line">        RETVAL=$?</div><div class="line">        <span class="keyword">if</span> [ <span class="variable">$RETVAL</span> -eq 7 ]; <span class="keyword">then</span></div><div class="line">            failure $<span class="string">"httpd shutdown"</span></div><div class="line">        <span class="keyword">fi</span></div><div class="line">    <span class="keyword">fi</span></div><div class="line">    <span class="built_in">echo</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment"># See how we were called.</span></div><div class="line"><span class="keyword">case</span> <span class="string">"<span class="variable">$1</span>"</span> <span class="keyword">in</span></div><div class="line">  start)</div><div class="line">        start</div><div class="line">        ;;</div><div class="line">  stop)</div><div class="line">        stop</div><div class="line">        ;;</div><div class="line">  status)</div><div class="line">        status -p <span class="variable">$&#123;pidfile&#125;</span> <span class="variable">$httpd</span></div><div class="line">        RETVAL=$?</div><div class="line">        ;;</div><div class="line">  restart)</div><div class="line">        stop</div><div class="line">        start</div><div class="line">        ;;</div><div class="line">  condrestart|try-restart)</div><div class="line">        <span class="keyword">if</span> status -p <span class="variable">$&#123;pidfile&#125;</span> <span class="variable">$httpd</span> &gt;&amp;/dev/null; <span class="keyword">then</span></div><div class="line">                stop</div><div class="line">                start</div><div class="line">        <span class="keyword">fi</span></div><div class="line">        ;;</div><div class="line">  force-reload|reload)</div><div class="line">        reload</div><div class="line">        ;;</div><div class="line">  graceful|<span class="built_in">help</span>|configtest|fullstatus)</div><div class="line">        <span class="variable">$apachectl</span> <span class="variable">$@</span></div><div class="line">        RETVAL=$?</div><div class="line">        ;;</div><div class="line">  *)</div><div class="line">        <span class="built_in">echo</span> $<span class="string">"Usage: <span class="variable">$prog</span> &#123;start|stop|restart|condrestart|try-restart|force-reload|reload|status|fullstatus|graceful|help|configtest&#125;"</span></div><div class="line">        RETVAL=2</div><div class="line"><span class="keyword">esac</span></div><div class="line"></div><div class="line"><span class="built_in">exit</span> <span class="variable">$RETVAL</span></div></pre></td></tr></table></figure>
+<p>添加执行权限</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod +x /etc/init.d/httpd</div></pre></td></tr></table></figure>
+<p>添加到开机启动项中</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chkconfig httpd on</div></pre></td></tr></table></figure>
+<p>启动服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">service httpd start</div></pre></td></tr></table></figure>
+<p>访问测试</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl 127.0.0.1</div><div class="line">&lt;html&gt;&lt;body&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/09/centos7-source-install-httpd-2-4/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/10/centos6-source-install-httpd-2-4/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
