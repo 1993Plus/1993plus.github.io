@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>CentOS6 使用二进制程序包安装 Mariadb | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="mariadb,安装mariadb," />
+  
+
+  <meta name="description" content="CentOS6 使用二进制包安装 MariaDB 10 到 MariaDB 官方站点下载包 （https://downloads.mariadb.org/mariadb/+releases/） wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.9/bintar-linux-x86_64/mariadb-10.2.9-linux-x86">
+<meta name="keywords" content="mariadb,安装mariadb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS6 使用二进制程序包安装 Mariadb">
+<meta property="og:url" content="http://www.weidong.io/2017/10/11/centos6-install-mariadb10-from-binary-package/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="CentOS6 使用二进制包安装 MariaDB 10 到 MariaDB 官方站点下载包 （https://downloads.mariadb.org/mariadb/+releases/） wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.9/bintar-linux-x86_64/mariadb-10.2.9-linux-x86">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-11T06:37:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS6 使用二进制程序包安装 Mariadb">
+<meta name="twitter:description" content="CentOS6 使用二进制包安装 MariaDB 10 到 MariaDB 官方站点下载包 （https://downloads.mariadb.org/mariadb/+releases/） wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.9/bintar-linux-x86_64/mariadb-10.2.9-linux-x86">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-centos6-install-mariadb10-from-binary-package" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">CentOS6 使用二进制程序包安装 Mariadb</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.11</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/MySQL-MariaDB/">MySQL(MariaDB)</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/11/centos6-install-mariadb10-from-binary-package/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>CentOS6 使用二进制包安装 MariaDB 10</p>
+<p>到 MariaDB 官方站点下载包 （<a href="https://downloads.mariadb.org/mariadb/+releases/）" target="_blank" rel="external">https://downloads.mariadb.org/mariadb/+releases/）</a></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">wget http://mirrors.neusoft.edu.cn/mariadb//mariadb-10.2.9/bintar-linux-x86_64/mariadb-10.2.9-linux-x86_64.tar.gz</div></pre></td></tr></table></figure>
+<p>将包解压到 <code>/usr/local</code> 目录下</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">tar xf mariadb-10.2.9-linux-x86_64.tar.gz -C /usr/<span class="built_in">local</span>/</div></pre></td></tr></table></figure>
+<p>对解压出来的目标目录创建 <code>mysql</code> 软连接</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/</div><div class="line">ln -sv mariadb-10.2.9-linux-x86_64/ mysql</div></pre></td></tr></table></figure>
+<p>创建数据库存放目录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mkdir /<span class="built_in">local</span>/mydata</div></pre></td></tr></table></figure>
+<p>创建 MariaDB 运行进程用户</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">; home 目录指定为数据库存放目录</div><div class="line">useradd mysql -r -m -d /<span class="built_in">local</span>/mydata/ -s /sbin/nologin</div></pre></td></tr></table></figure>
+<p>初始化数据库</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> mysql/</div><div class="line">./scripts/mysql_install_db --datadir=/<span class="built_in">local</span>/mydata/ --user=mysql</div></pre></td></tr></table></figure>
+<p>创建配置文件存放目录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mkdir /etc/mysql</div></pre></td></tr></table></figure>
+<p>拷贝配置文件到 <code>/etc/mysql</code> 目录下</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> support-files/</div><div class="line">cp my-huge.cnf /etc/mysql/my.cnf</div></pre></td></tr></table></figure>
+<p>修改配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/mysql/my.cnf</div><div class="line">;添加以下三行</div><div class="line">;指定数据库存放目录</div><div class="line">datadir = /<span class="built_in">local</span>/mydata</div><div class="line">;使用 innodb 引擎</div><div class="line">innodb_file_per_table = ON</div><div class="line">;跳过数据库连接地址反向解析</div><div class="line">skip_name_resolv = ON</div></pre></td></tr></table></figure>
+<p>创建日志文件并将日志文件所有者改为 mysql 用户</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">touch /var/<span class="built_in">log</span>/mysqld.log</div><div class="line">chown mysql /var/<span class="built_in">log</span>/mysqld.log</div></pre></td></tr></table></figure>
+<p>将 MariaDB 二进制程序路径添加到 PATH 变量中</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/profile.d/env.sh</div><div class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/mysql/bin/:<span class="variable">$PATH</span></div></pre></td></tr></table></figure>
+<p>读取该脚本</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">source</span> /etc/profile.d/env.sh</div></pre></td></tr></table></figure>
+<p>拷贝服务控制脚本</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">cp mysql.server /etc/init.d/mysqld</div></pre></td></tr></table></figure>
+<p>添加到开机启动项</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chkconfig mysqld on</div></pre></td></tr></table></figure>
+<p>启动 MariaDB 服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">service mysqld start</div></pre></td></tr></table></figure>
+<p>初始化数据库</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mysql_secure_installation</div><div class="line"></div><div class="line">NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MariaDB</div><div class="line">      SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!</div><div class="line"></div><div class="line">In order to <span class="built_in">log</span> into MariaDB to secure it, we<span class="string">'ll need the current</span></div><div class="line"><span class="string">password for the root user.  If you'</span>ve just installed MariaDB, and</div><div class="line">you haven<span class="string">'t set the root password yet, the password will be blank,</span></div><div class="line"><span class="string">so you should just press enter here.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">;输入 MariaDB root 用户当前密码，初始为空，直接回车</span></div><div class="line"><span class="string">Enter current password for root (enter for none): </span></div><div class="line"><span class="string">OK, successfully used password, moving on...</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">Setting the root password ensures that nobody can log into the MariaDB</span></div><div class="line"><span class="string">root user without the proper authorisation.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">;设置 root 密码</span></div><div class="line"><span class="string">Set root password? [Y/n] y</span></div><div class="line"><span class="string">;输入密码</span></div><div class="line"><span class="string">New password: </span></div><div class="line"><span class="string">;再次输入</span></div><div class="line"><span class="string">Re-enter new password: </span></div><div class="line"><span class="string">Password updated successfully!</span></div><div class="line"><span class="string">Reloading privilege tables..</span></div><div class="line"><span class="string"> ... Success!</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">By default, a MariaDB installation has an anonymous user, allowing anyone</span></div><div class="line"><span class="string">to log into MariaDB without having to have a user account created for</span></div><div class="line"><span class="string">them.  This is intended only for testing, and to make the installation</span></div><div class="line"><span class="string">go a bit smoother.  You should remove them before moving into a</span></div><div class="line"><span class="string">production environment.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">;移除匿名用户</span></div><div class="line"><span class="string">Remove anonymous users? [Y/n] y</span></div><div class="line"><span class="string"> ... Success!</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">Normally, root should only be allowed to connect from '</span>localhost<span class="string">'.  This</span></div><div class="line"><span class="string">ensures that someone cannot guess at the root password from the network.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">;禁止 root 用户远程登录</span></div><div class="line"><span class="string">Disallow root login remotely? [Y/n] y</span></div><div class="line"><span class="string"> ... Success!</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">By default, MariaDB comes with a database named '</span><span class="built_in">test</span><span class="string">' that anyone can</span></div><div class="line"><span class="string">access.  This is also intended only for testing, and should be removed</span></div><div class="line"><span class="string">before moving into a production environment.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">;移除 test 数据库</span></div><div class="line"><span class="string">Remove test database and access to it? [Y/n] y</span></div><div class="line"><span class="string"> - Dropping test database...</span></div><div class="line"><span class="string"> ... Success!</span></div><div class="line"><span class="string"> - Removing privileges on test database...</span></div><div class="line"><span class="string"> ... Success!</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">Reloading the privilege tables will ensure that all changes made so far</span></div><div class="line"><span class="string">will take effect immediately.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">;重新载入权限设置</span></div><div class="line"><span class="string">Reload privilege tables now? [Y/n] y</span></div><div class="line"><span class="string"> ... Success!</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">Cleaning up...</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">All done!  If you'</span>ve completed all of the above steps, your MariaDB</div><div class="line">installation should now be secure.</div><div class="line"></div><div class="line">Thanks <span class="keyword">for</span> using MariaDB!</div></pre></td></tr></table></figure>
+<p>登录 Mariadb</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mysql -uroot -p</div><div class="line">Enter password: </div><div class="line">Welcome to the MariaDB monitor.  Commands end with ; or \g.</div><div class="line">Your MariaDB connection id is 19</div><div class="line">Server version: 10.2.9-MariaDB-log MariaDB Server</div><div class="line"></div><div class="line">Copyright (c) 2000, 2017, Oracle, MariaDB Corporation Ab and others.</div><div class="line"></div><div class="line">Type <span class="string">'help;'</span> or <span class="string">'\h'</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">'\c'</span> to clear the current input statement.</div><div class="line"></div><div class="line">MariaDB [(none)]&gt;</div></pre></td></tr></table></figure>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/10/centos6-source-install-httpd-2-4/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/11/centos6-install-mariadb10-from-binary-package/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
