@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/php_arch.png">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/php_test1.png">
-<meta property="og:updated_time" content="2017-10-13T13:41:56.000Z">
+<meta property="og:updated_time" content="2017-10-13T13:48:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS7.3 编译安装 PHP7.1 FPM">
 <meta name="twitter:description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel 创建 php 运行进程用户 useradd apache -s /sbin/nologin 下载源码包到 /usr/local/src 目录下 cd /usr/local/">
@@ -261,7 +261,7 @@
 <p>重启 httpd 服务</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl restart httpd</div></pre></td></tr></table></figure>
 <p>在 PHP 服务器 <code>/var/www/php</code> 目录下添加 测试页面</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /var/www/html/index.php</div><div class="line"></div><div class="line">&lt;?php</div><div class="line">phpinfo();</div><div class="line">?&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /var/www/php/index.php</div><div class="line"></div><div class="line">&lt;?php</div><div class="line">phpinfo();</div><div class="line">?&gt;</div></pre></td></tr></table></figure>
 <p>在浏览器地址栏输入 httpd 服务器 IP 地址访问测试（本次测试的 httpd 服务器地址是 192.168.1.100 ）</p>
 <p><img src="http://ov2iiuul1.bkt.clouddn.com/php_test1.png" alt="测试页面"></p>
 <p>END!</p>
