@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>CentOS7.3 编译安装 PHP7.1 FPM | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="php7.1,编译安装,php-fpm," />
+  
+
+  <meta name="description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel 创建 php 运行进程用户 useradd apache -s /sbin/nologin 下载源码包到 /usr/local/src 目录下 cd /usr/local/">
+<meta name="keywords" content="php7.1,编译安装,php-fpm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7.3 编译安装 PHP7.1 FPM">
+<meta property="og:url" content="http://www.weidong.io/2017/10/13/centos7-install-php7-1-fpm-from-source/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel 创建 php 运行进程用户 useradd apache -s /sbin/nologin 下载源码包到 /usr/local/src 目录下 cd /usr/local/">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/php_arch.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/php_test1.png">
+<meta property="og:updated_time" content="2017-10-13T13:41:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS7.3 编译安装 PHP7.1 FPM">
+<meta name="twitter:description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel 创建 php 运行进程用户 useradd apache -s /sbin/nologin 下载源码包到 /usr/local/src 目录下 cd /usr/local/">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/php_arch.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-centos7-install-php7-1-fpm-from-source" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">CentOS7.3 编译安装 PHP7.1 FPM</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.13</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/PHP/">PHP</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/13/centos7-install-php7-1-fpm-from-source/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>CentOS7.3 编译安装 PHP 7.1 FPM 模式</strong></p>
+<p>拓扑结构</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/php_arch.png" alt="拓扑结构"></p>
+<p>安装必要依赖包</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel</div></pre></td></tr></table></figure>
+<p>创建 php 运行进程用户</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">useradd apache -s /sbin/nologin</div></pre></td></tr></table></figure>
+<p>下载源码包到 <code>/usr/local/src</code> 目录下</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/</div><div class="line">wget http://docs.php.net/distributions/php-7.1.10.tar.xz</div></pre></td></tr></table></figure>
+<p>解压源码包并切换进该目录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">tar xf php-7.1.10.tar.xz</div><div class="line"><span class="built_in">cd</span> php-7.1.10</div></pre></td></tr></table></figure>
+<p>执行编译</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">./configure \</div><div class="line">--prefix=/usr/<span class="built_in">local</span>/php7 \</div><div class="line">--<span class="built_in">enable</span>-fpm \</div><div class="line">--with-fpm-user=apache \</div><div class="line">--with-fpm-group=apache \</div><div class="line">--with-openssl \</div><div class="line">--with-fpm-systemd \</div><div class="line">--with-config-file-path=/etc \</div><div class="line">--with-config-file-scan-dir=/etc/php.d \</div><div class="line">--<span class="built_in">enable</span>-mbstring \</div><div class="line">--<span class="built_in">enable</span>-sockets \</div><div class="line">--<span class="built_in">enable</span>-maintainer-zts \</div><div class="line">--with-freetype-dir \</div><div class="line">--with-jpeg-dir \</div><div class="line">--with-png-dir \</div><div class="line">--with-libxml-dir=/usr \</div><div class="line">--with-zlib \</div><div class="line">--<span class="built_in">enable</span>-mysqlnd \</div><div class="line">--with-mysqli=mysqlnd \</div><div class="line">--with-pdo-mysql=mysqlnd \</div><div class="line">--<span class="built_in">disable</span>-fileinfo</div><div class="line"></div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<p>拷贝配置 <code>php.ini</code> 文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">cp php.ini-production /etc/php.ini</div></pre></td></tr></table></figure>
+<p>拷贝并修改 <code>php fpm</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">cp /usr/<span class="built_in">local</span>/php7/etc/php-fpm.conf.default /etc/php-fpm.conf</div><div class="line">;修改最后一行</div><div class="line">include=/etc/php-fpm.d/*.conf</div></pre></td></tr></table></figure>
+<p>创建连接池配置文件目录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mkdir /etc/php-fpm.d/</div></pre></td></tr></table></figure>
+<p>拷贝并修改连接池配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">cp /usr/<span class="built_in">local</span>/php7/etc/php-fpm.d/www.conf.default /etc/php-fpm.d/www.conf</div><div class="line">;监听 IP 与端口,如果是监听在所有 IP 上只填端口</div><div class="line">listen = 9000</div><div class="line">;允许连接的 IP</div><div class="line">listen.allowed_clients = 192.168.1.101</div></pre></td></tr></table></figure>
+<p>拷贝服务控制脚本</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">cp /usr/<span class="built_in">local</span>/src/php-7.1.10/sapi/fpm/php-fpm.service /etc/systemd/system/</div></pre></td></tr></table></figure>
+<p>修改服务控制脚本</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/systemd/system/php-fpm.service</div><div class="line">;将路径改为实际路径</div><div class="line">[Unit]</div><div class="line">Description=The PHP FastCGI Process Manager</div><div class="line">After=network.target</div><div class="line"></div><div class="line">[Service]</div><div class="line">Type=notify</div><div class="line">PIDFile=/usr/<span class="built_in">local</span>/php7/var/run/php-fpm.pid</div><div class="line">ExecStart=/usr/<span class="built_in">local</span>/php7/sbin/php-fpm --nodaemonize --fpm-config /etc/php-fpm.conf</div><div class="line">ExecReload=/bin/<span class="built_in">kill</span> -USR2 <span class="variable">$MAINPID</span></div><div class="line">PrivateTmp=<span class="literal">true</span></div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div></pre></td></tr></table></figure>
+<p>修改执行权限</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod +x /etc/systemd/system/php-fpm.service</div></pre></td></tr></table></figure>
+<p>加入开机自启动</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">systemctl <span class="built_in">enable</span> php-fpm</div></pre></td></tr></table></figure>
+<p>启动服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">systemctl start php-fpm</div></pre></td></tr></table></figure>
+<p>修改 httpd 配置</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;添加主页文件</div><div class="line">DirectoryIndex index.php</div><div class="line">;添加 php 支持</div><div class="line">AddType application/x-httpd-php .php</div><div class="line">AddType application/x-httpd-php-source .phps</div><div class="line">;关闭正向代理</div><div class="line">Proxyrequest Off</div><div class="line">;开启 FCGI 反向代理</div><div class="line">ProxyPassMatch ^/(.*\.php)$ fcgi://192.168.1.101:9000/var/www/php/<span class="variable">$1</span></div></pre></td></tr></table></figure>
+<p>重启 httpd 服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl restart httpd</div></pre></td></tr></table></figure>
+<p>在 PHP 服务器 <code>/var/www/php</code> 目录下添加 测试页面</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /var/www/html/index.php</div><div class="line"></div><div class="line">&lt;?php</div><div class="line">phpinfo();</div><div class="line">?&gt;</div></pre></td></tr></table></figure>
+<p>在浏览器地址栏输入 httpd 服务器 IP 地址访问测试（本次测试的 httpd 服务器地址是 192.168.1.100 ）</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/php_test1.png" alt="测试页面"></p>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/11/centos6-install-mariadb10-from-binary-package/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/13/centos7-install-php7-1-fpm-from-source/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
