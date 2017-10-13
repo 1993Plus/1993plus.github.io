@@ -1,5 +1,5 @@
 ---
-title: CentOS6 源码安装 httpd 2.4
+title: CentOS6 编译安装 httpd 2.4
 date: 2017-10-10 20:36:03
 category: HTTPD
 tags:
@@ -7,13 +7,19 @@ tags:
 	- centos6
 ---
 
-CentOS 6 编译安装 httpd 2.4
+**CentOS 6 编译安装 httpd 2.4**
 
 在 CentOS 6 系统上 yum 仓库是没有提供 httpd 2.4 ，只有 2.2 版本的，这时如果要想在 CentOS 6 系统上使用 httpd 2.4 就只有自己编译安装了，在编译安装 httpd 2.4 时又会遇到一个问题，因为 httpd 是依赖于 apr，apr-util 这两个运行库的，在 CentOS 6 yum 仓库中提供的这两个库版本安装包是 1.3.9 的，而 httpd 2.4 依赖这两个库的版本是 1.4 .0 以上的，所以这两个库也要自行解决。
 
 `关闭 SELinux`
 
 `关闭 iptables`
+
+安装编译所依赖的必要开发包
+
+```sh
+yum install -y gcc-c++ expat-devel pcre-devel openssl-devel
+```
 
 到 Apache 官方网站下载 apr，apr-util 的源码包（http://apr.apache.org/）
 
@@ -36,13 +42,13 @@ wget http://mirrors.shuosc.org/apache//httpd/httpd-2.4.28.tar.gz
 tar xf httpd-2.4.28.tar.gz
 ```
 
-将 apr 源码包解压，并移动改名放到` httpd-2.4.28/srclib` 目录下
+将 apr 源码包解压，并移动改名放到` httpd-2.4.28/srclib` 目录下(目标目录名不要改名，否则出错)
 
 ```sh
 mv apr-1.6.2 httpd-2.4.28/srclib/apr
 ```
 
-将 apr-util 源码包解压，并移动改名放到 `httpd-2.4.28/srclib` 目录下
+将 apr-util 源码包解压，并移动改名放到 `httpd-2.4.28/srclib` 目录下(目标目录名不要改名，否则出错)
 
 ```sh
 mv apr-util-1.6.0 httpd-2.4.28/srclib/apr-util
@@ -247,6 +253,56 @@ service httpd start
 curl 127.0.0.1
 <html><body><h1>It works!</h1></body></html>
 ```
+
+**方法二**
+
+还有一种方法就是选择直接编译安装 arp，apr-util 
+
+编译安装 apr，将下载的 apr 源码包解压进入目录
+
+```sh
+tar xf apr-1.6.2.tar.gz
+cd apr-1.6.2
+./configure
+;不指定安装位置，默认安装到 /usr/local/apr
+```
+
+编译安装 apr-util，将下载的 apr-util 源码包解压进入目录
+
+```sh
+tar xf apr-util-1.6.0.tar.gz
+cd apr-util-1.6.0
+./configure \
+--prefix=/usr/local/apr-util \
+--with-apr=/usr/local/apr/ \
+;安装目标目录名必须为 apr-util 否则可能在编译 httpd 的时候出错
+```
+
+编译安装 httpd 2.4
+
+```sh
+tar xf httpd-2.4.28.tar.gz
+cd httpd-2.4.28
+./configure \
+--prefix=/usr/local/httpd24 \
+--enable-so \
+--enable-cgi \
+--with-zlib \
+--with-pcre \
+--enable-proxy \
+--enable-ssl \
+--enable-modules=most \
+--enable-mpms-shared=all \
+--enable-rewrite \
+--with-apr=/usr/local/apr \
+--with-apr-util=/usr/local/apr-util \
+--with-mpm=prefork
+;因为是编译安装的 apr，arp-util，所以编译参数必须指定它们的路径
+```
+
+其它步骤与上面的相同
+
+
 
 
 
