@@ -7,26 +7,28 @@
 <head>
   <meta charset="utf-8">
   
-  <title>CentOS7 编译安装 httpd 2.4 | Weidong</title>
+  <title>关于 SSH | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="编译安装,httpd2.4,make," />
+    <meta name="keywords" content="ssh,secure shell," />
   
 
-  <meta name="description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
-<meta name="keywords" content="编译安装,httpd2.4,make">
+  <meta name="description" content="SSH SSH( Secure Shell ) protocol ,22/tcp, 安全的远程登录 具体的软件实现 OpenSSH : SSH 协议的开源实现，CentOS 默认安装dropbear : 另一个开源实现 SSH 协议版本 V1 : 基于 CRC-32 做 MAC，不安全；man-in-middleV2 : 双方主机协议选择安全的 MAC 方式基于 DH 算法做密钥交换，基于 RSA">
+<meta name="keywords" content="ssh,secure shell">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS7 编译安装 httpd 2.4">
-<meta property="og:url" content="http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/index.html">
+<meta property="og:title" content="关于 SSH">
+<meta property="og:url" content="http://www.weidong.io/2017/10/17/about-secure-shell/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
+<meta property="og:description" content="SSH SSH( Secure Shell ) protocol ,22/tcp, 安全的远程登录 具体的软件实现 OpenSSH : SSH 协议的开源实现，CentOS 默认安装dropbear : 另一个开源实现 SSH 协议版本 V1 : 基于 CRC-32 做 MAC，不安全；man-in-middleV2 : 双方主机协议选择安全的 MAC 方式基于 DH 算法做密钥交换，基于 RSA">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-09T14:02:18.000Z">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/ssh1.png">
+<meta property="og:updated_time" content="2017-10-17T14:46:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS7 编译安装 httpd 2.4">
-<meta name="twitter:description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
+<meta name="twitter:title" content="关于 SSH">
+<meta name="twitter:description" content="SSH SSH( Secure Shell ) protocol ,22/tcp, 安全的远程登录 具体的软件实现 OpenSSH : SSH 协议的开源实现，CentOS 默认安装dropbear : 另一个开源实现 SSH 协议版本 V1 : 基于 CRC-32 做 MAC，不安全；man-in-middleV2 : 双方主机协议选择安全的 MAC 方式基于 DH 算法做密钥交换，基于 RSA">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/ssh1.png">
 
   
 
@@ -175,14 +177,14 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-centos7-source-install-httpd-2-4" class="article article-type-post" itemprop="blogPost">
+   <article id="post-about-secure-shell" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">CentOS7 编译安装 httpd 2.4</h1>
+    <h1 class="post-title">关于 SSH</h1>
 
     <div class="article-meta">
       <span>
         <i class="icon-calendar"></i>
-        <span>2017.10.09</span>
+        <span>2017.10.17</span>
       </span>
 
       
@@ -195,7 +197,7 @@
       
   <span class="article-category">
     <i class="icon-list"></i>
-    <a class="article-category-link" href="/categories/HTTPD/">HTTPD</a>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
   </span>
 
 
@@ -203,7 +205,7 @@
       
         <span>
           <i class="icon-comment"></i>
-          <a href="http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/#disqus_thread"></a>
+          <a href="http://www.weidong.io/2017/10/17/about-secure-shell/#disqus_thread"></a>
         </span>
       
 
@@ -222,27 +224,43 @@
 
   <div class="article-content">
     
-      <p><strong>CentOS 7 编译安装 httpd 2.4</strong></p>
-<p><strong>创建所需要的用户与组</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">useradd -r apache -s /sbin/nologin</div><div class="line">; -r 创建系统用户</div><div class="line">; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统</div></pre></td></tr></table></figure>
-<p><strong>安装必要依赖包</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-devel wget</div></pre></td></tr></table></figure>
-<p><strong>下载源码包</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;切换到 /usr/<span class="built_in">local</span>/src 下使用 wget 或其它方式将源码包放到这个目录中</div><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/</div><div class="line">wget http://mirrors.shuosc.org/apache//httpd/httpd-2.4.28.tar.gz</div><div class="line">;解压包</div><div class="line">tar xvf httpd-2.4.28.tar.gz</div><div class="line">;进入到解压出来的目录内</div><div class="line"><span class="built_in">cd</span> httpd-2.4.28/</div></pre></td></tr></table></figure>
-<p><strong>执行编译</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">./configure \	;可以在这条命令后面使用 --<span class="built_in">help</span> 查看帮助与一些编译参数</div><div class="line">--prefix=/usr/<span class="built_in">local</span>/httpd24 \	;编译安装路径</div><div class="line">--<span class="built_in">enable</span>-so \</div><div class="line">--<span class="built_in">enable</span>-cgi \</div><div class="line">--with-zlib \</div><div class="line">--with-pcre \</div><div class="line">--<span class="built_in">enable</span>-proxy \</div><div class="line">--<span class="built_in">enable</span>-ssl \</div><div class="line">--<span class="built_in">enable</span>-modules=most \</div><div class="line">--<span class="built_in">enable</span>-mpms-shared=all \</div><div class="line">--<span class="built_in">enable</span>-rewrite \</div><div class="line">--with-mpm=prefork</div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
-<p><strong>修改守护进程运行用户与组</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /usr/<span class="built_in">local</span>/httpd24/conf/httpd.conf</div><div class="line">User apache</div><div class="line">Group apache</div></pre></td></tr></table></figure>
-<p><strong>将 httpd 程序路径加入到 <code>PATH</code> 环境变量中</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/httpd24/bin/:<span class="variable">$PATH</span> &gt; /etc/profile.d/httpd.sh</div><div class="line">; 使用 <span class="built_in">source</span> 重新读取改文件</div><div class="line"><span class="built_in">source</span> /etc/profile.d/httpd.sh</div></pre></td></tr></table></figure>
-<p>添加开机自启动</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/rc.d/rc.local</div><div class="line">/usr/<span class="built_in">local</span>/httpd24/bin/apachectl -k start</div></pre></td></tr></table></figure>
-<p>在 CentOS 7 中 rc.local 默认是没有执行权限的所以还要为它添加执行权限才行</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod +x /etc/rc.d/rc.local</div></pre></td></tr></table></figure>
-<p>使用 <code>apachectl</code> </p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">apachectl -k start		;启动 httpd 服务</div><div class="line">			 restart	;重启 httpd 服务</div><div class="line">			 stop		;停止 httpd 服务</div></pre></td></tr></table></figure>
-<p><strong>访问测试</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl 127.0.0.1</div><div class="line">&lt;html&gt;&lt;body&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</div></pre></td></tr></table></figure>
+      <p><strong>SSH</strong></p>
+<p>SSH( Secure Shell ) protocol ,22/tcp, 安全的远程登录</p>
+<p><strong>具体的软件实现</strong></p>
+<p>OpenSSH : SSH 协议的开源实现，CentOS 默认安装<br>dropbear : 另一个开源实现</p>
+<p><strong>SSH 协议版本</strong></p>
+<p>V1 : 基于 CRC-32 做 MAC，不安全；man-in-middle<br>V2 : 双方主机协议选择安全的 MAC 方式<br>基于 DH 算法做密钥交换，基于 RSA 或 DSA 实现身份认证</p>
+<p><strong>两种用户登录认证方式</strong></p>
+<p>基于 password<br>基于 key</p>
+<p><strong>相关包</strong></p>
+<p>openssh<br>openssh-clients<br>openssh-server</p>
+<p><strong>工具</strong></p>
+<p>基于 C/S 结构<br>Client：ssh，scp，sftp，slogin<br>Windows 客户端：xshll，putty，SecureCRT，sshsecureshellclient<br>Server：sshd</p>
+<p><strong>客户端组件</strong></p>
+<p>ssh<br>配置文件 <code>/etc/ssh/ssh_config</code><br>Host PATTERN<br>StrictHostKeyChecking no 首次登录不显示检查提示</p>
+<p><strong>openssh客户端</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">ssh [USER@]HOST[COMMAND]</div><div class="line">ssh [-l USER] HOST [COMMAND]</div><div class="line">-p port	;远程服务器监听的端口</div><div class="line">-b			;指定连接的源 IP</div><div class="line">-v			;调试模式</div><div class="line">-C			;压缩方式</div><div class="line">-X			;支持 X11 转发</div><div class="line">-y			;支持信任 X11 转发</div><div class="line">-t			;强制伪 tty 分配</div><div class="line">ssh -t RemoteServer1 ssh RemoteServer2</div></pre></td></tr></table></figure>
+<p><strong>允许实现对远程系统经验证地加密安全访问</strong></p>
+<p>当用户远程连接 ssh 服务器时，会复制 ssh 服务器 <code>/etc/ssh/ssh_host*key.pub</code> (Centos7 默认是 <code>ssh_host_ecdsa_key.pub</code>) 文件中的公钥到客户机的 <code>~./ssh/know_hosts</code> 中；下次连接时，会自动匹配相应的私钥，不能匹配，将拒绝连接。</p>
+<p><strong>ssh 服务登录验证方式</strong></p>
+<p>用户/口令<br>基于密钥</p>
+<p><strong>基于用户/口令登录验证</strong></p>
+<ol>
+<li>客户端发起 ssh 请求，服务器会把自己的公钥发送给用户</li>
+<li>用户会根据服务器发来的公钥对密码进行加密</li>
+<li>加密后的信息回传给服务器，服务器用自己的私钥解密，如果密码正确，则用户登录成功</li>
+</ol>
+<p><strong>基于密钥的登录方式</strong></p>
+<ol>
+<li>首先在客户端生成一对密钥（ssh-keygen）</li>
+<li>并将客户端的公钥 ssh-copy-id 拷贝到服务端</li>
+<li>当客户端再次发送一个连接请求，包括 IP，用户名</li>
+<li>服务端得到客户端的请求后，会到 authorized_keys 中查找，如果有响应的 IP 和用户，就会随机生成一个字符串，例如：abcd</li>
+<li>服务端将使用客户端拷贝过来的公钥进行加密，然后发送给客户端</li>
+<li>得到服务端发送来的消息后，客户端会使用私钥进行解密，然后将解密后的字符串发送给服务端</li>
+<li>服务端接收到客户端发来的字符串后，与之前的字符串进行对比，如果一致，就运行免密码登录</li>
+</ol>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/ssh1.png" alt="示意图"></p>
 <p>END!</p>
 
     
@@ -254,10 +272,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/10/09/httpd-2-4-常用配置/">
+    <a class="show pull-left" href="/2017/10/13/centos7-install-php7-1-fpm-from-source/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/10/centos6-source-install-httpd-2-4/">
+    <a class="show pull-right" href="/2017/10/17/linux-client-based-on-ssh-key-login-linux-server/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -371,7 +389,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/';
+    var disqus_url = 'http://www.weidong.io/2017/10/17/about-secure-shell/';
     
     (function(){
       var dsq = document.createElement('script');

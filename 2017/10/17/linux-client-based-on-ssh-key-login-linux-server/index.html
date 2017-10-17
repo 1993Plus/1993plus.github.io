@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux 客户端基于 SSH key 认证登录 Linux Server | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="ssh,ssh key," />
+  
+
+  <meta name="description" content="Linux 客户端基于 SSH key 认证登录 Linux Server 客户端生成密钥对 ;-t 指定加密类型，可用类型 dsa | ecdsa | ed25519 | rsa | rsa1ssh-keygen -t rsaGenerating public/private rsa key pair.;生成的密钥文件保存路径Enter file in which to save the key">
+<meta name="keywords" content="ssh,ssh key">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 客户端基于 SSH key 认证登录 Linux Server">
+<meta property="og:url" content="http://www.weidong.io/2017/10/17/linux-client-based-on-ssh-key-login-linux-server/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="Linux 客户端基于 SSH key 认证登录 Linux Server 客户端生成密钥对 ;-t 指定加密类型，可用类型 dsa | ecdsa | ed25519 | rsa | rsa1ssh-keygen -t rsaGenerating public/private rsa key pair.;生成的密钥文件保存路径Enter file in which to save the key">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-17T14:50:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 客户端基于 SSH key 认证登录 Linux Server">
+<meta name="twitter:description" content="Linux 客户端基于 SSH key 认证登录 Linux Server 客户端生成密钥对 ;-t 指定加密类型，可用类型 dsa | ecdsa | ed25519 | rsa | rsa1ssh-keygen -t rsaGenerating public/private rsa key pair.;生成的密钥文件保存路径Enter file in which to save the key">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-linux-client-based-on-ssh-key-login-linux-server" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Linux 客户端基于 SSH key 认证登录 Linux Server</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/17/linux-client-based-on-ssh-key-login-linux-server/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>Linux 客户端基于 SSH key 认证登录 Linux Server</strong></p>
+<p><strong>客户端生成密钥对</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;-t 指定加密类型，可用类型 dsa | ecdsa | ed25519 | rsa | rsa1</div><div class="line">ssh-keygen -t rsa</div><div class="line">Generating public/private rsa key pair.</div><div class="line">;生成的密钥文件保存路径</div><div class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa): </div><div class="line">Created directory <span class="string">'/root/.ssh'</span>.</div><div class="line">;是否给私钥加密，如果不需要加密直接回车就可以了</div><div class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): </div><div class="line">;再次输入密码</div><div class="line">Enter same passphrase again: </div><div class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.</div><div class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub.</div><div class="line">The key fingerprint is:</div><div class="line">SHA256:vyeCnEDO7d63PHHcDGrWOHLrtLj9Q8ZJZt+cDJ4kgJ0 root@localhost.localdomain</div><div class="line">The key<span class="string">'s randomart image is:</span></div><div class="line"><span class="string">+---[RSA 2048]----+</span></div><div class="line"><span class="string">|        o .      |</span></div><div class="line"><span class="string">|       . E       |</span></div><div class="line"><span class="string">|          .      |</span></div><div class="line"><span class="string">|    .      .=o   |</span></div><div class="line"><span class="string">|   + .  S  X+*+o.|</span></div><div class="line"><span class="string">|    + . ..O Oo+oo|</span></div><div class="line"><span class="string">|     + o =oB     |</span></div><div class="line"><span class="string">|      =..==oo    |</span></div><div class="line"><span class="string">|     .. +=B*..   |</span></div><div class="line"><span class="string">+----[SHA256]-----+</span></div></pre></td></tr></table></figure>
+<p>更改私钥文件密码</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;更改私钥密码使用 -p</div><div class="line">ssh-keygen -p</div><div class="line">确认要更改密码的私钥文件</div><div class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> the key is (/root/.ssh/id_rsa): </div><div class="line">;输入旧密码</div><div class="line">Enter old passphrase: </div><div class="line">;输入新密码</div><div class="line">Enter new passphrase (empty <span class="keyword">for</span> no passphrase): </div><div class="line">;重新输入新密码</div><div class="line">Enter same passphrase again: </div><div class="line">Your identification has been saved with the new passphrase.</div></pre></td></tr></table></figure>
+<p>将客户端生成的公钥文件拷贝到服务器上</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"> ;使用 ssh-copy-id 工具拷贝</div><div class="line"> ; -i 指定公钥文件路径，跟上服务器登录用户名加主机地址</div><div class="line"> ssh-copy-id -i /root/.ssh/id_rsa.pub root@172.18.39.161</div><div class="line">/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: <span class="string">"/root/.ssh/id_rsa.pub"</span></div><div class="line">The authenticity of host <span class="string">'172.18.39.161 (172.18.39.161)'</span> can<span class="string">'t be established.</span></div><div class="line"><span class="string">RSA key fingerprint is SHA256:tZu64oYqpse8To1kNaL+c/1+bvBFxgFZsFjvM1eqXBg.</span></div><div class="line"><span class="string">RSA key fingerprint is MD5:85:bd:5d:3b:a5:35:fd:a7:43:e2:16:e3:d8:96:97:51.</span></div><div class="line"><span class="string">;如果是第一次连接该主机会出现该提示，输入 yes</span></div><div class="line"><span class="string">Are you sure you want to continue connecting (yes/no)? yes</span></div><div class="line"><span class="string">/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed</span></div><div class="line"><span class="string">/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys</span></div><div class="line"><span class="string">root@172.18.39.161'</span>s password: </div><div class="line"></div><div class="line">Number of key(s) added: 1</div><div class="line"></div><div class="line">Now try logging into the machine, with:   <span class="string">"ssh 'root@172.18.39.161'"</span></div><div class="line">and check to make sure that only the key(s) you wanted were added.</div></pre></td></tr></table></figure>
+<p>使用 <code>ssh-copy-id</code> 这个工具拷贝过去后在服务端用户 <code>home</code> 目录下会自动创建一个 <code>.ssh</code> 的隐藏文件夹，并且会将客户端的公钥文件改名为 <code>authorized_keys</code> ，如果这个文件原本就存在，那么该私钥只是会追加在这个文件中</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> .ssh/</div><div class="line">ls -l</div><div class="line">-rw------- 1 root root 408 Oct 11 16:05 authorized_keys</div><div class="line">cat authorized_keys </div><div class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAWLQik92axbFwYczZ/Z7xlaa3J0kTrqf8wzU8NQi07D4YkYAJVMqtotzIf1E4koOJ9v5yw4JbVLY/Fc9/KD3xvW8lHyoZkUdHr3XH9D8/AYQ92Va/tUlCfvxNR7ozo6MyfbAYrVnpHuwqdR6+q6347W/dJheTABkuh7uQ9n0pdEBWOZyuTSFanj8PydfU2aSGSYz7QBkaEDyJGsP5V7R9SH3YAVM1sQGWaaAzbBON2RuaQhrZH8DO4xZ+KPW+tifpuWyNIEL8jF18lb2qQH972lUW5VtHtMrPFJOPUFNs06NCcYoQUSmlLxKc78enMEsf0/kin3lOvWFsUusd2bxf root@localhost.localdomain</div></pre></td></tr></table></figure>
+<p>现在就可以使用 ssh 客户端工具来基于 key 登录服务器了</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">ssh root@172.18.39.161</div><div class="line">;如果私钥文件是加密了的，那在登录的时候还需要输入私钥密码</div><div class="line">Enter passphrase <span class="keyword">for</span> key <span class="string">'/root/.ssh/id_rsa'</span>:</div></pre></td></tr></table></figure>
+<p><strong>启用代理</strong></p>
+<p>如果有多台服务器需要操作的话，那每次输入私钥密码也是一件很麻烦的事，解决这个问题的办法就是使用代理</p>
+<p>它可以让你在退出客户端之前不再输入私钥密码，但下次还是需要输入密码的</p>
+<p>验证代理（authentication agent）保密解密后的密钥</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;启用代理(在 GNOME 中，代理被自动提供给 root 用户)</div><div class="line">ssh-agent bash</div><div class="line">;使用 ssh-add 将钥匙添加给代理</div><div class="line">ssh-add </div><div class="line">;输入私钥密码</div><div class="line">Enter passphrase <span class="keyword">for</span> /root/.ssh/id_rsa: </div><div class="line">Identity added: /root/.ssh/id_rsa (/root/.ssh/id_rsa)</div></pre></td></tr></table></figure>
+<p><strong>注意事项</strong></p>
+<p>对于私钥文件，如果落入到黑客手中将是一件非常可怕的事，所以一般情况下建议给私钥文件加密，来保护私钥文件。</p>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/17/about-secure-shell/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/17/linux-client-based-on-ssh-key-login-linux-server/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
