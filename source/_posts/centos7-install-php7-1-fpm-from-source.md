@@ -23,7 +23,7 @@ yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel
 创建 php 运行进程用户
 
 ```sh
-useradd apache -s /sbin/nologin
+useradd apache -r -s /sbin/nologin
 ```
 
 下载源码包到 `/usr/local/src` 目录下
@@ -151,7 +151,7 @@ DirectoryIndex index.php
 AddType application/x-httpd-php .php
 AddType application/x-httpd-php-source .phps
 ;关闭正向代理
-Proxyrequest Off
+Proxyrequests Off
 ;开启 FCGI 反向代理
 ProxyPassMatch ^/(.*\.php)$ fcgi://192.168.1.101:9000/var/www/php/$1
 ```
@@ -165,7 +165,7 @@ systemctl restart httpd
 在 PHP 服务器 `/var/www/php` 目录下添加 测试页面
 
 ```sh
-vim /var/www/html/index.php
+vim /var/www/php/index.php
 
 <?php
 phpinfo();
