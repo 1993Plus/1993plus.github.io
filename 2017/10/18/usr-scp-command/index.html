@@ -7,37 +7,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>SecureCRT 设置基于 SSH key 登录 | Weidong</title>
+  <title>scp 命令简单用法 | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="Linux,SSH KEY,SecureCRT," />
+    <meta name="keywords" content="scp,linux," />
   
 
-  <meta name="description" content="SecureCRT 基于 SSH KEY 登录 Linux Server 在 SecureCRT 中生成密钥对  点击 Continue 继续  选择加密方式，确认后点击 Continue   输入私钥文件密码 输入备注信息   输入密钥加密长度，在 512 到 16384 之间   选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换 选择密钥文件保存路径   是否将该密钥加入到全局">
-<meta name="keywords" content="Linux,SSH KEY,SecureCRT">
+  <meta name="description" content="scp 命令 程序包名 openssh-clients 命令格式 scp [OPTION] SRC ... DEST/-C	压缩数据流-r	递归复制(拷贝目录是使用)-p	保留原文件的属性信息-q	静默模式-P PORT	指定 Remote Host 的监听端口 两种使用方式  将文件从本地拷贝到远程服务器上  命令格式 scp [OPTION] [USER@]HOST:/SOURCEFILE /">
+<meta name="keywords" content="scp,linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SecureCRT 设置基于 SSH key 登录">
-<meta property="og:url" content="http://www.weidong.io/2017/10/18/securecrt-ssh-key-login/index.html">
+<meta property="og:title" content="scp 命令简单用法">
+<meta property="og:url" content="http://www.weidong.io/2017/10/18/usr-scp-command/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="SecureCRT 基于 SSH KEY 登录 Linux Server 在 SecureCRT 中生成密钥对  点击 Continue 继续  选择加密方式，确认后点击 Continue   输入私钥文件密码 输入备注信息   输入密钥加密长度，在 512 到 16384 之间   选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换 选择密钥文件保存路径   是否将该密钥加入到全局">
+<meta property="og:description" content="scp 命令 程序包名 openssh-clients 命令格式 scp [OPTION] SRC ... DEST/-C	压缩数据流-r	递归复制(拷贝目录是使用)-p	保留原文件的属性信息-q	静默模式-P PORT	指定 Remote Host 的监听端口 两种使用方式  将文件从本地拷贝到远程服务器上  命令格式 scp [OPTION] [USER@]HOST:/SOURCEFILE /">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key1.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key2.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key3.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key4.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key5.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key7.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key8.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key9.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key10.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key_13.png">
-<meta property="og:updated_time" content="2017-10-18T01:54:37.000Z">
+<meta property="og:updated_time" content="2017-10-18T02:47:40.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SecureCRT 设置基于 SSH key 登录">
-<meta name="twitter:description" content="SecureCRT 基于 SSH KEY 登录 Linux Server 在 SecureCRT 中生成密钥对  点击 Continue 继续  选择加密方式，确认后点击 Continue   输入私钥文件密码 输入备注信息   输入密钥加密长度，在 512 到 16384 之间   选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换 选择密钥文件保存路径   是否将该密钥加入到全局">
-<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key1.png">
+<meta name="twitter:title" content="scp 命令简单用法">
+<meta name="twitter:description" content="scp 命令 程序包名 openssh-clients 命令格式 scp [OPTION] SRC ... DEST/-C	压缩数据流-r	递归复制(拷贝目录是使用)-p	保留原文件的属性信息-q	静默模式-P PORT	指定 Remote Host 的监听端口 两种使用方式  将文件从本地拷贝到远程服务器上  命令格式 scp [OPTION] [USER@]HOST:/SOURCEFILE /">
 
   
 
@@ -186,9 +175,9 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-securecrt-ssh-key-login" class="article article-type-post" itemprop="blogPost">
+   <article id="post-usr-scp-command" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">SecureCRT 设置基于 SSH key 登录</h1>
+    <h1 class="post-title">scp 命令简单用法</h1>
 
     <div class="article-meta">
       <span>
@@ -214,7 +203,7 @@
       
         <span>
           <i class="icon-comment"></i>
-          <a href="http://www.weidong.io/2017/10/18/securecrt-ssh-key-login/#disqus_thread"></a>
+          <a href="http://www.weidong.io/2017/10/18/usr-scp-command/#disqus_thread"></a>
         </span>
       
 
@@ -233,35 +222,26 @@
 
   <div class="article-content">
     
-      <p><strong>SecureCRT 基于 SSH KEY 登录 Linux Server</strong></p>
-<p>在 SecureCRT 中生成密钥对</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key1.png" alt="生成密钥对"></p>
-<p>点击 Continue 继续</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key2.png" alt="Continue"></p>
-<p>选择加密方式，确认后点击 Continue</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key3.png" alt="选择加密方式"></p>
-<ol>
-<li>输入私钥文件密码</li>
-<li>输入备注信息</li>
-</ol>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key4.png" alt="设置密码与备注信息"></p>
-<p>输入密钥加密长度，在 512 到 16384 之间</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key5.png" alt="输入密钥长度"></p>
-<ol>
-<li>选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换</li>
-<li>选择密钥文件保存路径</li>
-</ol>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key7.png" alt="选择密钥格式"></p>
-<p>是否将该密钥加入到全局设置中，如果点了 yes 那所有主机默认都会使用该密钥</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key8.png" alt=""></p>
-<p>将生成的公钥文件传到服务器上并进行格式转换</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;在用户 home 目录创建公钥文件存放目录</div><div class="line">mkdir .ssh</div><div class="line">;公钥原格式</div><div class="line">cat identity.pub </div><div class="line">---- BEGIN SSH2 PUBLIC KEY ----</div><div class="line">Subject: Zhaoweidong</div><div class="line">Comment: <span class="string">"Zhaoweidong@MacBook-Pro.local"</span></div><div class="line">ModBitSize: 2048</div><div class="line">AAAAB3NzaC1yc2EAAAADAQABAAABAQD0hak6HykrVOqZg61FlnCbyQXPXOW75Hm6</div><div class="line">dCokhC3bqAmNkJMdvsRK5dQfaDNebpYogax/e/edc2TedS+RYA7I3eTkTuqcU302</div><div class="line">+TAewcVrqel1b2qrSQ370iE/z4JQ6da6+q/FUDFfHp06Ww0CFIABcUBYLo3B4aG8</div><div class="line">Q5VcMhmh2Z8hBV5Kjrjy2ALpytxiXvi36NRJiPTSg+W5QNnCUPgXdoWIVGuXfX7U</div><div class="line">qp2ZOsHFuQoX2dydb5t+SLQDFTc7yf/aBBraSbqGxRklE+vztnv4RHda4ZjyjaYo</div><div class="line">LpWsPv90ZAuRXYOJ95PVHTEaqIMlMd0MBnObgZjCp6eZmTQzGRh3</div><div class="line">---- END SSH2 PUBLIC KEY ----</div><div class="line"></div><div class="line">;使用 ssh-keygen 转换为 OpenSSH key 格式；</div><div class="line">;将转换后的格式通过重定向保存到用户 home 目录下 .ssh/authorized_keys 文件中</div><div class="line">ssh-keygen -i -f identity.pub &gt;&gt; /root/.ssh/authorized_keys</div><div class="line"></div><div class="line">;转换后的格式</div><div class="line">cat /root/.ssh/authorized_keys </div><div class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD0hak6HykrVOqZg61FlnCbyQXPXOW75Hm6dCokhC3bqAmNkJMdvsRK5dQfaDNebpYogax/e/edc2TedS+RYA7I3eTkTuqcU302+TAewcVrqel1b2qrSQ370iE/z4JQ6da6+q/FUDFfHp06Ww0CFIABcUBYLo3B4aG8Q5VcMhmh2Z8hBV5Kjrjy2ALpytxiXvi36NRJiPTSg+W5QNnCUPgXdoWIVGuXfX7Uqp2ZOsHFuQoX2dydb5t+SLQDFTc7yf/aBBraSbqGxRklE+vztnv4RHda4ZjyjaYoLpWsPv90ZAuRXYOJ95PVHTEaqIMlMd0MBnObgZjCp6eZmTQzGRh3</div></pre></td></tr></table></figure>
-<p>将公钥登录方式设置为首选项，如果你没有选择登录要使用的私钥文件，还需要点 <code>Properties</code> 选项来选择私钥文件</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key9.png" alt="设置登录首选项"></p>
-<p>选择登录该主机要使用的私钥文件</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key10.png" alt="选择私钥文件"></p>
-<p>现在就可以使用基于 KEY 的方式来登录服务器了，如果你的私钥文件设置了密码，还需要输入一次私钥文件的密码</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key_13.png" alt="输入私钥文件密码"></p>
+      <p><strong>scp 命令</strong></p>
+<p>程序包名</p>
+<p><code>openssh-clients</code></p>
+<p>命令格式</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">scp [OPTION] SRC ... DEST/</div><div class="line">-C	压缩数据流</div><div class="line">-r	递归复制(拷贝目录是使用)</div><div class="line">-p	保留原文件的属性信息</div><div class="line">-q	静默模式</div><div class="line">-P PORT	指定 Remote Host 的监听端口</div></pre></td></tr></table></figure>
+<p>两种使用方式</p>
+<ul>
+<li>将文件从本地拷贝到远程服务器上</li>
+</ul>
+<p>命令格式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">scp [OPTION] [USER@]HOST:/SOURCEFILE /DESTPATH</div><div class="line">;如果在登录时不填用户名那将以本地当前登录的用户名登录远程主机</div></pre></td></tr></table></figure>
+<p>示例</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;如果目标主机后面没有跟路径，默认为该用户的 home 目录</div><div class="line">scp testfile root@192.168.1.100:</div><div class="line">;将本地的 testfile 文件拷贝到远程服务器的 /var/ 目录下</div><div class="line">scp testfile root@192.168.1.100:/var/</div></pre></td></tr></table></figure>
+<ul>
+<li>从远程服务器上拷贝文件到本地</li>
+</ul>
+<p>命令格式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">scp [OPTION] /SOURCEFILE [USER@]HOST:/DESTPATH</div><div class="line">;如果在登录时不填用户名那将以本地当前登录的用户名登录远程主机</div></pre></td></tr></table></figure>
+<p>示例</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;从远程服务器 root 用户 home 目录下拷贝 testfile 文件到本地当前所在目录</div><div class="line">scp root@192.168.1.100:testfile ./</div><div class="line">;长远程服务器 /var/ 目录下拷贝 testfile 文件到本地 /var/ 目录下</div><div class="line">scp root@192.168.1.100:/var/testfile /var/</div></pre></td></tr></table></figure>
 <p>END!</p>
 
     
@@ -273,10 +253,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/10/17/linux-client-based-on-ssh-key-login-linux-server/">
+    <a class="show pull-left" href="/2017/10/18/securecrt-ssh-key-login/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/18/usr-scp-command/">
+    <a class="hide pull-right" href="/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -390,7 +370,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'http://www.weidong.io/2017/10/18/securecrt-ssh-key-login/';
+    var disqus_url = 'http://www.weidong.io/2017/10/18/usr-scp-command/';
     
     (function(){
       var dsq = document.createElement('script');
