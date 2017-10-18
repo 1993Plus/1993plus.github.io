@@ -7,26 +7,37 @@
 <head>
   <meta charset="utf-8">
   
-  <title>CentOS7 编译安装 httpd 2.4 | Weidong</title>
+  <title>SecureCRT 设置基于 SSH key 登录 | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="httpd2.4,make,编译安装," />
+    <meta name="keywords" content="Linux,SSH KEY,SecureCRT," />
   
 
-  <meta name="description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
-<meta name="keywords" content="httpd2.4,make,编译安装">
+  <meta name="description" content="SecureCRT 基于 SSH KEY 登录 Linux Server 在 SecureCRT 中生成密钥对  点击 Continue 继续  选择加密方式，确认后点击 Continue   输入私钥文件密码 输入备注信息   输入密钥加密长度，在 512 到 16384 之间   选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换 选择密钥文件保存路径   是否将该密钥加入到全局">
+<meta name="keywords" content="Linux,SSH KEY,SecureCRT">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS7 编译安装 httpd 2.4">
-<meta property="og:url" content="http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/index.html">
+<meta property="og:title" content="SecureCRT 设置基于 SSH key 登录">
+<meta property="og:url" content="http://www.weidong.io/2017/10/18/securecrt-ssh-key-login/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
+<meta property="og:description" content="SecureCRT 基于 SSH KEY 登录 Linux Server 在 SecureCRT 中生成密钥对  点击 Continue 继续  选择加密方式，确认后点击 Continue   输入私钥文件密码 输入备注信息   输入密钥加密长度，在 512 到 16384 之间   选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换 选择密钥文件保存路径   是否将该密钥加入到全局">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-09T14:02:18.000Z">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key2.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key3.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key4.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key5.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key7.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key8.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key9.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key10.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key_13.png">
+<meta property="og:updated_time" content="2017-10-18T01:54:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS7 编译安装 httpd 2.4">
-<meta name="twitter:description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
+<meta name="twitter:title" content="SecureCRT 设置基于 SSH key 登录">
+<meta name="twitter:description" content="SecureCRT 基于 SSH KEY 登录 Linux Server 在 SecureCRT 中生成密钥对  点击 Continue 继续  选择加密方式，确认后点击 Continue   输入私钥文件密码 输入备注信息   输入密钥加密长度，在 512 到 16384 之间   选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换 选择密钥文件保存路径   是否将该密钥加入到全局">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key1.png">
 
   
 
@@ -175,14 +186,14 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-centos7-source-install-httpd-2-4" class="article article-type-post" itemprop="blogPost">
+   <article id="post-securecrt-ssh-key-login" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">CentOS7 编译安装 httpd 2.4</h1>
+    <h1 class="post-title">SecureCRT 设置基于 SSH key 登录</h1>
 
     <div class="article-meta">
       <span>
         <i class="icon-calendar"></i>
-        <span>2017.10.09</span>
+        <span>2017.10.18</span>
       </span>
 
       
@@ -195,7 +206,7 @@
       
   <span class="article-category">
     <i class="icon-list"></i>
-    <a class="article-category-link" href="/categories/HTTPD/">HTTPD</a>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
   </span>
 
 
@@ -203,7 +214,7 @@
       
         <span>
           <i class="icon-comment"></i>
-          <a href="http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/#disqus_thread"></a>
+          <a href="http://www.weidong.io/2017/10/18/securecrt-ssh-key-login/#disqus_thread"></a>
         </span>
       
 
@@ -222,27 +233,35 @@
 
   <div class="article-content">
     
-      <p><strong>CentOS 7 编译安装 httpd 2.4</strong></p>
-<p><strong>创建所需要的用户与组</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">useradd -r apache -s /sbin/nologin</div><div class="line">; -r 创建系统用户</div><div class="line">; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统</div></pre></td></tr></table></figure>
-<p><strong>安装必要依赖包</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-devel wget</div></pre></td></tr></table></figure>
-<p><strong>下载源码包</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;切换到 /usr/<span class="built_in">local</span>/src 下使用 wget 或其它方式将源码包放到这个目录中</div><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/</div><div class="line">wget http://mirrors.shuosc.org/apache//httpd/httpd-2.4.28.tar.gz</div><div class="line">;解压包</div><div class="line">tar xvf httpd-2.4.28.tar.gz</div><div class="line">;进入到解压出来的目录内</div><div class="line"><span class="built_in">cd</span> httpd-2.4.28/</div></pre></td></tr></table></figure>
-<p><strong>执行编译</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">./configure \	;可以在这条命令后面使用 --<span class="built_in">help</span> 查看帮助与一些编译参数</div><div class="line">--prefix=/usr/<span class="built_in">local</span>/httpd24 \	;编译安装路径</div><div class="line">--<span class="built_in">enable</span>-so \</div><div class="line">--<span class="built_in">enable</span>-cgi \</div><div class="line">--with-zlib \</div><div class="line">--with-pcre \</div><div class="line">--<span class="built_in">enable</span>-proxy \</div><div class="line">--<span class="built_in">enable</span>-ssl \</div><div class="line">--<span class="built_in">enable</span>-modules=most \</div><div class="line">--<span class="built_in">enable</span>-mpms-shared=all \</div><div class="line">--<span class="built_in">enable</span>-rewrite \</div><div class="line">--with-mpm=prefork</div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
-<p><strong>修改守护进程运行用户与组</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /usr/<span class="built_in">local</span>/httpd24/conf/httpd.conf</div><div class="line">User apache</div><div class="line">Group apache</div></pre></td></tr></table></figure>
-<p><strong>将 httpd 程序路径加入到 <code>PATH</code> 环境变量中</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/httpd24/bin/:<span class="variable">$PATH</span> &gt; /etc/profile.d/httpd.sh</div><div class="line">; 使用 <span class="built_in">source</span> 重新读取改文件</div><div class="line"><span class="built_in">source</span> /etc/profile.d/httpd.sh</div></pre></td></tr></table></figure>
-<p>添加开机自启动</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/rc.d/rc.local</div><div class="line">/usr/<span class="built_in">local</span>/httpd24/bin/apachectl -k start</div></pre></td></tr></table></figure>
-<p>在 CentOS 7 中 rc.local 默认是没有执行权限的所以还要为它添加执行权限才行</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod +x /etc/rc.d/rc.local</div></pre></td></tr></table></figure>
-<p>使用 <code>apachectl</code> </p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">apachectl -k start		;启动 httpd 服务</div><div class="line">			 restart	;重启 httpd 服务</div><div class="line">			 stop		;停止 httpd 服务</div></pre></td></tr></table></figure>
-<p><strong>访问测试</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl 127.0.0.1</div><div class="line">&lt;html&gt;&lt;body&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</div></pre></td></tr></table></figure>
+      <p><strong>SecureCRT 基于 SSH KEY 登录 Linux Server</strong></p>
+<p>在 SecureCRT 中生成密钥对</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key1.png" alt="生成密钥对"></p>
+<p>点击 Continue 继续</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key2.png" alt="Continue"></p>
+<p>选择加密方式，确认后点击 Continue</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key3.png" alt="选择加密方式"></p>
+<ol>
+<li>输入私钥文件密码</li>
+<li>输入备注信息</li>
+</ol>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key4.png" alt="设置密码与备注信息"></p>
+<p>输入密钥加密长度，在 512 到 16384 之间</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key5.png" alt="输入密钥长度"></p>
+<ol>
+<li>选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换</li>
+<li>选择密钥文件保存路径</li>
+</ol>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key7.png" alt="选择密钥格式"></p>
+<p>是否将该密钥加入到全局设置中，如果点了 yes 那所有主机默认都会使用该密钥</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key8.png" alt=""></p>
+<p>将生成的公钥文件传到服务器上并进行格式转换</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;在用户 home 目录创建公钥文件存放目录</div><div class="line">mkdir .ssh</div><div class="line">;公钥原格式</div><div class="line">cat identity.pub </div><div class="line">---- BEGIN SSH2 PUBLIC KEY ----</div><div class="line">Subject: Zhaoweidong</div><div class="line">Comment: <span class="string">"Zhaoweidong@MacBook-Pro.local"</span></div><div class="line">ModBitSize: 2048</div><div class="line">AAAAB3NzaC1yc2EAAAADAQABAAABAQD0hak6HykrVOqZg61FlnCbyQXPXOW75Hm6</div><div class="line">dCokhC3bqAmNkJMdvsRK5dQfaDNebpYogax/e/edc2TedS+RYA7I3eTkTuqcU302</div><div class="line">+TAewcVrqel1b2qrSQ370iE/z4JQ6da6+q/FUDFfHp06Ww0CFIABcUBYLo3B4aG8</div><div class="line">Q5VcMhmh2Z8hBV5Kjrjy2ALpytxiXvi36NRJiPTSg+W5QNnCUPgXdoWIVGuXfX7U</div><div class="line">qp2ZOsHFuQoX2dydb5t+SLQDFTc7yf/aBBraSbqGxRklE+vztnv4RHda4ZjyjaYo</div><div class="line">LpWsPv90ZAuRXYOJ95PVHTEaqIMlMd0MBnObgZjCp6eZmTQzGRh3</div><div class="line">---- END SSH2 PUBLIC KEY ----</div><div class="line"></div><div class="line">;使用 ssh-keygen 转换为 OpenSSH key 格式；</div><div class="line">;将转换后的格式通过重定向保存到用户 home 目录下 .ssh/authorized_keys 文件中</div><div class="line">ssh-keygen -i -f identity.pub &gt;&gt; /root/.ssh/authorized_keys</div><div class="line"></div><div class="line">;转换后的格式</div><div class="line">cat /root/.ssh/authorized_keys </div><div class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD0hak6HykrVOqZg61FlnCbyQXPXOW75Hm6dCokhC3bqAmNkJMdvsRK5dQfaDNebpYogax/e/edc2TedS+RYA7I3eTkTuqcU302+TAewcVrqel1b2qrSQ370iE/z4JQ6da6+q/FUDFfHp06Ww0CFIABcUBYLo3B4aG8Q5VcMhmh2Z8hBV5Kjrjy2ALpytxiXvi36NRJiPTSg+W5QNnCUPgXdoWIVGuXfX7Uqp2ZOsHFuQoX2dydb5t+SLQDFTc7yf/aBBraSbqGxRklE+vztnv4RHda4ZjyjaYoLpWsPv90ZAuRXYOJ95PVHTEaqIMlMd0MBnObgZjCp6eZmTQzGRh3</div></pre></td></tr></table></figure>
+<p>将公钥登录方式设置为首选项，如果你没有选择登录要使用的私钥文件，还需要点 <code>Properties</code> 选项来选择私钥文件</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key9.png" alt="设置登录首选项"></p>
+<p>选择登录该主机要使用的私钥文件</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key10.png" alt="选择私钥文件"></p>
+<p>现在就可以使用基于 KEY 的方式来登录服务器了，如果你的私钥文件设置了密码，还需要输入一次私钥文件的密码</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key_13.png" alt="输入私钥文件密码"></p>
 <p>END!</p>
 
     
@@ -254,10 +273,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/10/09/httpd-2-4-常用配置/">
+    <a class="show pull-left" href="/2017/10/17/linux-client-based-on-ssh-key-login-linux-server/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/10/centos6-source-install-httpd-2-4/">
+    <a class="hide pull-right" href="/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -371,7 +390,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/';
+    var disqus_url = 'http://www.weidong.io/2017/10/18/securecrt-ssh-key-login/';
     
     (function(){
       var dsq = document.createElement('script');
