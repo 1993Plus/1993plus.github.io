@@ -65,22 +65,22 @@ Your identification has been saved with the new passphrase.
 ```sh
  ;使用 ssh-copy-id 工具拷贝
  ; -i 指定公钥文件路径，跟上服务器登录用户名加主机地址
- ssh-copy-id -i /root/.ssh/id_rsa.pub root@172.18.39.161
+ ssh-copy-id -i /root/.ssh/id_rsa.pub root@192.168.1.100
 /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
-The authenticity of host '172.18.39.161 (172.18.39.161)' can't be established.
+The authenticity of host '192.168.1.100 (192.168.1.100)' can't be established.
 RSA key fingerprint is SHA256:tZu64oYqpse8To1kNaL+c/1+bvBFxgFZsFjvM1eqXBg.
 RSA key fingerprint is MD5:85:bd:5d:3b:a5:35:fd:a7:43:e2:16:e3:d8:96:97:51.
 ;如果是第一次连接该主机会出现该提示，输入 yes
 Are you sure you want to continue connecting (yes/no)? yes
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-root@172.18.39.161's password: 
+;输入服务器登录密码
+root@192.168.1.100's password: 
 
 Number of key(s) added: 1
 
-Now try logging into the machine, with:   "ssh 'root@172.18.39.161'"
+Now try logging into the machine, with:   "ssh 'root@192.168.1.100'"
 and check to make sure that only the key(s) you wanted were added.
-
 
 ```
 
@@ -97,7 +97,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAWLQik92axbFwYczZ/Z7xlaa3J0kTrqf8wzU8NQi0
 现在就可以使用 ssh 客户端工具来基于 key 登录服务器了
 
 ```sh
-ssh root@172.18.39.161
+ssh root@192.168.1.100
 ;如果私钥文件是加密了的，那在登录的时候还需要输入私钥密码
 Enter passphrase for key '/root/.ssh/id_rsa': 
 ```
