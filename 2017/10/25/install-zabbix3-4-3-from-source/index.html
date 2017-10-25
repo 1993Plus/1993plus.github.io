@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_5.1.png">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_6.1.png">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_7.1.png">
-<meta property="og:updated_time" content="2017-10-25T03:40:49.000Z">
+<meta property="og:updated_time" content="2017-10-25T03:45:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编译安装 Zabbix 3.4.3">
 <meta name="twitter:description" content="CentOS7.4 编译安装 Zabbix 3.4.3 环境 zabbix server ip: 192.168.1.23 mariadb server ip: 192.168.1.22 web server ip: 192.168.1.21 Zabbix server 安装依赖软件包 yum install -y gcc-c++ mysql++-devel libxml2-devel net-s">
@@ -247,7 +247,7 @@
 <p>执行编译参数</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">./configure \</div><div class="line">--prefix=/usr/<span class="built_in">local</span>/zabbix \</div><div class="line">--<span class="built_in">enable</span>-server \</div><div class="line">--<span class="built_in">enable</span>-agent \</div><div class="line">--with-mysql \</div><div class="line">--<span class="built_in">enable</span>-ipv6 \</div><div class="line">--with-net-snmp \</div><div class="line">--with-libcurl \</div><div class="line">--with-libxml2</div><div class="line"></div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
 <p>创建守护进程运行账户</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">groupadd zabbix -r -g 997</div><div class="line">useradd zabbix1 -r -u 995 -g zabbix -s /sbin/nologin</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">groupadd zabbix -r -g 997</div><div class="line">useradd zabbix1 -r -u 997 -g zabbix -s /sbin/nologin</div></pre></td></tr></table></figure>
 <p>创建日志存放目录</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mkdir /var/<span class="built_in">log</span>/zabbix</div><div class="line">;将日志存放目录所有者改为 zabbix 用户，或给 zabbix 用户写(w)权限</div><div class="line">chown zabbix /var/<span class="built_in">log</span>/zabbix</div></pre></td></tr></table></figure>
 <p>修改 <code>zabbix_server</code> 配置文件</p>
