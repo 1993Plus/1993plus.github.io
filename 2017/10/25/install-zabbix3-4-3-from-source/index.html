@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>编译安装 Zabbix 3.4.3 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="zabbix,monitor,监控," />
+  
+
+  <meta name="description" content="CentOS7.4 编译安装 Zabbix 3.4.3 环境 zabbix server ip: 192.168.1.23 mariadb server ip: 192.168.1.22 web server ip: 192.168.1.21 Zabbix server 安装依赖软件包 yum install -y gcc-c++ mysql++-devel libxml2-devel net-s">
+<meta name="keywords" content="zabbix,monitor,监控">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译安装 Zabbix 3.4.3">
+<meta property="og:url" content="http://www.weidong.io/2017/10/25/install-zabbix3-4-3-from-source/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="CentOS7.4 编译安装 Zabbix 3.4.3 环境 zabbix server ip: 192.168.1.23 mariadb server ip: 192.168.1.22 web server ip: 192.168.1.21 Zabbix server 安装依赖软件包 yum install -y gcc-c++ mysql++-devel libxml2-devel net-s">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_1.1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_2.1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_3.1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_4.1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_5.1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_6.1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_7.1.png">
+<meta property="og:updated_time" content="2017-10-25T03:40:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编译安装 Zabbix 3.4.3">
+<meta name="twitter:description" content="CentOS7.4 编译安装 Zabbix 3.4.3 环境 zabbix server ip: 192.168.1.23 mariadb server ip: 192.168.1.22 web server ip: 192.168.1.21 Zabbix server 安装依赖软件包 yum install -y gcc-c++ mysql++-devel libxml2-devel net-s">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/zabbix_1.1.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-install-zabbix3-4-3-from-source" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">编译安装 Zabbix 3.4.3</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.25</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Zabbix/">Zabbix</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/10/25/install-zabbix3-4-3-from-source/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>CentOS7.4 编译安装 Zabbix 3.4.3</strong></p>
+<p><strong>环境</strong></p>
+<p>zabbix server ip: 192.168.1.23</p>
+<p>mariadb server ip: 192.168.1.22</p>
+<p>web server ip: 192.168.1.21</p>
+<p><strong>Zabbix server</strong></p>
+<p>安装依赖软件包</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">yum install -y gcc-c++ mysql++-devel libxml2-devel net-snmp-devel libevent-devel curl-devel</div></pre></td></tr></table></figure>
+<p>到官方网站下载源码包(<a href="https://www.zabbix.com/download" target="_blank" rel="external">https://www.zabbix.com/download</a>)</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;切换目录将源码包下载到 /usr/<span class="built_in">local</span>/src 目录下(非必要)</div><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/</div><div class="line">;下载源码包</div><div class="line">wget https://nchc.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.4.3/zabbix-3.4.3.tar.gz</div></pre></td></tr></table></figure>
+<p>加压源码包</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">tar xf zabbix-3.4.3.tar.gz</div></pre></td></tr></table></figure>
+<p>进入解压目录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> zabbix-3.4.3/</div></pre></td></tr></table></figure>
+<p>执行编译参数</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">./configure \</div><div class="line">--prefix=/usr/<span class="built_in">local</span>/zabbix \</div><div class="line">--<span class="built_in">enable</span>-server \</div><div class="line">--<span class="built_in">enable</span>-agent \</div><div class="line">--with-mysql \</div><div class="line">--<span class="built_in">enable</span>-ipv6 \</div><div class="line">--with-net-snmp \</div><div class="line">--with-libcurl \</div><div class="line">--with-libxml2</div><div class="line"></div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<p>创建守护进程运行账户</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">groupadd zabbix -r -g 997</div><div class="line">useradd zabbix1 -r -u 995 -g zabbix -s /sbin/nologin</div></pre></td></tr></table></figure>
+<p>创建日志存放目录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mkdir /var/<span class="built_in">log</span>/zabbix</div><div class="line">;将日志存放目录所有者改为 zabbix 用户，或给 zabbix 用户写(w)权限</div><div class="line">chown zabbix /var/<span class="built_in">log</span>/zabbix</div></pre></td></tr></table></figure>
+<p>修改 <code>zabbix_server</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /usr/<span class="built_in">local</span>/zabbix/etc/zabbix_server.conf</div><div class="line"></div><div class="line">;日志存放路径</div><div class="line">LogFile=/var/<span class="built_in">log</span>/zabbix/zabbix_server.log</div><div class="line">;数据库服务器地址</div><div class="line">DBHost=192.168.1.22</div><div class="line">;连接的数据库名</div><div class="line">DBName=zabbix</div><div class="line">;登录数据库的用户名</div><div class="line">DBUser=zabbix</div><div class="line">;数据库用户密码</div><div class="line">DBPassword=zabbix</div><div class="line">;数据库监听端口</div><div class="line">DBPort=3306</div><div class="line">;Zabbix server 监听端口</div><div class="line">ListenIP=192.168.1.23</div><div class="line">;守护进程运行用户</div><div class="line">User=zabbix</div></pre></td></tr></table></figure>
+<p>修改 <code>zabbix_agentd</code> 配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /usr/<span class="built_in">local</span>/zabbix/etc/zabbix_agentd.conf</div><div class="line"></div><div class="line">;日志存放路径</div><div class="line">LogFile=/var/<span class="built_in">log</span>/zabbix/zabbix_agentd.log</div><div class="line">;zabbix server 地址</div><div class="line">Server=192.168.1.23</div><div class="line">;zabbix agentd 守护进程运行用户</div><div class="line">User=zabbix</div></pre></td></tr></table></figure>
+<p>拷贝服务启动脚本</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;在源码包目录中</div><div class="line">cp /usr/<span class="built_in">local</span>/src/zabbix-3.4.3/misc/init.d/fedora/core5/* /etc/init.d/</div></pre></td></tr></table></figure>
+<p>修改脚本</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/init.d/zabbix_server</div><div class="line">;修改 zabbix server 二进制程序路径为实际路径</div><div class="line">ZABBIX_BIN=<span class="string">"/usr/local/zabbix/sbin/zabbix_server"</span></div><div class="line">-------------------------------------------------------</div><div class="line">;修改 zabbix agentd 二进制程序路径为实际路径</div><div class="line">vim /etc/init.d/zabbix_agentd</div><div class="line">ZABBIX_BIN=<span class="string">"/usr/local/zabbix/sbin/zabbix_agentd"</span></div></pre></td></tr></table></figure>
+<p>添加为开机自启动</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chkconfig zabbix_server on</div><div class="line">chkconfig zabbix_agentd on</div></pre></td></tr></table></figure>
+<p><strong>数据库服务器</strong></p>
+<p>MariaDB 二进制方式安装：<a href="http://www.weidong.io/2017/10/11/centos6-install-mariadb10-from-binary-package/">http://www.weidong.io/2017/10/11/centos6-install-mariadb10-from-binary-package/</a></p>
+<p>将源码包中的 sql 文件拷贝到 数据库服务器上</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/zabbix-3.4.3/database/</div><div class="line">;拷贝到了 root 用户 home 目录</div><div class="line">scp -r mysql/ root@192.168.1.22:</div></pre></td></tr></table></figure>
+<p>创建数据库</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CREATE DATABASE zabbix CHARACTER SET &apos;utf8&apos;;</div></pre></td></tr></table></figure>
+<p>创建数据库用户并授权</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">GRANT ALL ON zabbix.* TO &apos;zabbix&apos;@&apos;192.168.1.%&apos; IDENTIFIED BY &apos;zabbix&apos;;</div></pre></td></tr></table></figure>
+<p>导入数据库</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">mysql -u zabbix -p -h 192.168.1.22 zabbix &lt; ~/mysql/schema.sql</div><div class="line">mysql -u zabbix -p -h 192.168.1.22 zabbix &lt; ~/mysql/images.sql</div><div class="line">mysql -u zabbix -p -h 192.168.1.22 zabbix &lt; ~/mysql/data.sql</div></pre></td></tr></table></figure>
+<p>启动 zabbix 服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">systemctl start zabbix_server</div><div class="line">systemctl start zabbix_agentd</div></pre></td></tr></table></figure>
+<p><strong>WEB 服务器</strong></p>
+<p>HTTPD 2.4 安装：<a href="http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/">http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/</a></p>
+<p>PHP FPM 安装：<a href="http://www.weidong.io/2017/10/13/centos7-install-php7-1-fpm-from-source/">http://www.weidong.io/2017/10/13/centos7-install-php7-1-fpm-from-source/</a></p>
+<p>拷贝源码包中的网页文件拷贝到 web 服务器工作目录</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">scp -r php/ root@192.168.1.21:/<span class="built_in">local</span>/www/zabbix</div></pre></td></tr></table></figure>
+<p>打开浏览器输入 web 服务器地址访问</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/zabbix_1.1.png" alt="setup1"></p>
+<p>参数检测，根据提示修改配置文件</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/zabbix_2.1.png" alt="setup2"></p>
+<p>输入数据库地址，端口，数据库名，数据库用户，数据库密码</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/zabbix_3.1.png" alt="setup3"></p>
+<p>输入 zabbix server 服务端地址，端口，名称</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/zabbix_4.1.png" alt="setup4"></p>
+<p>确认参数</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/zabbix_5.1.png" alt="setup5"></p>
+<p>点击 Finish 完成</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/zabbix_6.1.png" alt="setup6"></p>
+<p>登录(用户名“Admin”，密码“zabbix”)</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/zabbix_7.1.png" alt="setup7"></p>
+<p><strong><code>登录后可能会显示服务端没有运行，只需要重新运行一下 zabbix 服务端就可以了</code></strong></p>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/18/usr-scp-command/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/10/25/install-zabbix3-4-3-from-source/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
