@@ -15,20 +15,20 @@
     <meta name="keywords" content="php7.1,编译安装,php-fpm," />
   
 
-  <meta name="description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel 创建 php 运行进程用户 useradd apache -r -s /sbin/nologin 下载源码包到 /usr/local/src 目录下 cd /usr/loc">
+  <meta name="description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel libcurl-devel libjpeg-devel libpng-devel freetype-devel libmcrypt-devel openldap-devel">
 <meta name="keywords" content="php7.1,编译安装,php-fpm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS7.3 编译安装 PHP7.1 FPM">
 <meta property="og:url" content="http://www.weidong.io/2017/10/13/centos7-install-php7-1-fpm-from-source/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel 创建 php 运行进程用户 useradd apache -r -s /sbin/nologin 下载源码包到 /usr/local/src 目录下 cd /usr/loc">
+<meta property="og:description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel libcurl-devel libjpeg-devel libpng-devel freetype-devel libmcrypt-devel openldap-devel">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/php_arch.png">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/php_test1.png">
-<meta property="og:updated_time" content="2017-10-16T01:57:26.000Z">
+<meta property="og:updated_time" content="2017-10-27T06:22:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS7.3 编译安装 PHP7.1 FPM">
-<meta name="twitter:description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel 创建 php 运行进程用户 useradd apache -r -s /sbin/nologin 下载源码包到 /usr/local/src 目录下 cd /usr/loc">
+<meta name="twitter:description" content="CentOS7.3 编译安装 PHP 7.1 FPM 模式 拓扑结构  安装必要依赖包 yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel libcurl-devel libjpeg-devel libpng-devel freetype-devel libmcrypt-devel openldap-devel">
 <meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/php_arch.png">
 
   
@@ -229,15 +229,22 @@
 <p>拓扑结构</p>
 <p><img src="http://ov2iiuul1.bkt.clouddn.com/php_arch.png" alt="拓扑结构"></p>
 <p>安装必要依赖包</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel libcurl-devel libjpeg-devel libpng-devel freetype-devel libmcrypt-devel openldap-devel</div></pre></td></tr></table></figure>
 <p>创建 php 运行进程用户</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">useradd apache -r -s /sbin/nologin</div></pre></td></tr></table></figure>
 <p>下载源码包到 <code>/usr/local/src</code> 目录下</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/</div><div class="line">wget http://docs.php.net/distributions/php-7.1.10.tar.xz</div></pre></td></tr></table></figure>
 <p>解压源码包并切换进该目录</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">tar xf php-7.1.10.tar.xz</div><div class="line"><span class="built_in">cd</span> php-7.1.10</div></pre></td></tr></table></figure>
-<p>执行编译</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">./configure \</div><div class="line">--prefix=/usr/<span class="built_in">local</span>/php7 \</div><div class="line">--<span class="built_in">enable</span>-fpm \</div><div class="line">--with-fpm-user=apache \</div><div class="line">--with-fpm-group=apache \</div><div class="line">--with-openssl \</div><div class="line">--with-fpm-systemd \</div><div class="line">--with-config-file-path=/etc \</div><div class="line">--with-config-file-scan-dir=/etc/php.d \</div><div class="line">--<span class="built_in">enable</span>-mbstring \</div><div class="line">--<span class="built_in">enable</span>-sockets \</div><div class="line">--<span class="built_in">enable</span>-maintainer-zts \</div><div class="line">--with-freetype-dir \</div><div class="line">--with-jpeg-dir \</div><div class="line">--with-png-dir \</div><div class="line">--with-libxml-dir=/usr \</div><div class="line">--with-zlib \</div><div class="line">--<span class="built_in">enable</span>-mysqlnd \</div><div class="line">--with-mysqli=mysqlnd \</div><div class="line">--with-pdo-mysql=mysqlnd \</div><div class="line">--<span class="built_in">disable</span>-fileinfo</div><div class="line"></div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<p><em><code>FAQ</code></em></p>
+<p>如果不需要 <code>ldap</code> 模块可以取消，因为在编译过程中可能会出现两个错误 </p>
+<p>1) 提示找不到 <code>ldap</code> 库文件，解决办法就是将 <code>/usr/lib64/</code> 目录下的 <code>libldap</code> 库文件拷贝到 <code>/usr/lib/</code> 目录下</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">cp -a /usr/lib64/libldap* /usr/lib</div></pre></td></tr></table></figure>
+<p>2) 进行编译时系统抛出错误提示</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">/usr/bin/ld: ext/ldap/.libs/ldap.o: undefined reference to symbol <span class="string">'ber_scanf'</span></div><div class="line">/usr/lib64/liblber-2.4.so.2: error adding symbols: DSO missing from <span class="built_in">command</span> line</div><div class="line">collect2: error: ld returned 1 <span class="built_in">exit</span> status</div><div class="line">make: *** [sapi/cli/php] Error 1</div></pre></td></tr></table></figure>
+<p>解决办法编辑 <code>Makefile</code> (<code>vim Makefile</code>) 文件，找到 <code>EXTRA_LIBS =</code> 字段，在尾部追加 <code>-llber</code> 保存退出，继续执行 <code>make &amp;&amp; meke install</code> </p>
+<p>编译参数</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">./configure \</div><div class="line">--prefix=/<span class="built_in">local</span>/php7 \</div><div class="line">--<span class="built_in">enable</span>-fpm \</div><div class="line">--with-config-file-path=/etc \</div><div class="line">--with-config-file-scan-dir=/etc/php.d \</div><div class="line">--with-fpm-user=nginx \</div><div class="line">--with-fpm-group=nginx \</div><div class="line">--with-mcrypt --with-mhash \</div><div class="line">--with-openssl \</div><div class="line">--<span class="built_in">enable</span>-mysqlnd \</div><div class="line">--with-mysqli=mysqlnd \</div><div class="line">--with-pdo-mysql=mysqlnd --with-gd \</div><div class="line">--with-iconv \</div><div class="line">--with-zlib \</div><div class="line">--<span class="built_in">enable</span>-zip \</div><div class="line">--<span class="built_in">enable</span>-inline-optimization \</div><div class="line">--<span class="built_in">disable</span>-debug \</div><div class="line">--<span class="built_in">disable</span>-rpath \</div><div class="line">--<span class="built_in">enable</span>-shared \</div><div class="line">--<span class="built_in">enable</span>-xml \</div><div class="line">--<span class="built_in">enable</span>-bcmath \</div><div class="line">--<span class="built_in">enable</span>-shmop \</div><div class="line">--with-fpm-systemd \</div><div class="line">--<span class="built_in">enable</span>-mbregex \</div><div class="line">--<span class="built_in">enable</span>-mbstring \</div><div class="line">--<span class="built_in">enable</span>-gd-native-ttf \</div><div class="line">--<span class="built_in">enable</span>-pcntl \</div><div class="line">--<span class="built_in">enable</span>-sockets \</div><div class="line">--with-xmlrpc \</div><div class="line">--<span class="built_in">enable</span>-soap \</div><div class="line">--without-pear \</div><div class="line">--with-gettext \</div><div class="line">--<span class="built_in">enable</span>-session --with-curl \</div><div class="line">--with-jpeg-dir \</div><div class="line">--with-freetype-dir \</div><div class="line">--<span class="built_in">enable</span>-opcache \</div><div class="line">--without-gdbm \</div><div class="line">--<span class="built_in">enable</span>-maintainer-zts \</div><div class="line">--with-ldap \</div><div class="line">--<span class="built_in">disable</span>-fileinfo</div><div class="line"></div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
 <p>拷贝配置 <code>php.ini</code> 文件</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">cp php.ini-production /etc/php.ini</div></pre></td></tr></table></figure>
 <p>拷贝并修改 <code>php fpm</code> 配置文件</p>
