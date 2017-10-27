@@ -67,7 +67,7 @@ make && make install
 
 ```sh
 groupadd zabbix -r -g 997
-useradd zabbix1 -r -u 995 -g zabbix -s /sbin/nologin
+useradd zabbix1 -r -u 997 -g zabbix -s /sbin/nologin
 ```
 
 创建日志存放目录
@@ -191,6 +191,17 @@ PHP FPM 安装：http://www.weidong.io/2017/10/13/centos7-install-php7-1-fpm-fro
 
 ```sh
 scp -r php/ root@192.168.1.21:/local/www/zabbix
+```
+
+修改 PHP 配置文件参数(`php.ini`)修改完成后重启 httpd（php  以模块方式运行在 httpd 下）或 PHP-FPM
+
+```sh
+memory_limit = 128M
+post_max_size = 16M
+upload_max_filesize = 2M
+max_execution_time = 300
+max_input_time = 300
+date.timezone = Asia/Shanghai
 ```
 
 打开浏览器输入 web 服务器地址访问

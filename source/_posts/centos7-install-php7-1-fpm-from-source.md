@@ -17,13 +17,20 @@ tags:
 安装必要依赖包
 
 ```sh
-yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel
+yum install -y wget gcc-c++ systemd-devel libxml2-devel openssl-devel libcurl-devel libjpeg-devel libpng-devel freetype-devel libmcrypt-devel openldap-devel
 ```
 
-创建 php 运行进程用户
+创建 php 网页程序文件存放目录
 
 ```sh
-useradd apache -r -s /sbin/nologin
+mkdir /local/www/
+```
+
+创建 php 守护进程用户与组，并将其 `home` 目录指向 php 网页程序文件存放目录
+
+```sh
+ groupadd php-fpm -r -g 502
+ useradd php-fpm -r -u 502 -g 502 -m -d /local/www/ -s /sbin/nologin
 ```
 
 下载源码包到 `/usr/local/src` 目录下
@@ -40,29 +47,69 @@ tar xf php-7.1.10.tar.xz
 cd php-7.1.10
 ```
 
-执行编译
+*`FAQ`*
+
+如果不需要 `ldap` 模块可以取消，因为在编译过程中可能会出现两个错误 
+
+1) 提示找不到 `ldap` 库文件，解决办法就是将 `/usr/lib64/` 目录下的 `libldap` 库文件拷贝到 `/usr/lib/` 目录下
+
+```sh
+cp -a /usr/lib64/libldap* /usr/lib
+```
+
+2) 进行编译时系统抛出错误提示
+
+```sh
+/usr/bin/ld: ext/ldap/.libs/ldap.o: undefined reference to symbol 'ber_scanf'
+/usr/lib64/liblber-2.4.so.2: error adding symbols: DSO missing from command line
+collect2: error: ld returned 1 exit status
+make: *** [sapi/cli/php] Error 1
+```
+
+解决办法编辑 `Makefile` (`vim Makefile`) 文件，找到 `EXTRA_LIBS =` 字段，在尾部追加 `-llber` 保存退出，继续执行 `make && meke install` 
+
+编译参数
 
 ```sh
 ./configure \
---prefix=/usr/local/php7 \
+--prefix=/local/php7 \
 --enable-fpm \
---with-fpm-user=apache \
---with-fpm-group=apache \
---with-openssl \
---with-fpm-systemd \
 --with-config-file-path=/etc \
 --with-config-file-scan-dir=/etc/php.d \
---enable-mbstring \
---enable-sockets \
---enable-maintainer-zts \
---with-freetype-dir \
---with-jpeg-dir \
---with-png-dir \
---with-libxml-dir=/usr \
---with-zlib \
+--with-fpm-user=php-fpm \
+--with-fpm-group=php-fpm \
+--with-mcrypt --with-mhash \
+--with-openssl \
 --enable-mysqlnd \
 --with-mysqli=mysqlnd \
---with-pdo-mysql=mysqlnd \
+--with-pdo-mysql=mysqlnd --with-gd \
+--with-iconv \
+--with-zlib \
+--enable-zip \
+--enable-inline-optimization \
+--disable-debug \
+--disable-rpath \
+--enable-shared \
+--enable-xml \
+--enable-bcmath \
+--enable-shmop \
+--with-fpm-systemd \
+--enable-mbregex \
+--enable-mbstring \
+--enable-gd-native-ttf \
+--enable-pcntl \
+--enable-sockets \
+--with-xmlrpc \
+--enable-soap \
+--without-pear \
+--with-gettext \
+--enable-session --with-curl \
+--with-jpeg-dir \
+--with-freetype-dir \
+--enable-opcache \
+--without-gdbm \
+--enable-maintainer-zts \
+--with-ldap \
 --disable-fileinfo
 
 make && make install
