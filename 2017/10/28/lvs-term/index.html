@@ -7,26 +7,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>CentOS7 编译安装 httpd 2.4 | Weidong</title>
+  <title>LVS 集群中的术语 | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="httpd2.4,make,编译安装," />
+    <meta name="keywords" content="lvs," />
   
 
-  <meta name="description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
-<meta name="keywords" content="httpd2.4,make,编译安装">
+  <meta name="description" content="LVS 集群中的术语 VS: Virtual Server， Director，Dispatcher(调度器)，Load Balancer RS: Real Server(LVS)，upstream server(nginx)，backend server(haproxy) CIP: Client IP VIP: Virtual Server IP(VS 外网 IP) DIP: Director">
+<meta name="keywords" content="lvs">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS7 编译安装 httpd 2.4">
-<meta property="og:url" content="http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/index.html">
+<meta property="og:title" content="LVS 集群中的术语">
+<meta property="og:url" content="http://www.weidong.io/2017/10/28/lvs-term/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
+<meta property="og:description" content="LVS 集群中的术语 VS: Virtual Server， Director，Dispatcher(调度器)，Load Balancer RS: Real Server(LVS)，upstream server(nginx)，backend server(haproxy) CIP: Client IP VIP: Virtual Server IP(VS 外网 IP) DIP: Director">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-09T14:02:18.000Z">
+<meta property="og:updated_time" content="2017-10-28T13:35:50.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS7 编译安装 httpd 2.4">
-<meta name="twitter:description" content="CentOS 7 编译安装 httpd 2.4 创建所需要的用户与组 useradd -r apache -s /sbin/nologin; -r 创建系统用户; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统 安装必要依赖包 yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-">
+<meta name="twitter:title" content="LVS 集群中的术语">
+<meta name="twitter:description" content="LVS 集群中的术语 VS: Virtual Server， Director，Dispatcher(调度器)，Load Balancer RS: Real Server(LVS)，upstream server(nginx)，backend server(haproxy) CIP: Client IP VIP: Virtual Server IP(VS 外网 IP) DIP: Director">
 
   
 
@@ -175,14 +175,14 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-centos7-source-install-httpd-2-4" class="article article-type-post" itemprop="blogPost">
+   <article id="post-lvs-term" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">CentOS7 编译安装 httpd 2.4</h1>
+    <h1 class="post-title">LVS 集群中的术语</h1>
 
     <div class="article-meta">
       <span>
         <i class="icon-calendar"></i>
-        <span>2017.10.09</span>
+        <span>2017.10.28</span>
       </span>
 
       
@@ -195,7 +195,7 @@
       
   <span class="article-category">
     <i class="icon-list"></i>
-    <a class="article-category-link" href="/categories/HTTPD/">HTTPD</a>
+    <a class="article-category-link" href="/categories/LVS/">LVS</a>
   </span>
 
 
@@ -203,7 +203,7 @@
       
         <span>
           <i class="icon-comment"></i>
-          <a href="http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/#disqus_thread"></a>
+          <a href="http://www.weidong.io/2017/10/28/lvs-term/#disqus_thread"></a>
         </span>
       
 
@@ -222,28 +222,57 @@
 
   <div class="article-content">
     
-      <p><strong>CentOS 7 编译安装 httpd 2.4</strong></p>
-<p><strong>创建所需要的用户与组</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">useradd -r apache -s /sbin/nologin</div><div class="line">; -r 创建系统用户</div><div class="line">; -s 指定 shell 程序为 /sbin/nologin，不允许使用该账户登录系统</div></pre></td></tr></table></figure>
-<p><strong>安装必要依赖包</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">yum install -y apr-devel apr-util-devel gcc-c++ pcre-devel openssl-devel wget</div></pre></td></tr></table></figure>
-<p><strong>下载源码包</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;切换到 /usr/<span class="built_in">local</span>/src 下使用 wget 或其它方式将源码包放到这个目录中</div><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/</div><div class="line">wget http://mirrors.shuosc.org/apache//httpd/httpd-2.4.28.tar.gz</div><div class="line">;解压包</div><div class="line">tar xvf httpd-2.4.28.tar.gz</div><div class="line">;进入到解压出来的目录内</div><div class="line"><span class="built_in">cd</span> httpd-2.4.28/</div></pre></td></tr></table></figure>
-<p><strong>执行编译</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">./configure \	;可以在这条命令后面使用 --<span class="built_in">help</span> 查看帮助与一些编译参数</div><div class="line">--prefix=/usr/<span class="built_in">local</span>/httpd24 \	;编译安装路径</div><div class="line">--<span class="built_in">enable</span>-so \</div><div class="line">--<span class="built_in">enable</span>-cgi \</div><div class="line">--with-zlib \</div><div class="line">--with-pcre \</div><div class="line">--<span class="built_in">enable</span>-proxy \</div><div class="line">--<span class="built_in">enable</span>-ssl \</div><div class="line">--<span class="built_in">enable</span>-modules=most \</div><div class="line">--<span class="built_in">enable</span>-mpms-shared=all \</div><div class="line">--<span class="built_in">enable</span>-rewrite \</div><div class="line">--with-mpm=prefork</div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
-<p><strong>修改守护进程运行用户与组</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /usr/<span class="built_in">local</span>/httpd24/conf/httpd.conf</div><div class="line">User apache</div><div class="line">Group apache</div></pre></td></tr></table></figure>
-<p><strong>将 httpd 程序路径加入到 <code>PATH</code> 环境变量中</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/httpd24/bin/:<span class="variable">$PATH</span> &gt; /etc/profile.d/httpd.sh</div><div class="line">; 使用 <span class="built_in">source</span> 重新读取改文件</div><div class="line"><span class="built_in">source</span> /etc/profile.d/httpd.sh</div></pre></td></tr></table></figure>
-<p>添加开机自启动</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">vim /etc/rc.d/rc.local</div><div class="line">/usr/<span class="built_in">local</span>/httpd24/bin/apachectl -k start</div></pre></td></tr></table></figure>
-<p>在 CentOS 7 中 rc.local 默认是没有执行权限的所以还要为它添加执行权限才行</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">chmod +x /etc/rc.d/rc.local</div></pre></td></tr></table></figure>
-<p>使用 <code>apachectl</code> </p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">apachectl -k start		;启动 httpd 服务</div><div class="line">			 restart	;重启 httpd 服务</div><div class="line">			 stop		;停止 httpd 服务</div></pre></td></tr></table></figure>
-<p><strong>访问测试</strong></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">curl 127.0.0.1</div><div class="line">&lt;html&gt;&lt;body&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</div></pre></td></tr></table></figure>
-<p>END!</p>
+      <p><strong>LVS 集群中的术语</strong></p>
+<p>VS: Virtual Server， Director，Dispatcher(调度器)，Load Balancer</p>
+<p>RS: Real Server(LVS)，upstream server(nginx)，backend server(haproxy)</p>
+<p>CIP: Client IP</p>
+<p>VIP: Virtual Server IP(VS 外网 IP)</p>
+<p>DIP: Director IP(VS 内网 IP)</p>
+<p>RIP: Real Server IP</p>
+<p><code>访问流程： CIP &lt;—&gt; VIP &lt;===&gt; DIP &lt;—&gt;  RIP</code></p>
+<p><strong>LVS: ipvsadm/ipvs</strong></p>
+<p>ipvsadmin: 用户空间的命令行工具，规则管理器。用于管理集群服务及 Real Server</p>
+<p>ipvs: 工作于内核弓箭 <code>netfilter</code> 的 <code>INPUT</code> 钩子上的框架</p>
+<p><strong>LVS 集群类型</strong></p>
+<ul>
+<li>LVS-NAT: 修改请求报文的目标 IP，多目标 IP 的 DNAT</li>
+<li>LVS-DR: 操纵封装新的 MAC 地址</li>
+<li>LVS-TUN: 在原请求 IP 报文之外新加一个 IP 首部</li>
+<li>LVS-FULLNAT: 修改请求报文的源和目标 IP(kernel 默认不支持，需要自行编译)</li>
+</ul>
+<p><strong>LVS-NAT</strong></p>
+<p>本质是多目标 IP 的 DNAT，通过将请求报文中目标地址和目标端口修改为某选出的 RS 的 RIP 与 PORT 实现转发</p>
+<p>1）RIP 和 DIP 必须同在一个 IP 网络，且应该使用私网地址；RS 的网关要指向 DIP</p>
+<p>2）请求报文和响应报文都必须经由 Director 转发，Director 容易成为系统瓶颈</p>
+<p>3）支持端口映射，可修改请求报文的目标 PORT</p>
+<p>4）VS 必须是 Linux 系统，RS 可以是任意 OS</p>
+<p><strong>LVS-DR</strong></p>
+<p>LVS-DR(Direct Routing)，直接路由，LVS 默认模式，应用最广泛，通过为请求报文重新封装一个 MAC 首部进行转发，源 MAC 是 DIP 所在的接口的 MAC，目标 MAC 是某挑选出的 RS 的 RIP 所在接口的 MAC 地址；源 IP 和 PORT 以及目标 IP 和 PORT 均保持不变</p>
+<p><code>Director 和各个 RS 都配置有 VIP</code></p>
+<p>1）确保前段路由器将目标 IP 为 VIP 的请求报文发往 Director</p>
+<p>前端网关做静态绑定 VIP 和 Director 和 MAC 地址</p>
+<p>在 RS 上使用 arptables 工具</p>
+<p>在 RS 上修改内核参数以及限制 arp 通告及应答级别</p>
+<p><code>arp_announce</code></p>
+<p><code>arp_ignore</code></p>
+<p>2）RS 的 RIP 可以使用私网地址，也可以是公网地址；RIP 与 DIP 在同一 IP 网络；RIP 的网关不能指向 DIP，以确保响应报文不会经由 Director</p>
+<p>3）RS 和 Director 要在同一物理网络</p>
+<p>4）请求报文要经由 Director，但响应报文不经由 Director，而由 RS 直接返回给 Client</p>
+<p>5）不支持端口映射（端口不能修改）</p>
+<p>6）RS 可以使用大多数 OS</p>
+<p><strong>LVS-TUN</strong></p>
+<p>不修该请求报文的 IP 首部（源 IP 为 CIP，目标 IP 为 VIP），而是在原 IP 报文之外再分装一个 IP 首部（源 IP 为 DIP，目标 IP 为 RIP），将报文发给选出的目标 RS；RS 处理后直接返回给客户端（源 IP 为 VIP，目标 IP 为 CIP）</p>
+<p>1）DIP，VIP，RIP 都应该是公网地址</p>
+<p>2）RS 的网关不能，也不可能指向 DIP</p>
+<p>3）请求报文要经由 Director，但响应不能经由 Director</p>
+<p>4）不支持端口映射</p>
+<p>5）RS 的 OS 必须支持隧道功能</p>
+<p><strong>LVS-FULLNAT</strong></p>
+<p>通过同时修改请求报文的源 IP 地址和目标 IP 地址进行转发</p>
+<p>1）VIP 是公网地址，RIP 和 DIP 是私网地址，且通常不再同一 IP 网络；因此，RIP 的网关一般不会指向 DIP</p>
+<p>2）RS 收到的请求报文源地址是 DIP ，因此，只需要响应给 DIP；但 Director 还要将其发往 Client</p>
+<p>3）请求和响应报文都经由 Director</p>
+<p>4）支持端口映射；</p>
 
     
   </div>
@@ -254,10 +283,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/10/09/httpd-2-4-常用配置/">
+    <a class="show pull-left" href="/2017/10/27/lvs-load-balancing-model/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/10/centos6-source-install-httpd-2-4/">
+    <a class="hide pull-right" href="/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -371,7 +400,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'http://www.weidong.io/2017/10/09/centos7-source-install-httpd-2-4/';
+    var disqus_url = 'http://www.weidong.io/2017/10/28/lvs-term/';
     
     (function(){
       var dsq = document.createElement('script');
