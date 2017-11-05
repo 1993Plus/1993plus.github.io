@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>关于 keepalived | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="keepalived," />
+  
+
+  <meta name="description" content="Keepalived Keepalived 是一个基于 VRRP 协议来实现的 LVS 服务高可用方案，可以利用 keepalived 来避免单点故障（Single Ponit of Failure）。 工作原理： keepalived 是以 VRRP 协议为实现基础的， VRRP 全称 Virtual Router Redundancy Protocol，即虚拟冗余路由协议。虚拟路由冗余协议，可">
+<meta name="keywords" content="keepalived">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于 keepalived">
+<meta property="og:url" content="http://www.weidong.io/2017/11/04/keepalived/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="Keepalived Keepalived 是一个基于 VRRP 协议来实现的 LVS 服务高可用方案，可以利用 keepalived 来避免单点故障（Single Ponit of Failure）。 工作原理： keepalived 是以 VRRP 协议为实现基础的， VRRP 全称 Virtual Router Redundancy Protocol，即虚拟冗余路由协议。虚拟路由冗余协议，可">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-11-04T12:49:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于 keepalived">
+<meta name="twitter:description" content="Keepalived Keepalived 是一个基于 VRRP 协议来实现的 LVS 服务高可用方案，可以利用 keepalived 来避免单点故障（Single Ponit of Failure）。 工作原理： keepalived 是以 VRRP 协议为实现基础的， VRRP 全称 Virtual Router Redundancy Protocol，即虚拟冗余路由协议。虚拟路由冗余协议，可">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-keepalived" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">关于 keepalived</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.11.04</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/keepalived/">keepalived</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/11/04/keepalived/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>Keepalived</strong></p>
+<p>Keepalived 是一个基于 VRRP 协议来实现的 LVS 服务高可用方案，可以利用 keepalived 来避免单点故障（Single Ponit of Failure）。</p>
+<p><strong>工作原理：</strong></p>
+<p>keepalived 是以 VRRP 协议为实现基础的， VRRP 全称 Virtual Router Redundancy Protocol，即虚拟冗余路由协议。虚拟路由冗余协议，可以认为是实现路由器高可用的协议，即将 N 台提供相同功能的路由器组成一个路由器组，这个组里面有一个 master 和 多个 backup，master 上面有一个对外提供服务器的 VIP ，master 会发组播，当 backup 收不到 vrrp 包时就认为 master 宕掉了，这是就需要根据 VRRP 的优先级来选举一个 backup 当 master。这样的话就可以保证路由器的高可用了。</p>
+<p><strong>keepalived 的配置文件</strong></p>
+<p>keepalived 只有一个配置文件 keepalived.conf（<code>/etc/keepalived/keepalived.conf</code>），里面主要包括以下几个配置区域。</p>
+<p><code>global_defs</code> 主要配置发生故障是的通知对象及主机标识</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">global_defs &#123;</div><div class="line">; 故障发送生时，邮件通知地址</div><div class="line">   notification_email &#123;</div><div class="line">     acassen@firewall.loc</div><div class="line">     failover@firewall.loc</div><div class="line">     sysadmin@firewall.loc</div><div class="line">   &#125;</div><div class="line">; 通知邮件的发送地址</div><div class="line">   notification_email_from Alexandre.Cassen@firewall.loc</div><div class="line">; 通知邮件 smtp 地址</div><div class="line">   smtp_server 192.168.200.1</div><div class="line">; 连接 smtp 服务器的超时时间</div><div class="line">   smtp_connect_timeout 30</div><div class="line">; 节点标识符，通常为 hostname</div><div class="line">   router_id LVS_DEVEL</div><div class="line">; 组播地址</div><div class="line">   vrrp_mcast_group4 255.255.255.255</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>vrr_script</code> 自定义资源监控脚本，vrrp 示例根据脚本返回值，公共定义，可被多个示例调用，定义在 vrrp 实例之外</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">; 定义一个脚本名</div><div class="line">vrrp_script SCRIPT_NAME &#123;</div><div class="line">; 脚本语句块或脚本完整路径</div><div class="line">  script &quot;script&quot;</div><div class="line">; 检测间隔</div><div class="line">  intervl 1</div><div class="line">; 当脚本执行结果条件满足时权重值为</div><div class="line">  weight -20</div><div class="line">; 检测多少次失败结果才算失败</div><div class="line">  fall 2</div><div class="line">; 检测多少次成功才算成功</div><div class="line">  rise 1</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>vrrp_instance</code> 用来定义对外提共服务器的 VIP 区域及相关属性</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">vrrp_instance VI_1 &#123;</div><div class="line">; 当前节点在此虚拟路由上的初始状态，master|backup</div><div class="line">    state MASTER</div><div class="line">; 绑定为当前虚拟路由使用的物理接口</div><div class="line">    interface eth0</div><div class="line">; 虚拟路由唯一标识符，范围 0-255</div><div class="line">    virtual_router_id 51</div><div class="line">; 当前物理节点在此虚拟路由中的优先级，范围 1-254</div><div class="line">    priority 100</div><div class="line">; VRRP 包发送间隔，默认 1s</div><div class="line">    advert_int 1</div><div class="line">; 认证机制</div><div class="line">    authentication &#123;</div><div class="line">; 密码类型 AH|PASS</div><div class="line">        auth_type PASS</div><div class="line">; 密码(PASS 最多只能识别 8 位)</div><div class="line">        auth_pass 1111</div><div class="line">    &#125;</div><div class="line">; 虚拟 IP(VIP)</div><div class="line">    virtual_ipaddress &#123;</div><div class="line">        192.168.200.17/24</div><div class="line">        192.168.200.18/24 dev eth0 label eth0:1</div><div class="line">    &#125;</div><div class="line">; 监控网卡列表，当一下列表中的网卡测试失败时，切换到 FALT 状态</div><div class="line">    track_interface &#123;</div><div class="line">      eth1</div><div class="line">    &#125;</div><div class="line">; 调用 vrr_script 定义的脚本</div><div class="line">    track_script&#123;</div><div class="line">      SCRIPT_NAME</div><div class="line">    &#125;</div><div class="line">; 定义工作模式为非抢占模式。允许一个 priority 较低的节点作为 master，即使有 priority 更高的节点</div><div class="line">    nopreempt</div><div class="line">; master 节点启动多久后进行接管资源</div><div class="line">    preempt_delay 300</div><div class="line">; 当前节点切换为 master 节点时触发脚本</div><div class="line">    notify_master &lt;STRING&gt;|&lt;QUOTED-STRING&gt;</div><div class="line">; 当前节点切换为 backup 节点时触发脚本</div><div class="line">    notify_backup &lt;STRING&gt;|&lt;QUOTED-STRING&gt;</div><div class="line">; 当前节点切换为失败状态时触发脚本</div><div class="line">    notify_fault &lt;STRING&gt;|&lt;QUOTED-STRING&gt;</div><div class="line">; 以上任意状态时触发脚本</div><div class="line">    notify &lt;STRING&gt;|&lt;QUOTED-STRING&gt;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>virtual_server</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">; 接收外部请求的 VIP 地址与端口(对应 vrrp_instance 中配置的 VIP 地址)</div><div class="line">virtual_server 192.168.200.100 443 &#123;</div><div class="line">; 对后端服务器的检查间隔(单位为秒)</div><div class="line">    delay_loop 6</div><div class="line">; 对后端服务器的调度算法(rr|lc|wlc|lblc|sh|dh)</div><div class="line">    lb_algo rr</div><div class="line">; LVS 调度类型( NAT|DR|TUN)</div><div class="line">    lb_kind NAT </div><div class="line">; 持续连接时长</div><div class="line">    persistence_timeout 50</div><div class="line">; 服务协议类型</div><div class="line">    protocol TCP </div><div class="line"></div><div class="line">; 当后端所有 real_server 都不可用时由 sorry_server 接收请求</div><div class="line">    sorry_server 192.168.200.200 1358</div><div class="line"></div><div class="line">; 后端提供服务的真实服务器</div><div class="line">    real_server 192.168.201.100 443 &#123;</div><div class="line">; 权重</div><div class="line">        weight 1</div><div class="line">; 健康状态检测方式(HTTP_GET|SSL_GET|TCP_CHECK|SMTP_CHECK|MISC_CHECK..)</div><div class="line">        SSL_GET &#123;</div><div class="line">; 检测 URL</div><div class="line">            url &#123;</div><div class="line">              path /</div><div class="line">              digest ff20ad2481f97b1754ef3e12ecd3a9cc</div><div class="line">            &#125;   </div><div class="line">            url &#123;</div><div class="line">              path /mrtg/</div><div class="line">              digest 9b3a0c85a887a256d6939da88aabd8cd</div><div class="line">            &#125;  </div><div class="line">; 连接请求的超时时长</div><div class="line">            connect_timeout 3</div><div class="line">; 重试次数</div><div class="line">            nb_get_retry 3</div><div class="line">; 重试间隔</div><div class="line">            delay_before_retry 3</div><div class="line">; 向 real_server 指定 IP 地址发起健康状态检测请求</div><div class="line">            connect_ip 192.168.200.100</div><div class="line">; 向 real_server 指定端口发起健康状态检测请求</div><div class="line">            connect_port 22</div><div class="line">; 发出健康状态检测请求时使用的源地址</div><div class="line">            bindto 192.168.200.100</div><div class="line">; 发出健康状态检测请求时使用的源端口</div><div class="line">            bind_port 22</div><div class="line">        &#125;   </div><div class="line">    &#125;   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在下面这个目录中还有很多模板文件可以作为参考</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/usr/share/doc/keepalived-1.3.5/samples</div></pre></td></tr></table></figure>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/10/28/use-ipvsadm/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/11/04/keepalived/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
