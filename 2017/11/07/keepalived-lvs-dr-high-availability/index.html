@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Keepalived LVS DR 模型高可用实验 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Linux,Linux运维" />
+  
+
+  <meta name="description" content="Keepalived LVS DR 模型高可用实验 实验环境 LVS Virtual Server 以下简称 VS，后端 Real Server 简称 RS。 操作系统：  VS: CentOS 7.4 RS: CentOS 7.4 Router: RouterOS  IP 地址：  VS1: VRRP 通信地址 192.168.11.101/24 ,DIP 192.168.12.101/24,{">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Keepalived LVS DR 模型高可用实验">
+<meta property="og:url" content="http://www.weidong.io/2017/11/07/keepalived-lvs-dr-high-availability/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="Keepalived LVS DR 模型高可用实验 实验环境 LVS Virtual Server 以下简称 VS，后端 Real Server 简称 RS。 操作系统：  VS: CentOS 7.4 RS: CentOS 7.4 Router: RouterOS  IP 地址：  VS1: VRRP 通信地址 192.168.11.101/24 ,DIP 192.168.12.101/24,{">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/keepalived+lvs.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/keepalived%20lvs%20client_test.png">
+<meta property="og:updated_time" content="2017-11-07T01:27:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Keepalived LVS DR 模型高可用实验">
+<meta name="twitter:description" content="Keepalived LVS DR 模型高可用实验 实验环境 LVS Virtual Server 以下简称 VS，后端 Real Server 简称 RS。 操作系统：  VS: CentOS 7.4 RS: CentOS 7.4 Router: RouterOS  IP 地址：  VS1: VRRP 通信地址 192.168.11.101/24 ,DIP 192.168.12.101/24,{">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/keepalived+lvs.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-keepalived-lvs-dr-high-availability" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Keepalived LVS DR 模型高可用实验</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.11.07</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/11/07/keepalived-lvs-dr-high-availability/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>Keepalived LVS DR 模型高可用实验</strong></p>
+<p><strong>实验环境</strong></p>
+<p>LVS Virtual Server 以下简称 VS，后端 Real Server 简称 RS。</p>
+<p>操作系统：</p>
+<blockquote>
+<p>VS: CentOS 7.4</p>
+<p>RS: CentOS 7.4</p>
+<p>Router: RouterOS</p>
+</blockquote>
+<p>IP 地址：</p>
+<blockquote>
+<p>VS1: VRRP 通信地址 192.168.11.101/24 ,DIP 192.168.12.101/24,{VIP 192.168.11.100/24}</p>
+<p>VS2: VRRP 通信地址 192.168.11.102/24 ,DIP 192.168.12.101/24,{VIP 192.168.11.100/24}</p>
+<p>RS1: RIP 192.168.12.121, VIP 192.168.11.100/32</p>
+<p>RS2: RIP 192.168.12.122, VIP 192.168.11.100/32</p>
+<p>Router：WAN eth0 192.168.10.254/24, LAN1 eth1 192.168.11.254/24, LAN2 eth2 192.168.12.254/24</p>
+<p>Client: 192.168.10.1/24</p>
+</blockquote>
+<p>网络拓扑结构</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/keepalived+lvs.png" alt="keepalived lvs dr"></p>
+<p><strong>VS keepalived 配置</strong></p>
+<p>为了方便区分可以将主机名修改了</p>
+<p>VS1</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">hostnamectl set-hostname vs-node1</div></pre></td></tr></table></figure>
+<p>VS2</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">hostnamectl set-hostname vs-node2</div></pre></td></tr></table></figure>
+<p>在两台 VS 上安装 keepalived 软件包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">yum install -y keepalived</div></pre></td></tr></table></figure>
+<p><strong>MASTER 配置</strong></p>
+<p>修改 keepalived 配置文件(<code>/etc/keepalived/keepalived.conf</code>)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">! Configuration File for keepalived</div><div class="line"></div><div class="line">global_defs &#123;</div><div class="line">   notification_email &#123;</div><div class="line">     1993plus@gmail.com</div><div class="line">   &#125;</div><div class="line">   notification_email_from Alexandre.Cassen@firewall.loc</div><div class="line">   smtp_server 192.168.200.1</div><div class="line">   smtp_connect_timeout 30</div><div class="line">   ; 节点名</div><div class="line">   router_id vs-node1</div><div class="line">   ; 使用自定义组播地址(两台 VS 必须在同一组播地址中)</div><div class="line">   vrrp_mcast_group4 224.39.39.39</div><div class="line">&#125;</div><div class="line"></div><div class="line">vrrp_instance VI_1 &#123;</div><div class="line">	; 默认状态</div><div class="line">    state MASTER</div><div class="line">    ; VIP 网卡名</div><div class="line">    interface eth0</div><div class="line">    ; 虚拟路由 ID (两台 VS 必须填一样的 ID)</div><div class="line">    virtual_router_id 220</div><div class="line">    ; 优先级 ( MASTER 的优先级应比 BACKUP 高)</div><div class="line">    priority 100</div><div class="line">    ; VRRP 包发送间隔</div><div class="line">    advert_int 2</div><div class="line">    authentication &#123;</div><div class="line">        auth_type PASS</div><div class="line">        ; 认证密码 ( 两台 VS 必须填一样的密码)</div><div class="line">        auth_pass weidong</div><div class="line">    &#125;</div><div class="line">    virtual_ipaddress &#123;</div><div class="line">    	; VIP 地址，为了方便区分可以将该地址绑定在一个网卡别名上</div><div class="line">        192.168.11.100/24 dev eth0 label eth0:1 broadcast 192.168.11.255</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">virtual_server 192.168.11.100 80 &#123;</div><div class="line">	; 对 RS 的检测间隔</div><div class="line">    delay_loop 3</div><div class="line">    ; 调度算法</div><div class="line">    lb_algo rr</div><div class="line">    ; LVS 模式</div><div class="line">    lb_kind DR</div><div class="line">    ; 协议</div><div class="line">    protocol TCP</div><div class="line"></div><div class="line">	; 当后端所有 RS 宕机后又本机的 80 端口接管服务</div><div class="line">    sorry_server 127.0.0.1 80</div><div class="line"></div><div class="line">    real_server 192.168.12.121 80 &#123;</div><div class="line">        weight 1</div><div class="line">        HTTP_GET &#123;</div><div class="line">            url &#123;</div><div class="line">              path /index.html</div><div class="line">              status_code 200</div><div class="line">            &#125;</div><div class="line">            connect_timeout 3</div><div class="line">            nb_get_retry 3</div><div class="line">            delay_before_retry 3</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    real_server 192.168.12.122 80 &#123;</div><div class="line">        weight 1</div><div class="line">        HTTP_GET &#123;</div><div class="line">            url &#123;</div><div class="line">              path /index.html</div><div class="line">              status_code 200</div><div class="line">            &#125;</div><div class="line">            connect_timeout 3</div><div class="line">            nb_get_retry 3</div><div class="line">            delay_before_retry 3</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>启动  keepalived 服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl start keepalived.service</div></pre></td></tr></table></figure>
+<p>查看 IP 地址</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@vs-node1 ~]# ifconfig eth0:1</div><div class="line">eth0:1: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</div><div class="line">        inet 192.168.11.100  netmask 255.255.255.0  broadcast 192.168.11.255</div><div class="line">        ether 00:50:56:33:68:16  txqueuelen 1000  (Ethernet)</div></pre></td></tr></table></figure>
+<p>看到 VIP 已经被 keepalived 自动配置到网卡上了</p>
+<p>在 BACKUP 上使用 tcpdump 抓包，看能否收到 MASTER 发送的 VRRP 包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@vs-node2 ~]# tcpdump -i eth0 -nn host 224.39.39.39</div><div class="line">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</div><div class="line">listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</div><div class="line">09:49:07.661233 IP 192.168.11.101 &gt; 224.39.39.39: VRRPv2, Advertisement, vrid 220, prio 100, authtype simple, intvl 2s, length 20</div><div class="line">09:49:09.662978 IP 192.168.11.101 &gt; 224.39.39.39: VRRPv2, Advertisement, vrid 220, prio 100, authtype simple, intvl 2s, length 20</div></pre></td></tr></table></figure>
+<p>安装 ipvsadm 包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">yum install -y ipvsadm</div></pre></td></tr></table></figure>
+<p>使用 ipvsadm 查看 ipvs 列表</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@vs-node1 ~]# ipvsadm -Ln</div><div class="line">IP Virtual Server version 1.2.1 (size=4096)</div><div class="line">Prot LocalAddress:Port Scheduler Flags</div><div class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</div><div class="line">TCP  192.168.11.100:80 rr</div><div class="line">  -&gt; 127.0.0.1:80                 Route   1      0          0</div></pre></td></tr></table></figure>
+<p>由于后端 RS 还未配置所以现在是有本机接管的 80 端口</p>
+<p><strong>BACKUP 配置</strong></p>
+<p>修改 keepalived 配置文件(<code>/etc/keepalived/keepalived.conf</code>)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">! Configuration File for keepalived</div><div class="line"></div><div class="line">global_defs &#123;</div><div class="line">   notification_email &#123;</div><div class="line">     1993plus@gmail.com</div><div class="line">   &#125;</div><div class="line">   notification_email_from Alexandre.Cassen@firewall.loc</div><div class="line">   smtp_server 192.168.200.1</div><div class="line">   smtp_connect_timeout 30</div><div class="line">   router_id vs-node2</div><div class="line">   vrrp_mcast_group4 224.39.39.39</div><div class="line">&#125;</div><div class="line"></div><div class="line">vrrp_instance VI_1 &#123;</div><div class="line">	; 默认状态为 BACKUP</div><div class="line">    state BACKUP</div><div class="line">    interface eth0</div><div class="line">    virtual_router_id 220</div><div class="line">    priority 90</div><div class="line">    advert_int 2</div><div class="line">    authentication &#123;</div><div class="line">        auth_type PASS</div><div class="line">        auth_pass weidong</div><div class="line">    &#125;</div><div class="line">    virtual_ipaddress &#123;</div><div class="line">        192.168.11.100/24 dev eth0 label eth0:1 broadcast 192.168.11.255</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">virtual_server 192.168.11.100 80 &#123;</div><div class="line">    delay_loop 6</div><div class="line">    lb_algo rr </div><div class="line">    lb_kind DR</div><div class="line">    protocol TCP</div><div class="line"></div><div class="line">    sorry_server 127.0.0.1 80</div><div class="line"></div><div class="line">    real_server 192.168.12.121 80 &#123;</div><div class="line">        weight 1</div><div class="line">        HTTP_GET &#123;</div><div class="line">            url &#123; </div><div class="line">              path /index.html</div><div class="line">              status_code 200</div><div class="line">            &#125;</div><div class="line">            connect_timeout 3</div><div class="line">            nb_get_retry 3</div><div class="line">            delay_before_retry 3</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    real_server 192.168.12.122 80 &#123;</div><div class="line">        weight 1</div><div class="line">        HTTP_GET &#123;</div><div class="line">            url &#123; </div><div class="line">              path /index.html</div><div class="line">              status_code 200</div><div class="line">            &#125;</div><div class="line">            connect_timeout 3</div><div class="line">            nb_get_retry 3</div><div class="line">            delay_before_retry 3</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>启动  keepalived 服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl start keepalived.service</div></pre></td></tr></table></figure>
+<p>因为 BACKUP 的优先级低于 MASTER，所以当它发现组播中有比它优先级更高的主机存在，那它就会停止发送 VRRP 包，当然也不会接管 VIP。如果在 advert_int 设置时间内没有收到比它优先级更高的 VRRP 包，那它就会向网络中发送 VRRP 包，如果网络中没有比它优先级更高的主机存在时，那它就会接管 VIP，当然，如果设置了密码的话，还需要验证通过了才能接管。</p>
+<p>停止 MASTER 的 keepalived 服务，测试 BACKUP 是否能成功接管 VIP</p>
+<p>VS1</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@vs-node1 ~]# systemctl stop keepalived.service</div></pre></td></tr></table></figure>
+<p>VS2</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@vs-node2 ~]# ifconfig eth0:1</div><div class="line">eth0:1: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</div><div class="line">        inet 192.168.11.100  netmask 255.255.255.0  broadcast 192.168.11.255</div><div class="line">        ether 00:50:56:25:48:96  txqueuelen 1000  (Ethernet)</div></pre></td></tr></table></figure>
+<p>可以看到 VS 现在已经成功接管了 VIP</p>
+<p>而 VS1 上已经没有 VIP 了，当然，如果把 keepalived 服务启动的话，它还会接管 VIP，因为他的优先级最高 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@vs-node1 ~]# ifconfig eth0:1</div><div class="line">eth0:1: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</div><div class="line">        ether 00:50:56:33:68:16  txqueuelen 1000  (Ethernet)</div></pre></td></tr></table></figure>
+<p><strong>配置后端 RS</strong></p>
+<p><code>因为是 DR 模式所以 RS 的网关是不能指向 VS 的，这里演示的网关为 192.168.12.254/24</code></p>
+<p>RS1 配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">hostnamectl set-hostname web-server1</div></pre></td></tr></table></figure>
+<p>安装 Apache httpd</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">yum install -y httpd</div></pre></td></tr></table></figure>
+<p>创建测试页面</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@web-server1 ~]# echo web-server1 &gt; /var/www/html/index.html</div></pre></td></tr></table></figure>
+<p>启动 httpd</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl start httpd</div></pre></td></tr></table></figure>
+<p>关闭网卡 ARP 响应</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">echo 1 &gt; /proc/sys/net/ipv4/conf/all/arp_ignore </div><div class="line">echo 2 &gt; /proc/sys/net/ipv4/conf/all/arp_announce </div><div class="line">echo 1 &gt; /proc/sys/net/ipv4/conf/lo/arp_ignore </div><div class="line">echo 2 &gt; /proc/sys/net/ipv4/conf/lo/arp_announce</div></pre></td></tr></table></figure>
+<p>将 VIP 添加到回环网卡（lo）上，并将广播地址设置为自己</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ifconfig lo:1 192.168.11.100 netmask 255.255.255.255 broadcast 192.168.11.100 up</div></pre></td></tr></table></figure>
+<p>RS2 配置</p>
+<p>RS1 配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">hostnamectl set-hostname web-server2</div></pre></td></tr></table></figure>
+<p>安装 Apache httpd</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">yum install -y httpd</div></pre></td></tr></table></figure>
+<p>创建测试页面</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@web-server2 ~]# echo web-server2 &gt; /var/www/html/index.html</div></pre></td></tr></table></figure>
+<p>启动 httpd</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl start httpd</div></pre></td></tr></table></figure>
+<p>关闭网卡 ARP 响应</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">echo 1 &gt; /proc/sys/net/ipv4/conf/all/arp_ignore </div><div class="line">echo 2 &gt; /proc/sys/net/ipv4/conf/all/arp_announce </div><div class="line">echo 1 &gt; /proc/sys/net/ipv4/conf/lo/arp_ignore </div><div class="line">echo 2 &gt; /proc/sys/net/ipv4/conf/lo/arp_announce</div></pre></td></tr></table></figure>
+<p>将 VIP 添加到回环网卡（lo）上，并将广播地址设置为自己</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ifconfig lo:1 192.168.11.100 netmask 255.255.255.255 broadcast 192.168.11.100 up</div></pre></td></tr></table></figure>
+<p><strong>测试</strong></p>
+<p>在 VS 上查看 ipvs 列表</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@vs-node1 ~]# ipvsadm -Ln</div><div class="line">IP Virtual Server version 1.2.1 (size=4096)</div><div class="line">Prot LocalAddress:Port Scheduler Flags</div><div class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</div><div class="line">TCP  192.168.11.100:80 rr</div><div class="line">  -&gt; 192.168.12.121:80            Route   1      0          0         </div><div class="line">  -&gt; 192.168.12.122:80            Route   1      0          0</div></pre></td></tr></table></figure>
+<p>因为 keepalived 在做健康性检查的时候测试后端服务器是正常响应的所以就会将它们加入到内核的 ipvs 列表中</p>
+<p>你会发现 VIP 地址没在 VS2 上，但它的 ipvs 列表中也有 RS。这个是正常的，因为虽然它也有 ipvs 列表，但 VIP 不在它上面所以用户的请求是不会发到 VS2 上面的。</p>
+<p>现在可以到客户端进行测试了（因为我这里是在路由器上对 VIP 做的端口映射，所以访问的时候需要访问 192.168.10.254 的 80 端口，但效果是一样的）</p>
+<p>用一条循环语句来测试</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/keepalived%20lvs%20client_test.png" alt="keepalived lvs client test"></p>
+<p>因为使用的是轮叫算法（Round-Robin）所以它会轮流访问两台 RS</p>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/11/04/keepalived/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/11/07/keepalived-lvs-dr-high-availability/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
