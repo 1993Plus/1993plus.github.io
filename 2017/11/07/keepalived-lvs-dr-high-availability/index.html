@@ -24,7 +24,8 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/keepalived+lvs.png">
 <meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/keepalived%20lvs%20client_test.png">
-<meta property="og:updated_time" content="2017-11-07T01:27:25.000Z">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/keepalived%20lvs%20router.png">
+<meta property="og:updated_time" content="2017-11-07T01:52:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Keepalived LVS DR 模型高可用实验">
 <meta name="twitter:description" content="Keepalived LVS DR 模型高可用实验 实验环境 LVS Virtual Server 以下简称 VS，后端 Real Server 简称 RS。 操作系统：  VS: CentOS 7.4 RS: CentOS 7.4 Router: RouterOS  IP 地址：  VS1: VRRP 通信地址 192.168.11.101/24 ,DIP 192.168.12.101/24,{">
@@ -312,6 +313,8 @@
 <p>用一条循环语句来测试</p>
 <p><img src="http://ov2iiuul1.bkt.clouddn.com/keepalived%20lvs%20client_test.png" alt="keepalived lvs client test"></p>
 <p>因为使用的是轮叫算法（Round-Robin）所以它会轮流访问两台 RS</p>
+<p>通过路由器来观察流量</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/keepalived%20lvs%20router.png" alt="keepalived lvs routeros"></p>
 <p>END!</p>
 
     
