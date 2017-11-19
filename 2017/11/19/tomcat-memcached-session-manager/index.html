@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>tomcat 通过 memcached 做会话共享 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="tomcat,msm,memcached-session-manager," />
+  
+
+  <meta name="description" content="memcached-session-manager msmcached-session-manager 是一款开源的高可用 tomcat session 共享解决方案，他支持两种模式，粘性会话（sticky session）和非粘性会话（non-sticky-session），sticky 模式表示将会话全部存储到一台会话存储服务器上，客户端访问任意一台 web server 都能通过这台会话存储">
+<meta name="keywords" content="tomcat,msm,memcached-session-manager">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat 通过 memcached 做会话共享">
+<meta property="og:url" content="http://www.weidong.io/2017/11/19/tomcat-memcached-session-manager/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="memcached-session-manager msmcached-session-manager 是一款开源的高可用 tomcat session 共享解决方案，他支持两种模式，粘性会话（sticky session）和非粘性会话（non-sticky-session），sticky 模式表示将会话全部存储到一台会话存储服务器上，客户端访问任意一台 web server 都能通过这台会话存储">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/tomcat-node1.png">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/tomcat-node2.png">
+<meta property="og:updated_time" content="2017-11-19T15:13:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tomcat 通过 memcached 做会话共享">
+<meta name="twitter:description" content="memcached-session-manager msmcached-session-manager 是一款开源的高可用 tomcat session 共享解决方案，他支持两种模式，粘性会话（sticky session）和非粘性会话（non-sticky-session），sticky 模式表示将会话全部存储到一台会话存储服务器上，客户端访问任意一台 web server 都能通过这台会话存储">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/tomcat-node1.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-tomcat-memcached-session-manager" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">tomcat 通过 memcached 做会话共享</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.11.19</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Tomcat/">Tomcat</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/11/19/tomcat-memcached-session-manager/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>memcached-session-manager</strong></p>
+<p>msmcached-session-manager 是一款开源的高可用 tomcat session 共享解决方案，他支持两种模式，粘性会话（sticky session）和非粘性会话（non-sticky-session），sticky 模式表示将会话全部存储到一台会话存储服务器上，客户端访问任意一台 web server 都能通过这台会话存储服务器找到会话。noo-sticky 模式表示将会话信息同步到所有会话存储服务器上，这样不管客户端访问哪台 web server 也能找到会话，就算其中一台宕机也毫无影响，因为他还可以在其他会话存储服务器上找到会话。</p>
+<p>官方 Wiki：<a href="https://github.com/magro/memcached-session-manager/wiki" target="_blank" rel="external">https://github.com/magro/memcached-session-manager/wiki</a></p>
+<p><strong>实验环境</strong></p>
+<p>前端负载均衡使用为 Nginx</p>
+<p><strong>后端两台 Tomcat Server</strong></p>
+<p>操作系统版本： CentOS 7.3<br>Tomcat 版本： 7.0.69<br>JDK 版本：openjdk 8.0<br>分别为 tomcat-node1、tomcat-node2</p>
+<p><strong>后端两台 Memcached Server</strong></p>
+<p>操作系统：CentOS 7.3</p>
+<p>memcached 版本：1.4.15</p>
+<p>分别为 memcached-node1、memcached-node2</p>
+<p><strong>Memcached Server 配置</strong></p>
+<p>安装 memcached 包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@memcached-node1 ~]# yum -y install memcached</div></pre></td></tr></table></figure>
+<p>启动 memcached 服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@memcached-node1 ~]# systemctl start memcached.service</div></pre></td></tr></table></figure>
+<p>查看 memcached 端口 <code>11211</code> 是否处于监听状态</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@memcached-node1 ~]# ss -tan | grep 11211</div><div class="line">LISTEN     0      128          *:11211                    *:*</div></pre></td></tr></table></figure>
+<p>两台 memcached 执行相同的操作</p>
+<p><strong>Tomat Server 配置</strong></p>
+<p>msm 支持多种序列化工具，内置的 JAVA 序列化工具、kryo 序列化（据说效率最高）、javolution 序列化等。</p>
+<p>安装 tomcat 包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@tomcat-node1 ~]# yum install tomcat</div></pre></td></tr></table></figure>
+<p>将 memcached-session-manager 的 jar 包拷贝到 <code>$CATALINA_HOME/lib/</code> 目录中</p>
+<blockquote>
+<p><a href="http://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager/" target="_blank" rel="external">memcached-session-manager-${version}.jar</a></p>
+<p><a href="http://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager-tc6/" target="_blank" rel="external">memcached-session-manager-tc6-${version}.jar</a> (tomcat 6)</p>
+<p><a href="http://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager-tc7/" target="_blank" rel="external">memcached-session-manager-tc7-${version}.jar</a> (tomcat 7)</p>
+<p><a href="http://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager-tc8/" target="_blank" rel="external">memcached-session-manager-tc8-${version}.jar</a> (tomcat 8)</p>
+</blockquote>
+<p>另外用于 memcached 的 jar 包</p>
+<blockquote>
+<p><a href="http://repo1.maven.org/maven2/net/spy/spymemcached/" target="_blank" rel="external">spymemcached-${version}.jar</a></p>
+</blockquote>
+<p>例如我这里安装的是 tomcat 7 就把上面对应的三个包放到下面这个目录中</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/usr/share/tomcat/lib</div></pre></td></tr></table></figure>
+<p>下载序列化工具并将它们放到你的程序的 <code>WEB-INF/lib</code> 目录中</p>
+<p>例如 kryo 需要下载一下 jar 包</p>
+<blockquote>
+<p><a href="http://repo1.maven.org/maven2/de/javakaffee/msm/msm-kryo-serializer/" target="_blank" rel="external">msm-kryo-serializer</a></p>
+<p><a href="http://repo1.maven.org/maven2/de/javakaffee/kryo-serializers/" target="_blank" rel="external">kryo-serializers-0.34+</a></p>
+<p><a href="http://repo1.maven.org/maven2/com/esotericsoftware/kryo/" target="_blank" rel="external">kryo-3.x</a></p>
+<p><a href="http://repo1.maven.org/maven2/com/esotericsoftware/minlog/" target="_blank" rel="external">minlog</a></p>
+<p><a href="http://repo1.maven.org/maven2/com/esotericsoftware/reflectasm/" target="_blank" rel="external">reflectasm</a></p>
+<p><a href="http://repo1.maven.org/maven2/org/ow2/asm/asm/" target="_blank" rel="external">asm-5.x</a></p>
+<p><a href="http://repo1.maven.org/maven2/org/objenesis/objenesis/" target="_blank" rel="external">objenesis-2.x</a></p>
+</blockquote>
+<p>例如我这里的程序目录是在下面这个路径中</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/var/lib/tomcat/webapps/testapp</div></pre></td></tr></table></figure>
+<p>那你的程序目录中应该创建一个 <code>WEB-INF</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@tomcat-node1 ~]# ll /var/lib/tomcat/webapps/testapp</div><div class="line">drwxr-xr-x 3 root root  32 Nov 20 01:13 WEB-INF</div></pre></td></tr></table></figure>
+<p>然后在 <code>WEB-INF</code> 目录中创建一个 <code>lib</code> 目录，结构如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@tomcat-node1 webapps]# tree testapp/</div><div class="line">testapp/</div><div class="line">└── WEB-INF</div><div class="line">    └── lib</div></pre></td></tr></table></figure>
+<p>然后将上面下载 6 个 jar 放到 <code>WEB-INF/lib</code> 目录中，结构应该像下面这样</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@tomcat-node1 webapps]# tree testapp/</div><div class="line">testapp/</div><div class="line">└── WEB-INF</div><div class="line">    └── lib</div><div class="line">        ├── asm-6.0.jar</div><div class="line">        ├── kryo-4.0.1.jar</div><div class="line">        ├── kryo-serializers-0.42.jar</div><div class="line">        ├── minlog-1.3.0.jar</div><div class="line">        ├── msm-kryo-serializer-2.1.1.jar</div><div class="line">        ├── objenesis-2.6.jar</div><div class="line">        └── reflectasm-1.11.3.jar</div></pre></td></tr></table></figure>
+<p>在你的程序对应的 <code>&lt;Context&gt;...&lt;/Context&gt;</code> 中添加 <code>Manager</code> </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;Context path=&quot;/testapp&quot; docBase=&quot;testapp&quot;&gt;</div><div class="line">   &lt;Manager className=&quot;de.javakaffee.web.msm.MemcachedBackupSessionManager&quot;</div><div class="line">    memcachedNodes=&quot;mnode1:192.168.1.114:11211,mnode2:192.168.1.115:11211&quot;</div><div class="line">    failoverNodes=&quot;mem-node2&quot;</div><div class="line">    requestUriIgnorePattern=&quot;.*\.(ico|png|gif|jpg|css|js)$&quot;</div><div class="line">    transcoderFactoryClass=&quot;de.javakaffee.web.msm.serializer.kryo.KryoTranscoderFactory&quot;/&gt;</div><div class="line">&lt;/Context&gt;</div></pre></td></tr></table></figure>
+<p>上面是一个粘性会话的配置</p>
+<p><code>memcachedNodes</code> 表示 memcached 节点，填上对于的 IP 地址，IP 地址前面的名称为自定义名称</p>
+<p><code>failoverNodes</code> 它让 msm 把 会话存入 mnode1 中，只有当 mnode2 无效的时候才会把会话放到 mem-node2 上</p>
+<p><code>requestUriIgnorePattern</code> 表示要忽略的 URI</p>
+<p>对于粘性会话的配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;Context path=&quot;/testapp&quot; docBase=&quot;testapp&quot;&gt;</div><div class="line">&lt;Manager className=&quot;de.javakaffee.web.msm.MemcachedBackupSessionManager&quot;</div><div class="line">   memcachedNodes=&quot;mnode1:192.168.1.114:11211,mnode2:192.168.1.115:11211&quot;</div><div class="line">   sticky=&quot;false&quot;</div><div class="line">   sessionBackupAsync=&quot;false&quot;</div><div class="line">   lockingMode=&quot;auto&quot;</div><div class="line">   requestUriIgnorePattern=&quot;.*\.(ico|png|gif|jpg|css|js)$&quot;</div><div class="line">   transcoderFactoryClass=&quot;de.javakaffee.web.msm.serializer.kryo.KryoTranscoderFactory&quot; /&gt;</div><div class="line">&lt;/Context&gt;</div></pre></td></tr></table></figure>
+<p><code>sticky</code> 赋值为 <code>false</code> 表示不使用粘性会话</p>
+<p><code>sessionBackupAsync</code> 表示是否采用异步的方式备份 session</p>
+<p><code>lockingMode</code> 设置 session 的锁定模式，auto 表示对于只读请求 session 将不会锁定，如果包含写入请求，则 session 会被锁定</p>
+<p>添加测试页面</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;%@ page language=&quot;java&quot; %&gt;</div><div class="line">&lt;html&gt;</div><div class="line">  &lt;head&gt;&lt;title&gt;tomcat-node1&lt;/title&gt;&lt;/head&gt;</div><div class="line">  &lt;body&gt;</div><div class="line">    &lt;h1&gt;&lt;font color=&quot;red&quot;&gt;tomcat-node1&lt;/font&gt;&lt;/h1&gt;</div><div class="line">    &lt;table align=&quot;centre&quot; border=&quot;1&quot;&gt;</div><div class="line">      &lt;tr&gt;</div><div class="line">        &lt;td&gt;Session ID&lt;/td&gt;</div><div class="line">    &lt;% session.setAttribute(&quot;weidong.io&quot;,&quot;weidong.io&quot;); %&gt;</div><div class="line">        &lt;td&gt;&lt;%= session.getId() %&gt;&lt;/td&gt;</div><div class="line">      &lt;/tr&gt;</div><div class="line">      &lt;tr&gt;</div><div class="line">        &lt;td&gt;Created on&lt;/td&gt;</div><div class="line">        &lt;td&gt;&lt;%= session.getCreationTime() %&gt;&lt;/td&gt;</div><div class="line">     &lt;/tr&gt;</div><div class="line">    &lt;/table&gt;</div><div class="line">  &lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>启动 tomcat 服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@tomcat-node1 ~]# systemctl start tomcat.service</div></pre></td></tr></table></figure>
+<p>tomcat-node2 的配置与 tomcat-node1 基本一样</p>
+<p>添加 tomcat-node2 的测试页面</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;%@ page language=&quot;java&quot; %&gt;</div><div class="line">&lt;html&gt;</div><div class="line">  &lt;head&gt;&lt;title&gt;tomcat-node2&lt;/title&gt;&lt;/head&gt;</div><div class="line">  &lt;body&gt;</div><div class="line">    &lt;h1&gt;&lt;font color=&quot;blue&quot;&gt;tomcat-node2&lt;/font&gt;&lt;/h1&gt;</div><div class="line">    &lt;table align=&quot;centre&quot; border=&quot;1&quot;&gt;</div><div class="line">      &lt;tr&gt;</div><div class="line">        &lt;td&gt;Session ID&lt;/td&gt;</div><div class="line">    &lt;% session.setAttribute(&quot;weidong.io&quot;,&quot;weidong.io&quot;); %&gt;</div><div class="line">        &lt;td&gt;&lt;%= session.getId() %&gt;&lt;/td&gt;</div><div class="line">      &lt;/tr&gt;</div><div class="line">      &lt;tr&gt;</div><div class="line">        &lt;td&gt;Created on&lt;/td&gt;</div><div class="line">        &lt;td&gt;&lt;%= session.getCreationTime() %&gt;&lt;/td&gt;</div><div class="line">     &lt;/tr&gt;</div><div class="line">    &lt;/table&gt;</div><div class="line">  &lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p><strong>前端 Nginx 配置</strong></p>
+<p>安装 Nginx 软件包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">yum install nginx</div></pre></td></tr></table></figure>
+<p>配置 Nginx 反向代理</p>
+<p>在 <code>nginx.conf</code> 的 <code>http</code> 段落中添加 server 组，将默认 server 代理到后端的 tomcat server 组</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">upstream tcser &#123;</div><div class="line">        server 192.168.1.112:8080;</div><div class="line">        server 192.168.1.113:8080;</div><div class="line">        </div><div class="line">server &#123;</div><div class="line">        listen       80 default_server;</div><div class="line">        location / &#123;</div><div class="line">                proxy_pass http://tcser;</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<p>测试配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">nginx -t</div><div class="line">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</div><div class="line">nginx: configuration file /etc/nginx/nginx.conf test is successful</div></pre></td></tr></table></figure>
+<p>启动 Nginx</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl start nginx.service</div></pre></td></tr></table></figure>
+<p>访问测试</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/tomcat-node1.png" alt="node1"></p>
+<p>多次刷新</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/tomcat-node2.png" alt="node2"></p>
+<p>可以清楚的看到，不管客户端被调度到哪台 tomcat server 上，它的会话 ID 始终保持着不会改变，因为他已经被存入 后端的 memcached 中了，不管他调度到哪台 tomcat server 上，msm 都能在 memcached 中找到他</p>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/11/07/keepalived-lvs-dr-high-availability/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/11/19/tomcat-memcached-session-manager/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
