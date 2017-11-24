@@ -21,9 +21,7 @@ tags:
 
 
 
-
-
-![VS/NAT](http://www.linuxvirtualserver.org/zh/lvs3/vs-nat.jpg)
+![VS/NAT](http://ov2iiuul1.bkt.clouddn.com/vs-nat.jpg)
 
 
 
@@ -37,7 +35,7 @@ tags:
 
 VS/NAT 访问过程示例
 
-![VS/NAT 访问过程](http://www.linuxvirtualserver.org/zh/lvs3/vs-nat-example.jpg)
+![VS/NAT 访问过程](http://ov2iiuul1.bkt.clouddn.com/vs-nat-example.jpg)
 
 VS/NAT 的配置如下表所示，所有到  IP 地址为 202.103.106.5 和端口为 80 的流量都被负载均衡地调度到真实服务器 172.16.0.2:80 和 172.16.0.3:8080 上。目标地址为 202.103.106.5:21 的报文被转移到 172.16.0.3:21 上。而到其他端口的报文将被拒绝。
 
@@ -85,13 +83,13 @@ IP 隧道（IP tunneling）是一个将 IP 报文封装在另一个 IP 报文的
 
 利用 IP 隧道技术将请求报文封装转发给后端服务器，响应报文能从后端服务器直接返回给客户端。但在这里，后端服务器有一组而非一个，所以不可能静态的建立一一对应的隧道，而是动态地选择一台服务器，将请求报文封装和转发给选出的服务器。这样，就可以利用 IP 隧道的原理将一组服务器上的网络服务组成一个 IP 地址上的虚拟网络服务。VS/TUN 的结构如下图所示，各个服务器将 VIP 地址配置在自己的 IP 隧道设备上。
 
-![VS/TUN](http://www.linuxvirtualserver.org/zh/lvs3/vs-tun.jpg)
+![VS/TUN](http://ov2iiuul1.bkt.clouddn.com/vs-tun.jpg)
 
 
 
 VS/TUN 的工作流程如下图所示：它的连接调度和管理与 VS/NAT 中的一样，只是他的报文转发方法不同。调度器根据各个服务器的负载情况，动态地选择一台服务器，将请求报文封装在另一个 IP 报文中，再将封装后的 IP 报文转发给选出的服务器；服务器收到报文后，先将报文解封获得原来目标地址为 VIP 的报文，服务器发现 VIP 地址被配置在本地的 IP 隧道设备上，所以就处理这个请求，然后根据路由表将响应报文直接返回给客户端。
 
-![VS/TUN 工作流程](http://www.linuxvirtualserver.org/zh/lvs3/vs-tun-flow.jpg)
+![VS/TUN 工作流程](http://ov2iiuul1.bkt.clouddn.com/vs-tun-flow.jpg)
 
 
 
@@ -99,7 +97,7 @@ VS/TUN 的工作流程如下图所示：它的连接调度和管理与 VS/NAT �
 
 半连接的 TCP 有限状态机
 
-![tcp/ip](http://www.linuxvirtualserver.org/zh/lvs3/half-stm.jpg)
+![tcp/ip](http://ov2iiuul1.bkt.clouddn.com/half-stm.jpg)
 
 **通过直接路由实现虚拟服务器（VS/DR）**
 
@@ -107,11 +105,11 @@ VS/TUN 的工作流程如下图所示：它的连接调度和管理与 VS/NAT �
 
 VS/DR 的体系结构如下图所示：调度器和后端真实服务器组都必须在物理上有一个网卡通过不分断的局域网相连，如通过高速的交换机相连。VIP 地址为调度器和真实服务器组共享，调度器配置的 VIP 地址是对外可见的，用于接收虚拟服务的请求报文，后端所有的真实服务器把 VIP 地址配置在各自的 Non-ARP 网络设备上，它对外面是不可见的，只是用于处理目标地址为 VIP 的网络请求
 
-![VS/DR](http://www.linuxvirtualserver.org/zh/lvs3/vs-dr.jpg)
+![VS/DR](http://ov2iiuul1.bkt.clouddn.com/vs-dr.jpg)
 
 VS/DR 的工作流程如下图所示：它的连接调度和管理与 VS/NAT 和 VS/TUN 中的一样，它的报文转发方法又有不同，将报文直接路由给目标服务器。在 VS/DR 中，调度器根据各个服务器负载情况，动态地选择一台服务器，不修改也不封装 IP 报文，而是将数据帧的 MAC 地址改为选出的真实服务器的 MAC 地址，再将修改后的数据帧发送到与后端真实服务器同在的局域网中。因为数据帧的 MAC 地址是选出的后端真实服务器，所以后端真实服务器肯定可以收到这个数据帧，从中可以取得该 IP 报文。当服务器发现报文的目标地址 VIP 是在本地的网络设备上，服务器处理就处理这个报文，然后根据路由表将响应报文直接返回给客户端。
 
- ![VS/DR 数据发送过程](http://www.linuxvirtualserver.org/zh/lvs3/vs-dr-flow.jpg)
+ ![VS/DR 数据发送过程](http://ov2iiuul1.bkt.clouddn.com/vs-dr-flow.jpg)
 
 在 VS/DR 中，根据确实的 TCP/IP 协议栈处理，请求报文的目标地址为 VIP，响应报文的源地址肯定也为 VIP，所以响应报文不需要做任何修改，可以直接返回给客户端，客户端认为得到的是正常的服务，而不会知道是哪一台服务器处理的。
 
@@ -151,3 +149,11 @@ VS/TUN 技术对服务器有要求，即所有的服务器必须支持“IP Tunn
 跟 VS/TUN 方法一样，VS/DR 调度器只处理客户端到服务器端的连接，响应数据可以直接从独立网络路由返回给客户端。这可以极大地提高 LVS 集群系统的伸缩性。
 
 跟 VS/TUN 相比，这种方法没有 IP 隧道的开销，但是要求负载调度器与实际服务器都有一块网卡连载同一物理网段上，服务器网络设备（或者设备别名）不做 ARP 响应，或者能将报文重定向（Redirect）到本地的 Socket 端口上。
+
+
+
+摘抄自 章文嵩博士《Linux服务器集群系统(三)》 原文链接：http://www.linuxvirtualserver.org/zh/lvs3.html
+
+
+
+END!

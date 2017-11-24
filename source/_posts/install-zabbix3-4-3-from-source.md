@@ -67,7 +67,7 @@ make && make install
 
 ```sh
 groupadd zabbix -r -g 997
-useradd zabbix1 -r -u 997 -g zabbix -s /sbin/nologin
+useradd zabbix -r -u 997 -g zabbix -s /sbin/nologin
 ```
 
 创建日志存放目录
