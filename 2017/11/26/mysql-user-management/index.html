@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>MariaDB 用户管理 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="mariadb,mysql," />
+  
+
+  <meta name="description" content="MariaDB 用户名格式 MySQL 的用户由 user@host 组成，user 为用户名 host 可以是一个具体的 IP 、主机名，表示该用户可以通过哪些客户端主机请求创建连接线程。对于一个网络的授权可以使用通配符来匹配，在 MariaDB 中 % 用来匹配任意字符，_ 用来匹配任意单个字符。 例如要对一个网络授权 user@192.168.0.% 表示如果 host 通过 IP 地址前缀">
+<meta name="keywords" content="mariadb,mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MariaDB 用户管理">
+<meta property="og:url" content="http://www.weidong.io/2017/11/26/mysql-user-management/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="MariaDB 用户名格式 MySQL 的用户由 user@host 组成，user 为用户名 host 可以是一个具体的 IP 、主机名，表示该用户可以通过哪些客户端主机请求创建连接线程。对于一个网络的授权可以使用通配符来匹配，在 MariaDB 中 % 用来匹配任意字符，_ 用来匹配任意单个字符。 例如要对一个网络授权 user@192.168.0.% 表示如果 host 通过 IP 地址前缀">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-11-26T13:17:53.225Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MariaDB 用户管理">
+<meta name="twitter:description" content="MariaDB 用户名格式 MySQL 的用户由 user@host 组成，user 为用户名 host 可以是一个具体的 IP 、主机名，表示该用户可以通过哪些客户端主机请求创建连接线程。对于一个网络的授权可以使用通配符来匹配，在 MariaDB 中 % 用来匹配任意字符，_ 用来匹配任意单个字符。 例如要对一个网络授权 user@192.168.0.% 表示如果 host 通过 IP 地址前缀">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-mysql-user-management" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">MariaDB 用户管理</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.11.26</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/MariaDB/">MariaDB</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/11/26/mysql-user-management/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><strong>MariaDB 用户名格式</strong></p>
+<p>MySQL 的用户由 <code>user@host</code> 组成，user 为用户名 host 可以是一个具体的 IP 、主机名，表示该用户可以通过哪些客户端主机请求创建连接线程。对于一个网络的授权可以使用通配符来匹配，在 MariaDB 中 <code>%</code> 用来匹配任意字符，<code>_</code> 用来匹配任意单个字符。</p>
+<p>例如要对一个网络授权</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">user@192.168.0.%</div></pre></td></tr></table></figure>
+<p>表示如果 host 通过 IP 地址前缀为 192.168.0 开头，后跟任意地址的客户端主机都可以请求创建连接线程。</p>
+<p><strong>创建用户</strong></p>
+<p>创建用户使用 <code>CREATE USER</code> 命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CREATE USER &apos;user&apos;@&apos;host&apos; [IDENTIFIED BY [PASSWORD] &apos;password&apos;]</div></pre></td></tr></table></figure>
+<p>在创建用户时密码是一个可选项，也就是不给密码也可以创建用户。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; CREATE USER &apos;testuser&apos;@&apos;192.168.0.1&apos;;</div></pre></td></tr></table></figure>
+<p><strong>重命名</strong></p>
+<p>重命名用户使用 <code>RENAME USER</code> 命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">RENAME USER old_user TO new_user</div></pre></td></tr></table></figure>
+<p>需要注意的是重命名用户时也需要跟上主机名</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; RENAME USER &apos;testuser&apos;@&apos;192.168.0.1&apos; TO &apos;testu&apos;@&apos;192.168.0.%&apos;;</div></pre></td></tr></table></figure>
+<p><strong>删除用户</strong></p>
+<p>删除用户使用 <code>DROP USER</code> 命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">DROP USER user [, user] ...</div></pre></td></tr></table></figure>
+<p>需要注意的是重命名用户时也需要跟上主机名</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; DROP USER &apos;testu&apos;@&apos;192.168.0.%&apos;;</div></pre></td></tr></table></figure>
+<p><strong>修改用户密码</strong></p>
+<p>修改用户密码有三种方法，可通过 <code>SET PASSWORD</code> 命令、直接修改 <code>mysql.user</code> 表、使用 <code>mysqladmin</code> 工具修改</p>
+<p>使用 <code>SET PASSWORD</code> 命令修改</p>
+<p>语法格式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">SET PASSWORD [FOR user] =</div><div class="line">    &#123;</div><div class="line">        PASSWORD(&apos;cleartext password&apos;)</div><div class="line">      | OLD_PASSWORD(&apos;cleartext password&apos;)</div><div class="line">      | &apos;encrypted password&apos;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>示例</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SET PASSWORD FOR &apos;testu&apos;@&apos;192.168.1.%&apos; = PASSWORD (&apos;123456&apos;);</div></pre></td></tr></table></figure>
+<p>通过修改 mysql.user 表</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">UPDATE mysql.user SET Password = PASSWORD (&apos;123456&apos;) WHERE User = &apos;testu&apos;;</div></pre></td></tr></table></figure>
+<p>如果改用户属于多个主机，但只想修改某个主机下的用户，那么在更新条件中还需要对主机进行限制</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">UPDATE mysql.user SET Password = PASSWORD (&apos;123456&apos;) WHERE User = &apos;testu&apos; AND Host = &apos;192.168.1.%&apos;;</div></pre></td></tr></table></figure>
+<p>通过 mysqladmin 工具修改</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mysqladmin -uroot -p password &apos;newpass&apos;</div><div class="line">Enter password: 输入旧密码</div></pre></td></tr></table></figure>
+<p><code>通过修改表更改了密码需要使用  FLUSH PRIVIEGES 来刷新授权表</code></p>
+<p><strong>用户授权</strong></p>
+<p>虽然用户已经创建好了，但他除了登录几乎不能做任何操作</p>
+<p>查看其他用户权限</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SHOW GRANTS FOR &apos;testu&apos;@&apos;192.168.1.%&apos;\G;</div><div class="line">*************************** 1. row ***************************</div><div class="line">Grants for testu@192.168.1.%: GRANT USAGE ON *.* TO &apos;testu&apos;@&apos;192.168.1.%&apos; IDENTIFIED BY PASSWORD &apos;*6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9&apos;</div></pre></td></tr></table></figure>
+<p>对于 test@192.168.1.% 这个用于，由于没有对他进行授权，他现在只有一个 USAGE 的权限。</p>
+<p>如果要查看当前登录用户的权限</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SHOW GRANTS FOR CURRENT_USER();</div><div class="line">+---------------------------------------------------------------------+</div><div class="line">| Grants for root@localhost                                           |</div><div class="line">+---------------------------------------------------------------------+</div><div class="line">| GRANT ALL PRIVILEGES ON *.* TO &apos;root&apos;@&apos;localhost&apos; WITH GRANT OPTION |</div><div class="line">| GRANT PROXY ON &apos;&apos;@&apos;&apos; TO &apos;root&apos;@&apos;localhost&apos; WITH GRANT OPTION        |</div><div class="line">+---------------------------------------------------------------------+</div></pre></td></tr></table></figure>
+<p>授权使用 <code>GRANT</code> 命令</p>
+<p>命令格式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">GRANT</div><div class="line">    priv_type [(column_list)]</div><div class="line">      [, priv_type [(column_list)]] ...</div><div class="line">    ON [object_type] priv_level</div><div class="line">    TO user_specification [, user_specification] ...</div><div class="line">    [REQUIRE &#123;NONE | ssl_option [[AND] ssl_option] ...&#125;]</div><div class="line">    [WITH with_option ...]</div><div class="line"></div><div class="line">GRANT PROXY ON user_specification</div><div class="line">    TO user_specification [, user_specification] ...</div><div class="line">    [WITH GRANT OPTION]</div><div class="line"></div><div class="line">object_type:</div><div class="line">    TABLE</div><div class="line">  | FUNCTION</div><div class="line">  | PROCEDURE</div><div class="line"></div><div class="line">priv_level:</div><div class="line">    *</div><div class="line">  | *.*</div><div class="line">  | db_name.*</div><div class="line">  | db_name.tbl_name</div><div class="line">  | tbl_name</div><div class="line">  | db_name.routine_name</div><div class="line"></div><div class="line">user_specification:</div><div class="line">    user</div><div class="line">    [</div><div class="line">        IDENTIFIED BY [PASSWORD] &apos;password&apos;</div><div class="line">      | IDENTIFIED WITH auth_plugin [AS &apos;auth_string&apos;]</div><div class="line">    ]</div><div class="line"></div><div class="line">ssl_option:</div><div class="line">    SSL</div><div class="line">  | X509</div><div class="line">  | CIPHER &apos;cipher&apos;</div><div class="line">  | ISSUER &apos;issuer&apos;</div><div class="line">  | SUBJECT &apos;subject&apos;</div><div class="line"></div><div class="line">with_option:</div><div class="line">    GRANT OPTION</div><div class="line">  | MAX_QUERIES_PER_HOUR count</div><div class="line">  | MAX_UPDATES_PER_HOUR count</div><div class="line">  | MAX_CONNECTIONS_PER_HOUR count</div><div class="line">  | MAX_USER_CONNECTIONS count</div></pre></td></tr></table></figure>
+<p>参数有很多</p>
+<p><em>priv_type 表示权限类型</em></p>
+<p>库和表级别</p>
+<blockquote>
+<p>CREATE, ALTER, DROP</p>
+<p>INDEX</p>
+<p>CREATE VIEW</p>
+<p>SHOW VIEW</p>
+<p>GRANT (可以将自己的权限生成一个副本转给其他用户，且无法被管理员收回)</p>
+<p>OPTION</p>
+</blockquote>
+<p>数据操作</p>
+<blockquote>
+<p>INSERT</p>
+<p>DELETE</p>
+<p>UPDATE</p>
+<p>SELECT</p>
+</blockquote>
+<p>字段操作</p>
+<blockquote>
+<p>SELECT(col1,col2,…)</p>
+<p>UPDATE(col1,col2,…)</p>
+<p>INSERT(col1,col2,…)</p>
+</blockquote>
+<p>所有权限</p>
+<blockquote>
+<p>ALL</p>
+<p>ALL PRIVILEGES</p>
+</blockquote>
+<p>例如给用户授权 <code>CREATE</code> 权限</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; GRANT CREATE ON *.* TO &apos;testu&apos;@&apos;192.168.1.%&apos;;</div></pre></td></tr></table></figure>
+<p>这里在授权的时候并没有给 <code>object_type</code> 默认为 <code>TABLE</code> </p>
+<p>也可以使用 <code>GRANT</code> 命令直接创建用户并授权</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; GRANT INSERT ON book.* TO &apos;tom&apos;@&apos;192.168.1.%&apos; IDENTIFIED BY &apos;123456&apos;;</div></pre></td></tr></table></figure>
+<p>创建一个一个名为 tom 的用户，给的权限为 book 数据库中所有表的 INSERT 权限</p>
+<p><strong>撤回权限</strong></p>
+<p>撤回权限使用 <code>REVOKE</code> 命令</p>
+<p>命令格式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">REVOKE</div><div class="line">    priv_type [(column_list)]</div><div class="line">      [, priv_type [(column_list)]] ...</div><div class="line">    ON [object_type] priv_level</div><div class="line">    FROM user [, user] ...</div><div class="line"></div><div class="line">REVOKE ALL PRIVILEGES, GRANT OPTION</div><div class="line">    FROM user [, user] ...</div><div class="line"></div><div class="line">REVOKE PROXY ON user</div><div class="line">    FROM user [, user] ...</div></pre></td></tr></table></figure>
+<p>撤回 tom 用户在 book 数据库上的 INSERT 权限</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; REVOKE INSERT ON book.* FROM &apos;tom&apos;@&apos;192.168.1.%&apos;;</div></pre></td></tr></table></figure>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/11/26/mysql-engines/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/11/26/mysql-user-management/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
