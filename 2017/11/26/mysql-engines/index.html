@@ -7,37 +7,28 @@
 <head>
   <meta charset="utf-8">
   
-  <title>SecureCRT 设置基于 SSH key 登录 | Weidong</title>
+  <title>MySQL Innodb MyISAM engine | Weidong</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="SSH KEY,Linux,SecureCRT," />
+    <meta name="keywords" content="mysql,innodb,myisam," />
   
 
-  <meta name="description" content="SecureCRT 基于 SSH KEY 登录 Linux Server 在 SecureCRT 中生成密钥对  点击 Continue 继续  选择加密方式，确认后点击 Continue   输入私钥文件密码 输入备注信息   输入密钥加密长度，在 512 到 16384 之间   选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换 选择密钥文件保存路径   是否将该密钥加入到全局">
-<meta name="keywords" content="SSH KEY,Linux,SecureCRT">
+  <meta name="description" content="MySQL 存储引擎 MySQL 结构体系 ​                                    MySQL 结构体系 MySQL 由以下几部分组成  连接池组件 管理服务器和工具组件 SQL 接口组件 查询分线器组件 优化器组件 缓冲组件 插件式存储引擎 物理文件  MySQL 数据库区别于其它数据库的最重要的一个特点就是其插件式的表存储引擎。MySQL 插件式的存储引擎架构">
+<meta name="keywords" content="mysql,innodb,myisam">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SecureCRT 设置基于 SSH key 登录">
-<meta property="og:url" content="http://www.weidong.io/2017/10/18/securecrt-ssh-key-login/index.html">
+<meta property="og:title" content="MySQL Innodb MyISAM engine">
+<meta property="og:url" content="http://www.weidong.io/2017/11/26/mysql-engines/index.html">
 <meta property="og:site_name" content="Weidong">
-<meta property="og:description" content="SecureCRT 基于 SSH KEY 登录 Linux Server 在 SecureCRT 中生成密钥对  点击 Continue 继续  选择加密方式，确认后点击 Continue   输入私钥文件密码 输入备注信息   输入密钥加密长度，在 512 到 16384 之间   选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换 选择密钥文件保存路径   是否将该密钥加入到全局">
+<meta property="og:description" content="MySQL 存储引擎 MySQL 结构体系 ​                                    MySQL 结构体系 MySQL 由以下几部分组成  连接池组件 管理服务器和工具组件 SQL 接口组件 查询分线器组件 优化器组件 缓冲组件 插件式存储引擎 物理文件  MySQL 数据库区别于其它数据库的最重要的一个特点就是其插件式的表存储引擎。MySQL 插件式的存储引擎架构">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key1.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key2.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key3.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key4.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key5.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key7.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key8.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key9.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key10.png">
-<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key_13.png">
-<meta property="og:updated_time" content="2017-10-18T01:54:37.000Z">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/mysql-arch.png">
+<meta property="og:updated_time" content="2017-11-26T09:48:30.252Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SecureCRT 设置基于 SSH key 登录">
-<meta name="twitter:description" content="SecureCRT 基于 SSH KEY 登录 Linux Server 在 SecureCRT 中生成密钥对  点击 Continue 继续  选择加密方式，确认后点击 Continue   输入私钥文件密码 输入备注信息   输入密钥加密长度，在 512 到 16384 之间   选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换 选择密钥文件保存路径   是否将该密钥加入到全局">
-<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key1.png">
+<meta name="twitter:title" content="MySQL Innodb MyISAM engine">
+<meta name="twitter:description" content="MySQL 存储引擎 MySQL 结构体系 ​                                    MySQL 结构体系 MySQL 由以下几部分组成  连接池组件 管理服务器和工具组件 SQL 接口组件 查询分线器组件 优化器组件 缓冲组件 插件式存储引擎 物理文件  MySQL 数据库区别于其它数据库的最重要的一个特点就是其插件式的表存储引擎。MySQL 插件式的存储引擎架构">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/mysql-arch.png">
 
   
 
@@ -186,14 +177,14 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-securecrt-ssh-key-login" class="article article-type-post" itemprop="blogPost">
+   <article id="post-mysql-engines" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">SecureCRT 设置基于 SSH key 登录</h1>
+    <h1 class="post-title">MySQL Innodb MyISAM engine</h1>
 
     <div class="article-meta">
       <span>
         <i class="icon-calendar"></i>
-        <span>2017.10.18</span>
+        <span>2017.11.26</span>
       </span>
 
       
@@ -206,7 +197,7 @@
       
   <span class="article-category">
     <i class="icon-list"></i>
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
   </span>
 
 
@@ -214,7 +205,7 @@
       
         <span>
           <i class="icon-comment"></i>
-          <a href="http://www.weidong.io/2017/10/18/securecrt-ssh-key-login/#disqus_thread"></a>
+          <a href="http://www.weidong.io/2017/11/26/mysql-engines/#disqus_thread"></a>
         </span>
       
 
@@ -233,36 +224,32 @@
 
   <div class="article-content">
     
-      <p><strong>SecureCRT 基于 SSH KEY 登录 Linux Server</strong></p>
-<p>在 SecureCRT 中生成密钥对</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key1.png" alt="生成密钥对"></p>
-<p>点击 Continue 继续</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key2.png" alt="Continue"></p>
-<p>选择加密方式，确认后点击 Continue</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key3.png" alt="选择加密方式"></p>
-<ol>
-<li>输入私钥文件密码</li>
-<li>输入备注信息</li>
-</ol>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key4.png" alt="设置密码与备注信息"></p>
-<p>输入密钥加密长度，在 512 到 16384 之间</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key5.png" alt="输入密钥长度"></p>
-<ol>
-<li>选择密钥格式，默认就好了，因为到服务器上可以使用工具进行格式转换</li>
-<li>选择密钥文件保存路径</li>
-</ol>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key7.png" alt="选择密钥格式"></p>
-<p>是否将该密钥加入到全局设置中，如果点了 yes 那所有主机默认都会使用该密钥</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key8.png" alt=""></p>
-<p>将生成的公钥文件传到服务器上并进行格式转换</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">;在用户 home 目录创建公钥文件存放目录</div><div class="line">mkdir .ssh</div><div class="line">;公钥原格式</div><div class="line">cat identity.pub </div><div class="line">---- BEGIN SSH2 PUBLIC KEY ----</div><div class="line">Subject: Zhaoweidong</div><div class="line">Comment: <span class="string">"Zhaoweidong@MacBook-Pro.local"</span></div><div class="line">ModBitSize: 2048</div><div class="line">AAAAB3NzaC1yc2EAAAADAQABAAABAQD0hak6HykrVOqZg61FlnCbyQXPXOW75Hm6</div><div class="line">dCokhC3bqAmNkJMdvsRK5dQfaDNebpYogax/e/edc2TedS+RYA7I3eTkTuqcU302</div><div class="line">+TAewcVrqel1b2qrSQ370iE/z4JQ6da6+q/FUDFfHp06Ww0CFIABcUBYLo3B4aG8</div><div class="line">Q5VcMhmh2Z8hBV5Kjrjy2ALpytxiXvi36NRJiPTSg+W5QNnCUPgXdoWIVGuXfX7U</div><div class="line">qp2ZOsHFuQoX2dydb5t+SLQDFTc7yf/aBBraSbqGxRklE+vztnv4RHda4ZjyjaYo</div><div class="line">LpWsPv90ZAuRXYOJ95PVHTEaqIMlMd0MBnObgZjCp6eZmTQzGRh3</div><div class="line">---- END SSH2 PUBLIC KEY ----</div><div class="line"></div><div class="line">;使用 ssh-keygen 转换为 OpenSSH key 格式；</div><div class="line">;将转换后的格式通过重定向保存到用户 home 目录下 .ssh/authorized_keys 文件中</div><div class="line">ssh-keygen -i -f identity.pub &gt;&gt; /root/.ssh/authorized_keys</div><div class="line"></div><div class="line">;转换后的格式</div><div class="line">cat /root/.ssh/authorized_keys </div><div class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD0hak6HykrVOqZg61FlnCbyQXPXOW75Hm6dCokhC3bqAmNkJMdvsRK5dQfaDNebpYogax/e/edc2TedS+RYA7I3eTkTuqcU302+TAewcVrqel1b2qrSQ370iE/z4JQ6da6+q/FUDFfHp06Ww0CFIABcUBYLo3B4aG8Q5VcMhmh2Z8hBV5Kjrjy2ALpytxiXvi36NRJiPTSg+W5QNnCUPgXdoWIVGuXfX7Uqp2ZOsHFuQoX2dydb5t+SLQDFTc7yf/aBBraSbqGxRklE+vztnv4RHda4ZjyjaYoLpWsPv90ZAuRXYOJ95PVHTEaqIMlMd0MBnObgZjCp6eZmTQzGRh3</div></pre></td></tr></table></figure>
-<p>将公钥登录方式设置为首选项，如果你没有选择登录要使用的私钥文件，还需要点 <code>Properties</code> 选项来选择私钥文件</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key9.png" alt="设置登录首选项"></p>
-<p>选择登录该主机要使用的私钥文件</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key10.png" alt="选择私钥文件"></p>
-<p>现在就可以使用基于 KEY 的方式来登录服务器了，如果你的私钥文件设置了密码，还需要输入一次私钥文件的密码</p>
-<p><img src="http://ov2iiuul1.bkt.clouddn.com/securecrt_ssh_key_13.png" alt="输入私钥文件密码"></p>
-<p>END!</p>
+      <p>MySQL 存储引擎</p>
+<p><strong>MySQL 结构体系</strong><br><img src="http://ov2iiuul1.bkt.clouddn.com/mysql-arch.png" alt="mysql-arch"></p>
+<p>​                                    MySQL 结构体系</p>
+<p>MySQL 由以下几部分组成</p>
+<ul>
+<li>连接池组件</li>
+<li>管理服务器和工具组件</li>
+<li>SQL 接口组件</li>
+<li>查询分线器组件</li>
+<li>优化器组件</li>
+<li>缓冲组件</li>
+<li>插件式存储引擎</li>
+<li>物理文件</li>
+</ul>
+<p>MySQL 数据库区别于其它数据库的最重要的一个特点就是其插件式的表存储引擎。MySQL 插件式的存储引擎架构提供了一系列的管理和服务支持，这些标准与存储引擎本身无关，可能是每个数据库系统都必须的，如 MySQL 分析器和优化器等，而存储引擎是地产物理结构的实现，每个存储引擎开发者都可以按照自己的意愿来进行开发。存储引擎是基于表的，而不是数据库。</p>
+<p>由于 MySQL 数据库开源的特性，存储引擎可以分为 MySQL 官方存储引擎和第三方存储引擎。有些第三方存储引擎很强大，如 InnoDB 存储引擎，最早是第三方存储引擎，后被 Oracle 收购，其应用及其广泛，甚至是 MySQL 数据库 OLTP (Online Transaction Processing 在线事务处理)应用中使用最广泛的存储引擎。</p>
+<p><strong>InnoDB 存储引擎</strong></p>
+<p>InnoDB 存储引擎支持事务，其设计的目标主要面向在线事务处理（OLTP）的应用。特点是行级别锁，支持外键，并支持类似 Oracle 的非锁定读，也就是默认读取操作不会产生锁。从 MySQL 数据库 5.5.8 版本开始，InnoDB 存储引擎是默认的存储引擎。</p>
+<p>InnoDB 存储引擎将数据放在一个逻辑的表空间中，这个表空间就像黑盒一样由 InnoDB 存储引擎自身进行管理。从 MySQL 4.1 版本开始，它可以将每个 InnoDB 存储引擎的表单独存放在一个独立的 ibd 文件中。此外，InnoDB 存储引擎支持裸设备 （row disk）用来建立表空间。</p>
+<p>InnoDB 通过使用 MVCC（Multiversion Concurrency Controll，多版本并发控制）来获得高并发，并且实现了 SQL 标准的 4 种隔离级别，默认为 REPEATABLE（可重复读）级别。同时，使用一种被称为 netx-key locking 的策略来避免幻读（phantom）现象的产生。除此之外，InnoDB 存储引擎还提供了插入缓冲（instert buffer）、二次写（double write）、自适应哈希索引（adaptive hash index）、预读（read ahead）等高性能和高可用的功能。</p>
+<p>对于表中数据的存储，InnoDB 存储引擎采用了聚集（clustered）的方式，因此每张表的存储都是按主键的顺序进行存放。如果没有显示地在表定义时指定主键，InnoDB 存储引擎会为每一行生成一个 6 字节的 ROWID ，并以此作为主键。</p>
+<p><strong>MyISAM 存储引擎</strong></p>
+<p>MyISAM 存储引擎不支持事务、表级别锁，支持全文索引，主要面向一些 OLAP （On-Line Analytical Processing ，联机分析处理） 数据库应用。在 MySQL 5.5.8 版本之前 MyISAM 存储引擎是默认的存储引擎。数据库系统与文件系统很大的一个不同之处在于对事务的支持，然而 MyISAM 存储引擎是不支持事务的，在数据仓库中，如果没有 ETL (Extract Transform and Load，提取转换加载) 这些操作，只是简单的报表查询，可能对事务要求没那么高。MyISAM 另外一个与众不同的地方是它的缓冲池只缓存索引文件，而不缓存数据文件，这点和大多数的数据库都非常不同。</p>
+<p>MyISAM 存储引擎表由 MYD 和 MYI 组成，MYD 用来存储数据文件，MYI 用来存放索引文件。可以通过使用 <code>myisampack</code> 工具来进一步压缩数据文件，因为 <code>myisampack</code> 工具使用赫夫曼（Hufffman）编码静态算法来压缩数据，因此使用 <code>myisampack</code> 工具压缩后的表是只读的，也可以通过 <code>myisampack</code> 来解压数据文件。</p>
+<p>在 MySQL 5.0 版本之前，MyISAM 默认支持的表大小为 4GB，如果需要支持大于 4GB 的 MyISAM 表时，则需要指定 MAX_ROWS 和 AVG_ROW_LENGTH 属性。从 MySQL 5.0 版本开始，MyISAM 默认支持 256TB 的单表数据，这足够一般应用需求。</p>
+<p>对于 MyISAM 存储引擎表，MySQL 数据库只缓存其索引文件，数据文件的缓存交由操作系统本身来完成，这与其他使用 LRU 算法缓存数据的大部分数据库大不相同。此外，在 MySQL 5.1.23 版本之前，无论是在 32 位还是 64 位操作系统环境下，缓存索引的缓冲区最大只能设置 4GB。在之后的版本中，64 为操作系统可以支持大于 4GB 的索引缓冲区。 </p>
 
     
   </div>
@@ -273,10 +260,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/10/17/linux-client-based-on-ssh-key-login-linux-server/">
+    <a class="show pull-left" href="/2017/11/19/tomcat-memcached-session-manager/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/18/usr-scp-command/">
+    <a class="hide pull-right" href="/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -390,7 +377,7 @@
   <script>
     var disqus_shortname = 'forsigner';
     
-    var disqus_url = 'http://www.weidong.io/2017/10/18/securecrt-ssh-key-login/';
+    var disqus_url = 'http://www.weidong.io/2017/11/26/mysql-engines/';
     
     (function(){
       var dsq = document.createElement('script');
