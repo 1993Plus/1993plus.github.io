@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用Percona XtraBackup备份MariaDB数据库 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="MySQL,MariaDB,xtrabackup," />
+  
+
+  <meta name="description" content="XtraBackup XtraBackup 是由著名的 MySQL 咨询服务公司 Percona 公司所开发，他其实是 Oracle 官方所研发的 InnoDB Host Backup 的升级版。 Percona 官方做了一个与 InnoDB Hot Backup 的对比表：https://www.percona.com/software/mysql-database/percona-xtraba">
+<meta name="keywords" content="MySQL,MariaDB,xtrabackup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Percona XtraBackup备份MariaDB数据库">
+<meta property="og:url" content="http://www.weidong.io/2017/12/05/使用percona-xtrabackup备份数据库/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="XtraBackup XtraBackup 是由著名的 MySQL 咨询服务公司 Percona 公司所开发，他其实是 Oracle 官方所研发的 InnoDB Host Backup 的升级版。 Percona 官方做了一个与 InnoDB Hot Backup 的对比表：https://www.percona.com/software/mysql-database/percona-xtraba">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ov2iiuul1.bkt.clouddn.com/xtrabackup-download.png">
+<meta property="og:updated_time" content="2017-12-05T01:05:18.832Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Percona XtraBackup备份MariaDB数据库">
+<meta name="twitter:description" content="XtraBackup XtraBackup 是由著名的 MySQL 咨询服务公司 Percona 公司所开发，他其实是 Oracle 官方所研发的 InnoDB Host Backup 的升级版。 Percona 官方做了一个与 InnoDB Hot Backup 的对比表：https://www.percona.com/software/mysql-database/percona-xtraba">
+<meta name="twitter:image" content="http://ov2iiuul1.bkt.clouddn.com/xtrabackup-download.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-使用percona-xtrabackup备份数据库" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">使用Percona XtraBackup备份MariaDB数据库</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.12.05</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/MariaDB/">MariaDB</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/12/05/使用percona-xtrabackup备份数据库/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>XtraBackup</p>
+<p>XtraBackup 是由著名的 MySQL 咨询服务公司 Percona 公司所开发，他其实是 Oracle 官方所研发的 InnoDB Host Backup 的升级版。</p>
+<p>Percona 官方做了一个与 InnoDB Hot Backup 的对比表：<a href="https://www.percona.com/software/mysql-database/percona-xtrabackup/feature-comparison" target="_blank" rel="external">https://www.percona.com/software/mysql-database/percona-xtrabackup/feature-comparison</a></p>
+<blockquote>
+<p>官方的介绍</p>
+</blockquote>
+<p>Percona XtraBackup 是一个免费，开源，支持完全在线备份的解决方案，他所支持的 MySQL 版本有 Percona MySQL Server（Percona 的 MySQL 版本分支），MySQL，MariaDB。他能在事务性存储引擎上执行在线非阻塞，压缩，高度安全的备份（在 MyISAM 存储引擎上只能执行阻塞式备份）。Percona XtrBackup 拥有超过 210 万的下载量（2017年12月）。</p>
+<p>XtraBackup 官方下载地址：<a href="https://www.percona.com/downloads/XtraBackup/LATEST/" target="_blank" rel="external">https://www.percona.com/downloads/XtraBackup/LATEST/</a></p>
+<p>XtraBackup 官方在线文档：<a href="https://www.percona.com/doc/percona-xtrabackup/LATEST/index.html" target="_blank" rel="external">https://www.percona.com/doc/percona-xtrabackup/LATEST/index.html</a></p>
+<p>在下载列表中有 4 个包，第一个是后三个的集合打包，分为 dubuginfo 包，主包，test 包，通常只需要下载主包就可以了。</p>
+<p><img src="http://ov2iiuul1.bkt.clouddn.com/xtrabackup-download.png" alt="xtrabackup-download"></p>
+<p>使用 wget 下载</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 pkg]# wget https://www.percona.com/downloads/XtraBackup/Percona-XtraBackup-2.4.9/binary/redhat/7/x86_64/percona-xtrabackup-24-2.4.9-1.el7.x86_64.rpm</div></pre></td></tr></table></figure>
+<p>因为安装的时候有一些依赖包需要安装，如果是 Red Hat 或 CentOS 系列的系统建议直接使用 yum 来安装(如果配置了 epel 源的话也可以直接使用 yum 安装 epel 源里面的版本)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 pkg]# yum install -y percona-xtrabackup-24-2.4.9-1.el7.x86_64.rpm</div></pre></td></tr></table></figure>
+<p>安装完成后可以看看他生成的文件，可以发现他的文件非常少，是一个非常轻量的工具。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 pkg]# rpm -ql percona-xtrabackup-24-2.4.9-1.el7.x86_64</div><div class="line">/usr/bin/innobackupex</div><div class="line">/usr/bin/xbcloud</div><div class="line">/usr/bin/xbcloud_osenv</div><div class="line">/usr/bin/xbcrypt</div><div class="line">/usr/bin/xbstream</div><div class="line">/usr/bin/xtrabackup</div><div class="line">/usr/share/doc/percona-xtrabackup-24-2.4.9</div><div class="line">/usr/share/doc/percona-xtrabackup-24-2.4.9/COPYING</div><div class="line">/usr/share/man/man1/innobackupex.1.gz</div><div class="line">/usr/share/man/man1/xbcrypt.1.gz</div><div class="line">/usr/share/man/man1/xbstream.1.gz</div><div class="line">/usr/share/man/man1/xtrabackup.1.gz</div></pre></td></tr></table></figure>
+<p>通常备份能用到的就是 <code>innobackupex</code>  和 <code>xtrabackup</code></p>
+<p><code>xtrabackup</code> 是一个 C 语言开发二进制程序，他链接至 InnoDB 库和 MySQL 客户端标准库。通过 InnoDB 库提供了将日志应用到数据文件的功能，而 Mysql 客户端标准库提供了命令行选项的解析、配置文件解析等功能。</p>
+<p><code>xtrabackup</code> 支持增量备份，也就是说他只能复制上一次完全备份以来发生了变化的数据。可以在每个完整备份之间执行许多增量备份，因此可以设置一个备份计划，例如每周进行一次完整备份，每天进行增量备份。</p>
+<p>在备份的同时，xtrabackup 还会在备份目录下创建文件 <code>xtrabackup_checkpoints</code> ，记录备份类型（完全备份或增量备份），备份状态（是否已经为 perpared 状态），和 LSN (日志序列号) 范围信息。每个 InnoDB 页（通常为 16kb ）都会包含一个 LSN，LSN 是整个数据库系统的系统版本号，每个页面相关的 LSN 能够表明此页面最近是如果发生改变的。增量备份实际上并没有将数据文件与之前的备份数据文件进行比较，他只是读取 InnoDB 页，并将其 LSN 与最后一个备份的 LSN 进行比较。</p>
+<p><code>innobackupex</code> 这个程序在 2.3 (包括2.3) 版本之前是一个 perl 脚本，它对 <code>xtrabackup</code> 进行了封装，在备份 innodb 表是，这个脚本会调用 <code>xtrabackup</code> 。直接使用 <code>xtrabackup</code> 只能备份 Mysql 的 innodb 表和 MariaDB 的 xtraDB ，如果使用 <code>innobackupex</code> 就能备份 innodb 表和 xtradb 表，同时还能备份 myisam 表。在 2.4 版本以后官方使用 C 语言将 <code>innobackupex</code> 的功能整合进了 <code>xtrbackup</code> ，但为了兼容之前版本中老用户的使用习惯，在 2.4 版本中的 <code>innobackupex</code> 只是一个链接到 <code>xtrabackup</code> 的符号链接。他允许用户传递旧版本中 <code>innobackupex</code> 的参数选项。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# ll /usr/bin/innobackupex</div><div class="line">lrwxrwxrwx 1 root root 10 Dec  2 17:22 /usr/bin/innobackupex -&gt; xtrabackup</div></pre></td></tr></table></figure>
+<p>备份时可以通过远程连接至 MariaDB 服务验证权限通过后进行备份。Percona XtraBackup 所执行的备份属于物理备份（通过服务数据文件），恢复时也是将数据文件拷贝到数据目录完成恢复，恢复时不能启动 MAriaDB  服务，所以恢复时只能在提供 MariaDB 服务的服务器上安装 Percona XtraBackup 进行恢复。</p>
+<p>因为在备份那一刻可能有些事务并没有完成，所以 Percona XtraBackup 在备份时还会将 InnoDB 的事务日志一同备份，在还原时如果是没有做完的事务就直接回滚，如果是执行完了的事务，但是没有提交，那就直接提交，也就是崩溃后恢复。</p>
+<p>这时候有个问题就是在做完一次完整备份后再做增量备份，他们直接可能也会存在事务不完整的情况。如果将第一个增量备份直接合并到完整备份上，并把一些不完整的事务给回滚了，这时在将第二个增量备份合并上来的时候就会出问题了。所以再进行恢复时不能随意将事务日志进行提交或回滚，只有将最后一个增量备份合并到完整备份后才能对事务做提交或回滚。这个过程在 Percona XtraBackup 中叫 prepare（准备）。</p>
+<p>因为不管如何备份都是无法做到备份到系统宕机那一刻的，在恢复时还是需要通过二进制日志来做时间点的数据恢复，所以 Percona XtraBackup 在备份时会将备份那一刻正在使用的二进制日志文件名与二进制日志的结束位置记录下来。在恢复数据时只需要将记录的二进制日志之后的日志取出来进行 replay 就可以了。这需要在启动 MariaDB 服务后通过人为来操作。</p>
+<p> <code>innobackupex</code> 是一个为了能兼容 Oracle 的 Innodb backup 在 <code>xtrabackup</code>  之上做的二次封装。在 Percona XtraBackup 2.4 版本之前，这个程序是一个 Perl 脚本，从 2.4 版本开始官方使用 C 语言将他重写整合到了 <code>xtrabackup</code> 程序中，所以在 2.4 版本所看到的 <code>innobackupex</code> 其实是一个连接到 <code>xtrabackup</code>  的符号链接，但他依然能接受旧版本中 <code>innobackupex</code> 所支持的选项。通常也是使用 <code>innobackupex</code>。</p>
+<blockquote>
+<p>innoackupex 选项</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-u, --user=name	# 连接 MariaDB 服务的用户名</div><div class="line">-p, --password=name	#连接密码</div><div class="line">-H, --host=name	#要连接的主机地址</div><div class="line">-P, --port=#	#MariaDB 监听的端口</div><div class="line">-S, --socket=name	#通过 socket 连接 MariaDB 服务</div><div class="line">--databases=name	#指定要备份的库</div><div class="line">--apply-log	#应用备份数据目录中的 “xtrabackup_logfile” 事务日志，做恢复前准备操纵</div><div class="line">--redo-only	#在对有增量备份的数据做准备操作时跳过“回滚”，只做“重做”，直到合并最后一个增量时</div><div class="line">--copy-back	#将准备好的备份数据复制到数据目录中</div><div class="line">--move-back	#将准备好的备份数据直接移动到数据目录中。</div><div class="line">--incremental	#表示本次备份类型为增量备份。需要使用 --incremental-basedir 指定基于哪个备份做增量</div><div class="line">--incremental-basedir=name	#指定基于哪个数据目录做增量备份</div><div class="line">--incremental-dir=name	#需要合并到完整备份的增量备份数据目录</div><div class="line">--parallel=#	#备份时指定开启多少个线程来并行备份</div><div class="line">--use-memory=#	#备份时能使用的内存大小，支持直接给定单位（如 1MB,1GB)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>权限相关</p>
+</blockquote>
+<p>在备份时应该使用一个最小权限的用户来进行备份</p>
+<p>创建一个用户</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; CREATE USER &apos;bakuser&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;123456&apos;;</div></pre></td></tr></table></figure>
+<p>撤销他的所有权限</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; REVOKE ALL PRIVILEGES,GRANT OPTION FROM &apos;bakuser&apos;@&apos;localhost&apos;;</div></pre></td></tr></table></figure>
+<p>重新授予权限（通常只需要 <code>RELOAD</code>, <code>LOCK TABLES</code>, <code>REPLCATION CLIENT</code> 这几个权限就可以了）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; GRANT RELOAD,PROCESS,LOCK TABLES,REPLICATION CLIENT ON *.* TO &apos;bakuser&apos;@&apos;localhost&apos;;</div></pre></td></tr></table></figure>
+<p>刷新表权限</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; FLUSH PRIVILEGES;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>准备一次完整备份</p>
+</blockquote>
+<p>创建备份数据存放的目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# mkdir /tmp/databak</div></pre></td></tr></table></figure>
+<p>对所有库进行一次完整备份</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# innobackupex -ubakuser -p123456 /tmp/databak/</div></pre></td></tr></table></figure>
+<p>在开始备份后程序给出了一个提示，只有最后显示 <code>completed OK!</code> 时表示备份成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">IMPORTANT: Please check that the backup run completes successfully.</div><div class="line">           At the end of a successful backup run innobackupex</div><div class="line">           prints &quot;completed OK!&quot;.</div></pre></td></tr></table></figure>
+<p>备份完成后备份数据会存放在一个以当前时间命名的目录中</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# ll /tmp/databak/</div><div class="line">drwxr-x--- 5 root root 175 Dec  3 22:29 2017-12-03_22-29-34</div></pre></td></tr></table></figure>
+<p>在备份目录中的 <code>xtrabackup_checkpoints</code> 中可以看到备份类型，及 LSN 先关信息</p>
+<p>通过文件中的 backup_type 可以看到本次备份类型为 full-backuped 表示完整备份</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# cat /tmp/databak/2017-12-03_22-29-34/xtrabackup_checkpoints </div><div class="line">backup_type = full-backuped</div><div class="line">from_lsn = 0</div><div class="line">to_lsn = 1604969</div><div class="line">last_lsn = 1604969</div><div class="line">compact = 0</div><div class="line">recover_binlog_info = 0</div></pre></td></tr></table></figure>
+<p>在备份数据目录中除了创建会 <code>xtrabackup_checkpoints</code> 还会创建以下文件</p>
+<ul>
+<li>backup-my.cn：备份时 MariaDB 服务器的必要配置信息</li>
+<li>xtrabackup_binlog_info ：备份那一刻所处的二进制日志位置信息</li>
+<li>xtrabacku_info ：备份时传递给 Percona XtraBackup 参数，及软件版本信息等</li>
+<li>xtrabackup_logfile ：备份时的事务日志信息</li>
+</ul>
+<blockquote>
+<p>恢复备份数据</p>
+</blockquote>
+<p>在恢复时，在恢复数据的系统上也要安装 Percona XtraBackup，恢复前需要先对备份数据做 Prepare （准备）操作，将备份数据中的事务应用到数据文件中。将数据复制的数据目录之前停止 MariaDB 服务，清空数据目录。</p>
+<p>使用 <code>--apply-log</code> 选项并指定数据目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 ~]# innobackupex --apply-log 2017-12-03_22-29-34/</div></pre></td></tr></table></figure>
+<p>最后显示 <code>completed OK!</code> 表示成功</p>
+<p>现在可以 <code>--copy-back</code> 将备份数据复制到数据目录。复制时 Percona XtraBackup 会读取 <code>/etc</code> 下 MariaDB 的配置文件 my.cnf 获取数据目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 ~]# innobackupex --copy-back 2017-12-03_22-29-34/</div></pre></td></tr></table></figure>
+<p>数据文件复制到数据目录后确认文件的所有者与所有组是否为 mysql，如果不是 mysql 将其改为 mysql</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 ~]# chown -R mysql:mysql /var/lib/mysql/</div></pre></td></tr></table></figure>
+<p>现在就可以正常启动 MariaDB 服务了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 ~]# systemctl start mariadb.service</div></pre></td></tr></table></figure>
+<p>如果需要做时间点数据恢复，在启动 MariaDB 服务后将对二进制日志做 replay 就可以了。</p>
+<blockquote>
+<p>基于完整备份做增量备份</p>
+</blockquote>
+<p>当前在 stuinfo 数据库 student 表中有 5 条数据</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SELECT * FROM stuinfo.student;</div><div class="line">+------+--------+</div><div class="line">| s_id | s_name |</div><div class="line">+------+--------+</div><div class="line">|    1 | Stu01  |</div><div class="line">|    2 | Stu02  |</div><div class="line">|    3 | Stu03  |</div><div class="line">|    4 | Stu04  |</div><div class="line">|    5 | Stu05  |</div><div class="line">+------+--------+</div></pre></td></tr></table></figure>
+<p>对当前状态做一次完整备份</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# innobackupex -uroot -p123456 /tmp/databak/</div></pre></td></tr></table></figure>
+<p>在 stuinfo 数据库 student 表中插入一条数据</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; INSERT INTO stuinfo.student VALUE (6,&apos;Stu06&apos;);</div><div class="line"></div><div class="line">MariaDB [(none)]&gt; SELECT * FROM stuinfo.student;</div><div class="line">+------+--------+</div><div class="line">| s_id | s_name |</div><div class="line">+------+--------+</div><div class="line">|    1 | Stu01  |</div><div class="line">|    2 | Stu02  |</div><div class="line">|    3 | Stu03  |</div><div class="line">|    4 | Stu04  |</div><div class="line">|    5 | Stu05  |</div><div class="line">|    6 | Stu06  |</div><div class="line">+------+--------+</div></pre></td></tr></table></figure>
+<p>通过 <code>xtrabackup_checkpoints</code> 查看备份类型与 LSN 信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# cat /tmp/databak/2017-12-04_17-07-33/xtrabackup_checkpoints </div><div class="line">backup_type = full-backuped</div><div class="line">from_lsn = 0</div><div class="line">to_lsn = 1626814</div><div class="line">last_lsn = 1626814</div><div class="line">compact = 0</div><div class="line">recover_binlog_info = 0</div></pre></td></tr></table></figure>
+<p>现在基于完整备份对发生变化的数据做增量备份</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# innobackupex -uroot -p123456 --incremental /tmp/databak/ --incremental-basedir /tmp/databak/2017-12-04_17-07-33/</div></pre></td></tr></table></figure>
+<p>通过 <code>xtrabackup_checkpoints</code> 可以查看到 backup_type 为 incremental（增量备份）</p>
+<p>他的起始 LSN 为完整备份的结束位置。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# cat /tmp/databak/2017-12-04_17-12-54/xtrabackup_checkpoints </div><div class="line">backup_type = incremental</div><div class="line">from_lsn = 1626814</div><div class="line">to_lsn = 1627868</div><div class="line">last_lsn = 1627868</div><div class="line">compact = 0</div><div class="line">recover_binlog_info = 0</div></pre></td></tr></table></figure>
+<p>再插入一条数据</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; INSERT INTO stuinfo.student VALUE (7,&apos;Stu07&apos;);</div><div class="line"></div><div class="line">MariaDB [(none)]&gt; SELECT * FROM stuinfo.student;</div><div class="line">+------+--------+</div><div class="line">| s_id | s_name |</div><div class="line">+------+--------+</div><div class="line">|    1 | Stu01  |</div><div class="line">|    2 | Stu02  |</div><div class="line">|    3 | Stu03  |</div><div class="line">|    4 | Stu04  |</div><div class="line">|    5 | Stu05  |</div><div class="line">|    6 | Stu06  |</div><div class="line">|    7 | Stu07  |</div><div class="line">+------+--------+</div></pre></td></tr></table></figure>
+<p>现在基于上次的增量备份再对发生变化的数据做增量备份，如果每次都是基于完整备份做备份的话属于差异备份。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# innobackupex -uroot -p123456 --incremental /tmp/databak/ --incremental-basedir /tmp/databak/2017-12-04_17-12-54/</div></pre></td></tr></table></figure>
+<p>他的 LSN 起始位置也是由上次备份的结束位置为起始点</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node1 ~]# cat /tmp/databak/2017-12-04_17-16-34/xtrabackup_checkpoints </div><div class="line">backup_type = incremental</div><div class="line">from_lsn = 1627868</div><div class="line">to_lsn = 1628922</div><div class="line">last_lsn = 1628922</div><div class="line">compact = 0</div><div class="line">recover_binlog_info = 0</div></pre></td></tr></table></figure>
+<p>再向数据库中插入一条数据，用来模拟二进制日志重放</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; INSERT INTO stuinfo.student VALUE (8,&apos;Stu08&apos;);</div><div class="line"></div><div class="line">MariaDB [(none)]&gt; SELECT * FROM stuinfo.student;</div><div class="line">+------+--------+</div><div class="line">| s_id | s_name |</div><div class="line">+------+--------+</div><div class="line">|    1 | Stu01  |</div><div class="line">|    2 | Stu02  |</div><div class="line">|    3 | Stu03  |</div><div class="line">|    4 | Stu04  |</div><div class="line">|    5 | Stu05  |</div><div class="line">|    6 | Stu06  |</div><div class="line">|    7 | Stu07  |</div><div class="line">|    8 | Stu08  |</div><div class="line">+------+--------+</div></pre></td></tr></table></figure>
+<blockquote>
+<p>恢复增量备份</p>
+</blockquote>
+<p>在另外一台 MariaDB 服务器上恢复这些增量备份。首先这台 MariaDB 也应该安装 Percona XtraBackup ，安装好 MariaDB 服务，但不能启动 MariaDB 服务，不能初始化数据库。</p>
+<p>先对第一次的完整备份做 <code>apply-log</code> 操作，但不能回滚一些未完成的事务，所以要加上 <code>--redo-only</code> 选项</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 databak]# innobackupex --apply-log --redo-only 2017-12-04_17-07-33/</div></pre></td></tr></table></figure>
+<p>先合并第一个增量备份到完整备份上，他的事务也不能做回滚操作，所以也需要加上  <code>redo-only</code> 选项。除此之外还需要使用 <code>--incremental-dir</code> 指定增量备份的路径</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 databak]# innobackupex --apply-log --redo-only 2017-12-04_17-07-33/ --incremental-dir 2017-12-04_17-12-54/</div></pre></td></tr></table></figure>
+<p>再合并上最后一次的增量备份</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 databak]# innobackupex --apply-log --redo-only 2017-12-04_17-07-33/ --incremental-dir 2017-12-04_17-16-34/</div></pre></td></tr></table></figure>
+<p>现在所有增量备份都已经成功合并到了完整备份上。再对完整备份做一次 apply-log。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 databak]# innobackupex --apply-log 2017-12-04_17-07-33/</div></pre></td></tr></table></figure>
+<p>可以通过查看完整备份中的 <code>xtrabackup_checkpoints</code> LSN 来确认</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 databak]# cat 2017-12-04_17-07-33/xtrabackup_checkpoints </div><div class="line">backup_type = full-prepared</div><div class="line">from_lsn = 0</div><div class="line">to_lsn = 1628922</div><div class="line">last_lsn = 1628922</div><div class="line">compact = 0</div><div class="line">recover_binlog_info = 0</div></pre></td></tr></table></figure>
+<p>将他复制到数据目录中</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 databak]# innobackupex --copy-back 2017-12-04_17-07-33/</div></pre></td></tr></table></figure>
+<p>修改数据文件所有者与所属组为 mysql</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 ~]# chown -R mysql:mysql /var/lib/mysql/</div></pre></td></tr></table></figure>
+<p>启动 MariaDB 服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 ~]# systemctl start mariadb</div></pre></td></tr></table></figure>
+<p>登录 MariaDB 服务查看数据</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SELECT  * FROM stuinfo.student;</div><div class="line">+------+--------+</div><div class="line">| s_id | s_name |</div><div class="line">+------+--------+</div><div class="line">|    1 | Stu01  |</div><div class="line">|    2 | Stu02  |</div><div class="line">|    3 | Stu03  |</div><div class="line">|    4 | Stu04  |</div><div class="line">|    5 | Stu05  |</div><div class="line">|    6 | Stu06  |</div><div class="line">|    7 | Stu07  |</div><div class="line">+------+--------+</div></pre></td></tr></table></figure>
+<p>可以看到第 8 条数据因为没有在增量备份中，所有还原回来的数据中只有 7 条数据。现在通过二进制日志来模拟做时间点还原。</p>
+<p>通过查看最后一次增量备份中的 <code>xtrabackup_binlog_info</code> 来确认二进制日志的位置。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 ~]# cat databak/2017-12-04_17-16-34/xtrabackup_binlog_info </div><div class="line">mariadb-binlog.000001	3527</div></pre></td></tr></table></figure>
+<p>可以看到最后一次增量备份时二进制日志结束位置在 mariadb-binlog.000001 这个文件的 3527。所以现在需要从 3527 这个位置开始读取二进制日志，然后对他做 replay。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@node2 ~]# mysqlbinlog --start-position 3527 mariadb-binlog.000001 &gt; /tmp/binlog.sql</div></pre></td></tr></table></figure>
+<p>临时将他导出到 /tmp 下是为了让 Mariadb 能有权限读取这个 sql 脚本</p>
+<p>登录 MariaDB 后在会话级别关闭二进制日志记录（在 replay 二进制日志数据时是没必要在记录二进制日志的）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SET @@SESSION.sql_log_bin = OFF;</div></pre></td></tr></table></figure>
+<p>导入 sql 脚本</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SOURCE /tmp/binlog.sql</div></pre></td></tr></table></figure>
+<p>现在数据就已经全部恢复完成了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SELECT * FROM stuinfo.student;</div><div class="line">+------+--------+</div><div class="line">| s_id | s_name |</div><div class="line">+------+--------+</div><div class="line">|    1 | Stu01  |</div><div class="line">|    2 | Stu02  |</div><div class="line">|    3 | Stu03  |</div><div class="line">|    4 | Stu04  |</div><div class="line">|    5 | Stu05  |</div><div class="line">|    6 | Stu06  |</div><div class="line">|    7 | Stu07  |</div><div class="line">|    8 | Stu08  |</div><div class="line">+------+--------+</div></pre></td></tr></table></figure>
+<p>到此一次完整的备份就完成了。</p>
+<p>Percona XtraBackup 其他的一些高级功能可以通过查看官方文档。</p>
+<p>END!</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/12/05/使用mysqldump备份数据库/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/12/05/使用percona-xtrabackup备份数据库/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
