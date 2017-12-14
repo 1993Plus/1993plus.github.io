@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>MySQL 主从复制 | Weidong</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="mariadb,mysql,replication," />
+  
+
+  <meta name="description" content="MySQL 复制架构 MySQL 主从复制机制：在主从（Master/Slave）架构中，主从节点都存有相同的数据集。但只有主节点接受来自客户端读写请求，其余从节点只接受读请求。从节点通过扮演成客户端的形式从主节点上复制二进制日志到本地进行 replay，实现将数据写入本地数据库中。 实现了 MySQL 向外扩展（Scale Out）的解决方案。完成了数据分布，负载均衡的功用，但只能实现读请求的负">
+<meta name="keywords" content="mariadb,mysql,replication">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 主从复制">
+<meta property="og:url" content="http://www.weidong.io/2017/12/14/mysql主从复制/index.html">
+<meta property="og:site_name" content="Weidong">
+<meta property="og:description" content="MySQL 复制架构 MySQL 主从复制机制：在主从（Master/Slave）架构中，主从节点都存有相同的数据集。但只有主节点接受来自客户端读写请求，其余从节点只接受读请求。从节点通过扮演成客户端的形式从主节点上复制二进制日志到本地进行 replay，实现将数据写入本地数据库中。 实现了 MySQL 向外扩展（Scale Out）的解决方案。完成了数据分布，负载均衡的功用，但只能实现读请求的负">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-12-14T13:35:27.904Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL 主从复制">
+<meta name="twitter:description" content="MySQL 复制架构 MySQL 主从复制机制：在主从（Master/Slave）架构中，主从节点都存有相同的数据集。但只有主节点接受来自客户端读写请求，其余从节点只接受读请求。从节点通过扮演成客户端的形式从主节点上复制二进制日志到本地进行 replay，实现将数据写入本地数据库中。 实现了 MySQL 向外扩展（Scale Out）的解决方案。完成了数据分布，负载均衡的功用，但只能实现读请求的负">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#MySQL-复制架构"><span class="toc-text">MySQL 复制架构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#面临的问题"><span class="toc-text">面临的问题</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MySQL-主从复制组件"><span class="toc-text">MySQL 主从复制组件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#级联复制"><span class="toc-text">级联复制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#复制机制"><span class="toc-text">复制机制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#主从复制配置"><span class="toc-text">主从复制配置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#常见问题"><span class="toc-text">常见问题</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-mysql主从复制" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">MySQL 主从复制</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.12.14</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Weidong</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/MariaDB/">MariaDB</a>
+  </span>
+
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://www.weidong.io/2017/12/14/mysql主从复制/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h5 id="MySQL-复制架构"><a href="#MySQL-复制架构" class="headerlink" title="MySQL 复制架构"></a>MySQL 复制架构</h5><p> MySQL 主从复制机制：在主从（Master/Slave）架构中，主从节点都存有相同的数据集。但只有主节点接受来自客户端读写请求，其余从节点只接受读请求。从节点通过扮演成客户端的形式从主节点上复制二进制日志到本地进行 replay，实现将数据写入本地数据库中。 实现了 MySQL 向外扩展（Scale Out）的解决方案。完成了数据分布，负载均衡的功用，但只能实现读请求的负载均衡。</p>
+<p>MySQL 主主复制机制：在主主（Master/Master）架构中，各个节点互为主从，所以所有节点都需要开启二进制日志与中继日志。但这样会面临一个问题就是，当从节点 replay 二进制日志时自己也会记录二进制日志事件，会形成一个死循环。比如 node1 与 node2 工作在主主模式下，他们互为主从，当 node1 写入数据后 node2 会向他请求二进制日志事件，node2 在 replay 二进制日志事件后自己也记录了二进制日志，当 node1 在想 node2 请求二进制日志事件时会收到他之前发送过去的事件，这样一来就会造成数据重复写入了。在 MySQL 中通过 server id 来解决该问题。 MySQL 在记录二进制日志时会将自己的 server id 记录到二进制日志事件中，当收到的二进制日志事件中的 server id 是自己是那就不对该事件进行 replay。这种架构起到了数据冗余与高可用的效果。</p>
+<h5 id="面临的问题"><a href="#面临的问题" class="headerlink" title="面临的问题"></a>面临的问题</h5><p>在主从复制中前端调度器所面临的问题，他需要解码识别来自客户端的 SQL 请求，对 SQL 语句作精确分析，判断客户端发来的请求是读请求还是写请求。如果是写请求那么就只能发送给 Master 节点，如果是读请求就基于负载均衡的方式发送 Slave 节点。要完成这些功能前端调度器就必须要工作在七层协议上，该调度器通常被称为 R/W Spliter（读写分离器）或 SQL 语句路由器。</p>
+<h5 id="MySQL-主从复制组件"><a href="#MySQL-主从复制组件" class="headerlink" title="MySQL 主从复制组件"></a>MySQL 主从复制组件</h5><blockquote>
+<p>Slave</p>
+</blockquote>
+<p><code>I/O Thread</code> 向 Master 请求二进制日志事件，并保存在中继日志中，并记录下已读取到的位置。</p>
+<p><code>第一次请求二进制日志信息时如果不指定读取位置，那将从第一个二进制日志的的起始位置开始读取，在数据很多的情况下应避免此操作。</code></p>
+<p><code>SQL Thread</code> 从中继日志中读取二进制日志事件，在本地完成重放</p>
+<blockquote>
+<p>Master</p>
+</blockquote>
+<p><code>Dump Thread</code> 为每个 Slave 的 <code>I/O Thread</code> 启动一个 Dump 线程，用于向请求者发送 binary log events。</p>
+<h5 id="级联复制"><a href="#级联复制" class="headerlink" title="级联复制"></a>级联复制</h5><p>通常对于从节点来说，保存二进制日志是没有意义的，而且会增加 I/O ，所以一般在从节点没有必要开启二进制日志。在另外一种结构中从节点也可以作为其他从节点的主节点，他的从节点想要从他那儿获取到数据那他就需要开启二进制日志的记录。这种结构就叫做级联复制。在 Slave 节点较多造成 Master 节点压力过大的情况下会用到。中继节点如果不需要存储数据时只需要将默认存储引擎设置为 <code>BLACKHOLE</code> 即可。</p>
+<h5 id="复制机制"><a href="#复制机制" class="headerlink" title="复制机制"></a>复制机制</h5><blockquote>
+<p>异步复制</p>
+</blockquote>
+<p>在主从复制中写入数据时 Master 节点只需要保证本地写入成功即可，而不需要知道 Slave 节点是否复制完成。</p>
+<blockquote>
+<p>半同步复制</p>
+</blockquote>
+<p>半同步复制是基于 Google 为 MySQL 所研发的插件实现的。他的实现方式是要求 Slave 节点中必须有一个 Slave 节点在复制完数据后向 Master 节点回应“复制完成”， 才返回给客户端成功的信息。对于其他 Slave 节点仍然为异步复制。</p>
+<h5 id="主从复制配置"><a href="#主从复制配置" class="headerlink" title="主从复制配置"></a>主从复制配置</h5><p><code>在配置前将所有节点时间同步为一致</code></p>
+<blockquote>
+<p>Master 节点配置</p>
+</blockquote>
+<p>修改配置文件</p>
+<p>启用二进制日志、设置全局唯一 server id</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">server_id = 1</div><div class="line">log-bin = master-binlog</div></pre></td></tr></table></figure>
+<p>创建仅有复制权限的用户</p>
+<p>创建用户</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; CREATE USER &apos;repluser&apos;@&apos;172.18.39.%&apos; IDENTIFIED BY &apos;123456&apos;;</div></pre></td></tr></table></figure>
+<p>撤回该账号所有权限</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; REVOKE ALL PRIVILEGES,GRANT OPTION FROM &apos;repluser&apos;@&apos;172.18.39.%&apos;;</div></pre></td></tr></table></figure>
+<p>重新赋予 <code>REPLICATION SLAVE</code> , <code>REPLICATION CLIENT</code> 权限</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; GRANT REPLICATION SLAVE,REPLICATION CLIENT ON *.* TO &apos;repluser&apos;@&apos;172.18.39.%&apos;;</div></pre></td></tr></table></figure>
+<p>刷新权限表</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; FLUSH PRIVILEGES;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Slave 节点配置</p>
+</blockquote>
+<p>修改配置文件</p>
+<p>启用中继日志、设置全局唯一 server id、</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">server_id = 2</div><div class="line">relay-log = relay-log</div></pre></td></tr></table></figure>
+<p>设置 Slave 节点指向 Master 节点使用 <code>CHANGE MASTER TO</code> 命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CHANGE MASTER TO</div><div class="line">    MASTER_BIND = &apos;interface_name&apos;	# 连接 Master 使用的网络接口</div><div class="line">  | MASTER_HOST = &apos;host_name&apos;	# Master 节点地址</div><div class="line">  | MASTER_USER = &apos;user_name&apos;	# 连接 Master 节点用于复制数据的用户</div><div class="line">  | MASTER_PASSWORD = &apos;password&apos;	# 用户密码</div><div class="line">  | MASTER_PORT = port_num	# Master 监听的端口，默认为 3306</div><div class="line">  | MASTER_CONNECT_RETRY = interval	# 连接失败重试间隔，单位为秒，默认 60 秒</div><div class="line">  | MASTER_HEARTBEAT_PERIOD = interval	# 心跳检查间隔</div><div class="line">  | MASTER_LOG_FILE = &apos;master_log_name&apos;	# 要复制数据的二进制日志起始文件</div><div class="line">  | MASTER_LOG_POS = master_log_pos	# 二进制日志起始位置</div><div class="line">  | RELAY_LOG_FILE = &apos;relay_log_name&apos;	# 中继日志文件</div><div class="line">  | RELAY_LOG_POS = relay_log_pos	# 中继日志起始位置</div><div class="line"></div><div class="line"># 使用 SSL 连接的相关参数</div><div class="line">  | MASTER_SSL = &#123;0|1&#125;</div><div class="line">  | MASTER_SSL_CA = &apos;ca_file_name&apos;</div><div class="line">  | MASTER_SSL_CAPATH = &apos;ca_directory_name&apos;</div><div class="line">  | MASTER_SSL_CERT = &apos;cert_file_name&apos;</div><div class="line">  | MASTER_SSL_KEY = &apos;key_file_name&apos;</div><div class="line">  | MASTER_SSL_CIPHER = &apos;cipher_list&apos;</div><div class="line">  | MASTER_SSL_VERIFY_SERVER_CERT = &#123;0|1&#125;</div><div class="line">  </div><div class="line"># 要忽略的 server id</div><div class="line">  | IGNORE_SERVER_IDS = (server_id_list)</div></pre></td></tr></table></figure>
+<p>有很多选项，但大多数是可选的可以不用设置。选项之间使用英文逗号“,”分隔。</p>
+<p>查看 Master 节点的二进制日志信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SHOW MASTER LOGS;</div><div class="line">+----------------------+-----------+</div><div class="line">| Log_name             | File_size |</div><div class="line">+----------------------+-----------+</div><div class="line">| master-binlog.000001 |       590 |</div><div class="line">+----------------------+-----------+</div></pre></td></tr></table></figure>
+<p>在这个位置之前的数据都是一些 Master 节点配置产生的二进制日志事件，这些事件不需要被 Slave 节点复制那就从这个位置复制即可。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; CHANGE MASTER TO </div><div class="line">MASTER_HOST=&apos;172.18.39.41&apos;,</div><div class="line">MASTER_USER=&apos;repluser&apos;,</div><div class="line">MASTER_PASSWORD=&apos;123456&apos;,</div><div class="line">MASTER_LOG_FILE=&apos;master-binlog.000001&apos;,</div><div class="line">MASTER_LOG_POS=590,</div><div class="line">MASTER_CONNECT_RETRY=10;</div></pre></td></tr></table></figure>
+<p>查看 Slave 状态</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SHOW SLAVE STATUS\G;</div><div class="line">*************************** 1. row ***************************</div><div class="line">               Slave_IO_State: </div><div class="line">                  Master_Host: 172.18.39.41</div><div class="line">                  Master_User: repluser</div><div class="line">                  Master_Port: 3306</div><div class="line">                Connect_Retry: 10</div><div class="line">              Master_Log_File: master-binlog.000001</div><div class="line">          Read_Master_Log_Pos: 590</div><div class="line">               Relay_Log_File: relay-log.000001</div><div class="line">                Relay_Log_Pos: 4</div><div class="line">        Relay_Master_Log_File: master-binlog.000001</div><div class="line">             Slave_IO_Running: No</div><div class="line">            Slave_SQL_Running: No</div><div class="line">              Replicate_Do_DB: </div><div class="line">          Replicate_Ignore_DB: </div><div class="line">           Replicate_Do_Table: </div><div class="line">       Replicate_Ignore_Table: </div><div class="line">      Replicate_Wild_Do_Table: </div><div class="line">  Replicate_Wild_Ignore_Table: </div><div class="line">                   Last_Errno: 0</div><div class="line">                   Last_Error: </div><div class="line">                 Skip_Counter: 0</div><div class="line">          Exec_Master_Log_Pos: 590</div><div class="line">              Relay_Log_Space: 245</div><div class="line">              Until_Condition: None</div><div class="line">               Until_Log_File: </div><div class="line">                Until_Log_Pos: 0</div><div class="line">           Master_SSL_Allowed: No</div><div class="line">           Master_SSL_CA_File: </div><div class="line">           Master_SSL_CA_Path: </div><div class="line">              Master_SSL_Cert: </div><div class="line">            Master_SSL_Cipher: </div><div class="line">               Master_SSL_Key: </div><div class="line">        Seconds_Behind_Master: NULL</div><div class="line">Master_SSL_Verify_Server_Cert: No</div><div class="line">                Last_IO_Errno: 0</div><div class="line">                Last_IO_Error: </div><div class="line">               Last_SQL_Errno: 0</div><div class="line">               Last_SQL_Error: </div><div class="line">  Replicate_Ignore_Server_Ids: </div><div class="line">             Master_Server_Id: 0</div></pre></td></tr></table></figure>
+<p>现在配置完成了，但从 Slave 状态中可以看到 <code>Slave_IO_Running</code> 和 <code>Slave_SQL_Running</code> 为 NO，表示 Slave 节点现在还没有开始复制数据。</p>
+<p>启动 IO 线程与 SQL 线程</p>
+<p>要启动 IO 线程与 SQL 线程使用 <code>START SLAVE</code> 命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">START SLAVE [thread_types]</div><div class="line">thread_type: IO_THREAD | SQL_THREAD</div><div class="line"># 如果不知道 thread_types 则表示两个线程都启动</div></pre></td></tr></table></figure>
+<p>启动后 <code>Slave_IO_Running</code> 和 <code>Slave_SQL_Running</code> 将显示为 Yes ，Slave_IO_State 为等待 Master 发送事件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SHOW SLAVE STATUS\G;</div><div class="line">*************************** 1. row ***************************</div><div class="line">               Slave_IO_State: Waiting for master to send event</div><div class="line">                  Master_Host: 172.18.39.41</div><div class="line">                  Master_User: repluser</div><div class="line">                  Master_Port: 3306</div><div class="line">                Connect_Retry: 10</div><div class="line">              Master_Log_File: master-binlog.000001</div><div class="line">          Read_Master_Log_Pos: 590</div><div class="line">               Relay_Log_File: relay-log.000002</div><div class="line">                Relay_Log_Pos: 533</div><div class="line">        Relay_Master_Log_File: master-binlog.000001</div><div class="line">             Slave_IO_Running: Yes</div><div class="line">            Slave_SQL_Running: Yes</div></pre></td></tr></table></figure>
+<p>测试</p>
+<p>在 Master 节点上创建一个数据库 “repltest”</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; CREATE DATABASE repltest;</div></pre></td></tr></table></figure>
+<p>查看 Slave 节点上是否复制</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SHOW DATABASES;</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">| repltest           |</div><div class="line">| test               |</div><div class="line">+--------------------+</div></pre></td></tr></table></figure>
+<p>可以看到 Master 节点上创建的 “repltest” 数据库已经成功复制到了 Slave 节点上了。</p>
+<p>再次查看  Slave 状态，可以看到 “Read_Master_Log_Pos” 位置从 590 到 681</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">MariaDB [(none)]&gt; SHOW SLAVE STATUS\G;</div><div class="line">*************************** 1. row ***************************</div><div class="line">               Slave_IO_State: Waiting for master to send event</div><div class="line">                  Master_Host: 172.18.39.41</div><div class="line">                  Master_User: repluser</div><div class="line">                  Master_Port: 3306</div><div class="line">                Connect_Retry: 10</div><div class="line">              Master_Log_File: master-binlog.000001</div><div class="line">          Read_Master_Log_Pos: 681</div><div class="line">               Relay_Log_File: relay-log.000002</div><div class="line">                Relay_Log_Pos: 624</div><div class="line">        Relay_Master_Log_File: master-binlog.000001</div><div class="line">             Slave_IO_Running: Yes</div><div class="line">            Slave_SQL_Running: Yes</div></pre></td></tr></table></figure>
+<p>在 Slave 节点的数据目录下会生成 <code>master.info</code> 和 <code>relay-log.info</code> 两个文件，在 Slave 节点到 Master 节点请求二进制日志事件时非常重要</p>
+<p><code>master.info</code> 中记录了连接 Master 的信息</p>
+<p><code>relay-log.info</code> 记录了当前正在使用的中继日志文件与位置和从 Master 节点读取的二进制日志文件与位置</p>
+<p>到此 MySQL 的主从配置就完成了。</p>
+<h5 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h5><ul>
+<li>如果配置主从复制前 Master 节点已经有很多数据了，这时使用二进制日志是没法进行复制的。应该先将 Master 节点上的数据库做完整备份，然后恢复到 Slave 节点上，在开启同步。</li>
+<li>限制 Slave 节点为只读。可以在配置文件中增加 <code>read_only=ON</code> 。但该设置对 SUPER 用户无效。</li>
+<li>事务安全。对于事务型存储引擎，如 InnoDB 在提交事务后二进制日志事件会在内存中缓冲一段时间后才会写入到磁盘上的二进制日志文件中。这样一来如果遇到服务器宕机内存中的二进制日志事件就会丢失，造成事件不完整，Slave 节点也就获取不到完整的数据了。为了避免这种情况的发送可以设置 <code>sync_binlog=ON</code> ，表示当产生新的二进制日志事件是立即写入二进制日志文件中。</li>
+<li>对于 InnoDB 存储引擎还应该设置 <code>innodb_flush_logs_at_trx_commit</code> 为 <code>ON</code> ，表示当事务提交时立即将事务日志刷写到事务日志文件中，避免宕机造成事务丢失。设置 <code>innodb_support_xa</code> 为 <code>ON</code> 启动分布式事务提交。</li>
+<li>对于 Slave 节点，可以设置 <code>skip_slave_start</code> 为 <code>ON</code> 表示启动 MySQL 服务时跳过自动启动 IO 线程与 SQL 线程，在启动服务确认 Master 节点正常后手动开启 IO 线程与 SQL 线程，避免将 Master 上的错误事件复制到 Slave 上。</li>
+</ul>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/12/05/使用percona-xtrabackup备份数据库/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'forsigner';
+    
+    var disqus_url = 'http://www.weidong.io/2017/12/14/mysql主从复制/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//forsigner.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
